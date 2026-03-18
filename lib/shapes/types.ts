@@ -20,6 +20,7 @@ export interface SolveResult {
 export interface SVGData {
   points: Array<{ x: number; y: number; label: string }>
   lines: Array<{ from: number; to: number; label?: string }>
+  circles?: Array<{ cx: number; cy: number; r: number; label?: string }>
   width: number
   height: number
 }

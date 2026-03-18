@@ -21,8 +21,24 @@ export function ShapeDrawing({ shape, data, isPreview = false }: Props) {
       <svg
         viewBox={`0 0 ${svgData.width} ${svgData.height}`}
         className={`w-full rounded-xl border bg-white ${isPreview ? 'opacity-60 border-dashed border-gray-300' : 'border-blue-200'}`}
-        style={{ maxHeight: '300px' }}
+        style={{ maxHeight: 'min(300px, 70vw)' }}
       >
+        {/* Kreise */}
+        {svgData.circles?.map((c, i) => (
+          <g key={`c${i}`}>
+            <circle
+              cx={c.cx} cy={c.cy} r={c.r}
+              fill={isPreview ? 'rgba(148,163,184,0.1)' : 'rgba(59,130,246,0.08)'}
+              stroke={isPreview ? '#94a3b8' : '#3b82f6'}
+              strokeWidth="2"
+            />
+            {c.label && (
+              <text x={c.cx + c.r * 0.7} y={c.cy - c.r * 0.7} textAnchor="middle" fontSize="12" fontWeight="600" fill={isPreview ? '#64748b' : '#1d4ed8'}>
+                {c.label}
+              </text>
+            )}
+          </g>
+        ))}
         {svgData.lines.map((line, i) => {
           const from = svgData.points[line.from]
           const to   = svgData.points[line.to]
