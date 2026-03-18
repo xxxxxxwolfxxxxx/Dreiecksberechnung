@@ -14,6 +14,13 @@ export const trapez: Shape = {
     const { a, c, h, b, d, flaeche } = k as Record<string, number>
     let hVal = h
     if (!hVal && flaeche && a && c) hVal = (2 * flaeche) / (a + c)
+    if (!hVal && a !== undefined && b !== undefined && c !== undefined && d !== undefined) {
+      if (a === c) return { solutions: [], error: 'a und c müssen unterschiedlich sein für diese Berechnung' }
+      const x1 = (a * a - c * c + d * d - b * b) / (2 * (a - c))
+      const h2 = b * b - x1 * x1
+      if (h2 < 0) return { solutions: [], error: 'Kein Trapez mit diesen Seiten möglich' }
+      hVal = Math.sqrt(h2)
+    }
     if (!a || !c || !hVal) return { solutions: [], error: 'Grundseiten a, c und Höhe h angeben' }
     const A = ((a + c) / 2) * hVal
     const m = (a + c) / 2
