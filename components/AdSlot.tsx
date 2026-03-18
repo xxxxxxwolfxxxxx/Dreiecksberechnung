@@ -9,27 +9,19 @@ interface Props {
 }
 
 export function AdSlot({ slot, format = 'auto', className = '', minHeight = 90 }: Props) {
-  const ref = useRef<HTMLDivElement>(null)
-  const loaded = useRef(false)
+  const pushed = useRef(false)
 
   useEffect(() => {
-    if (loaded.current || !ref.current) return
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && !loaded.current) {
-        loaded.current = true
-        try {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          ;((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({})
-        } catch {}
-        observer.disconnect()
-      }
-    })
-    observer.observe(ref.current)
-    return () => observer.disconnect()
+    if (pushed.current) return
+    pushed.current = true
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ;((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({})
+    } catch {}
   }, [])
 
   return (
-    <div ref={ref} className={className} style={{ minHeight }}>
+    <div className={className} style={{ minHeight }}>
       <ins
         className="adsbygoogle"
         style={{ display: 'block' }}

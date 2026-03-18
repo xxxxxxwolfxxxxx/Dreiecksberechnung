@@ -12,6 +12,33 @@ interface Props {
   shapeId: string
 }
 
+function MidBanner() {
+  const pushed = useRef(false)
+  useEffect(() => {
+    if (pushed.current) return
+    pushed.current = true
+    // Kurze Verzögerung damit das <ins>-Element im DOM ist
+    setTimeout(() => {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ;((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({})
+      } catch {}
+    }, 50)
+  }, [])
+  return (
+    <div style={{ minHeight: 90 }}>
+      <ins
+        className="adsbygoogle"
+        style={{ display: 'block' }}
+        data-ad-client="ca-pub-8687929894744033"
+        data-ad-slot="7625380516"
+        data-ad-format="horizontal"
+        data-full-width-responsive="true"
+      />
+    </div>
+  )
+}
+
 function ShapeCalculatorInner({ shapeId }: Props) {
   const shape = shapes[shapeId]
   const [values, setValues] = useState<Partial<Record<string, number>>>({})
@@ -32,17 +59,6 @@ function ShapeCalculatorInner({ shapeId }: Props) {
   }
 
   const activeSolution = result?.solutions[activeIdx]
-  const midAdPushed = useRef(false)
-
-  useEffect(() => {
-    if (activeSolution && !midAdPushed.current) {
-      midAdPushed.current = true
-      try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ;((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({})
-      } catch {}
-    }
-  }, [activeSolution])
 
   return (
     <div className="mx-auto max-w-2xl space-y-5">
@@ -114,18 +130,7 @@ function ShapeCalculatorInner({ shapeId }: Props) {
       )}
 
       {/* Mittlerer Werbebanner – erscheint nur nach der Berechnung */}
-      {activeSolution && (
-        <div style={{ minHeight: 90 }}>
-          <ins
-            className="adsbygoogle"
-            style={{ display: 'block' }}
-            data-ad-client="ca-pub-8687929894744033"
-            data-ad-slot="7625380516"
-            data-ad-format="horizontal"
-            data-full-width-responsive="true"
-          />
-        </div>
-      )}
+      {activeSolution && <MidBanner />}
 
       {/* Loesungsweg */}
       {activeSolution && (
