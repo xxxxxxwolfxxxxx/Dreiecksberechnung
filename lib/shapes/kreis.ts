@@ -60,10 +60,19 @@ export const kreis: Shape = {
   },
   toSVG(values, size) {
     const cx = size / 2, cy = size / 2
-    const r = (size * 0.4)
+    const r = size * 0.38
+    const midX = cx + r / 2
     return {
-      points: [{ x: cx + r, y: cy, label: 'r' }],
-      lines: [{ from: 0, to: 0, label: `r = ${values.r}` }],
+      points: [
+        { x: cx, y: cy, label: 'M' },           // Mittelpunkt
+        { x: cx + r, y: cy, label: '' },         // Punkt auf dem Kreis
+      ],
+      lines: [
+        { from: 0, to: 1, label: `r = ${fmt(values.r)}` },  // Radius-Linie
+      ],
+      circles: [
+        { cx, cy, r },
+      ],
       width: size, height: size,
     }
   },

@@ -61,14 +61,19 @@ export const raute: Shape = {
   },
   toSVG(v, size) {
     const cx = size / 2, cy = size / 2
-    const d1 = ((v.d1 || v.a * 1.2)) * size * 0.35 / v.a
-    const d2 = ((v.d2 || v.a)) * size * 0.35 / v.a
+    const actualD1 = v.d1 || v.a * Math.sqrt(2)
+    const actualD2 = v.d2 || v.a * Math.sqrt(2)
+    // Skaliere so dass die größte Halbdiagonale maximal 40% der SVG-Größe beträgt
+    const maxHalf = Math.max(actualD1, actualD2) / 2
+    const scale = (size * 0.4) / maxHalf
+    const hd1 = (actualD1 / 2) * scale  // halbe horizontale Diagonale
+    const hd2 = (actualD2 / 2) * scale  // halbe vertikale Diagonale
     return {
       points: [
-        { x: cx, y: cy - d2, label: '' },
-        { x: cx + d1, y: cy, label: '' },
-        { x: cx, y: cy + d2, label: '' },
-        { x: cx - d1, y: cy, label: '' },
+        { x: cx,       y: cy - hd2, label: '' },
+        { x: cx + hd1, y: cy,       label: '' },
+        { x: cx,       y: cy + hd2, label: '' },
+        { x: cx - hd1, y: cy,       label: '' },
       ],
       lines: [
         { from: 0, to: 1, label: `a = ${v.a}` },
