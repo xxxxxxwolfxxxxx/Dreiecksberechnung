@@ -5,7 +5,7 @@ const toDeg = (rad: number) => (rad * 180) / Math.PI
 
 const EPS = 1e-9
 
-function computeDerivedValues(a: number, b: number, c: number): Record<string, number> & { typ: string } {
+function computeDerivedValues(a: number, b: number, c: number): Record<string, number | string> {
   // All angles via cosine rule
   const alpha = toDeg(Math.acos((b * b + c * c - a * a) / (2 * b * c)))
   const beta  = toDeg(Math.acos((a * a + c * c - b * b) / (2 * a * c)))
@@ -45,8 +45,8 @@ function computeDerivedValues(a: number, b: number, c: number): Record<string, n
     umfang, flaeche,
     h_a, h_b, h_c,
     inkreis, umkreis,
-    typ: typ as unknown as number,
-  } as Record<string, number> & { typ: string }
+    typ,
+  }
 }
 
 function validateSides(a: number, b: number, c: number): string | null {
@@ -176,21 +176,35 @@ function solveSSW(known: Partial<Record<string, number>>): SolveResult {
   // Ambiguous case: 2 sides + non-included angle
   // Canonical form: sides a, b and angle alpha (opposite to a)
   // We normalise to always work with: known angle α opposite to side a, with b as the other side
-  let a: number, b: number, alphaKnown: number, swapped = false
+  // swapType encodes which swap was applied so we can reverse it correctly:
+  //   'none'      – no swap (a=known.a, b=known.b, computed 3rd side → c)
+  //   'ab-beta'   – a↔b swap: a=known.b, b=known.a → computed side is c (stays c)
+  //   'ac-alpha'  – a known as a, b stands for known.c → computed side is b
+  //   'bc-beta'   – a=known.b, b=known.c → computed side is a
+  //   'bc-gamma'  – a=known.c, b=known.b → computed side is a
+  //   'ac-gamma'  – a=known.c, b=known.a → computed side is b
+  let a: number, b: number, alphaKnown: number
+  let swapType: string = 'none'
 
   if (known.a !== undefined && known.b !== undefined && known.alpha !== undefined) {
     a = known.a; b = known.b; alphaKnown = known.alpha
+    swapType = 'none'
   } else if (known.a !== undefined && known.b !== undefined && known.beta !== undefined) {
-    // Swap: beta is opposite b → rename so alpha is the known angle opposite a
-    a = known.b; b = known.a; alphaKnown = known.beta; swapped = true
+    // beta opposite b → rename so alpha is the known angle opposite a
+    a = known.b; b = known.a; alphaKnown = known.beta
+    swapType = 'ab-beta'
   } else if (known.a !== undefined && known.c !== undefined && known.alpha !== undefined) {
     a = known.a; b = known.c; alphaKnown = known.alpha
+    swapType = 'ac-alpha'
   } else if (known.b !== undefined && known.c !== undefined && known.beta !== undefined) {
     a = known.b; b = known.c; alphaKnown = known.beta
+    swapType = 'bc-beta'
   } else if (known.b !== undefined && known.c !== undefined && known.gamma !== undefined) {
-    a = known.c; b = known.b; alphaKnown = known.gamma; swapped = true
+    a = known.c; b = known.b; alphaKnown = known.gamma
+    swapType = 'bc-gamma'
   } else if (known.a !== undefined && known.c !== undefined && known.gamma !== undefined) {
-    a = known.c; b = known.a; alphaKnown = known.gamma; swapped = true
+    a = known.c; b = known.a; alphaKnown = known.gamma
+    swapType = 'ac-gamma'
   } else {
     return { solutions: [], error: 'Ungültige SSW-Kombination.' }
   }
@@ -205,6 +219,26 @@ function solveSSW(known: Partial<Record<string, number>>): SolveResult {
     return { solutions: [], error: 'Kein Dreieck möglich (sin(β) > 1).' }
   }
 
+  // Reconstruct original sides (a, b, c) from canonical (a_can, b_can) and computed third side
+  // swapType determines which original key gets which value:
+  //   'none':     known.a=a_can, known.b=b_can, computed=c  → finalA=a_can, finalB=b_can, finalC=computed
+  //   'ab-beta':  known.a=b_can, known.b=a_can, computed=c  → finalA=b_can, finalB=a_can, finalC=computed
+  //   'ac-alpha': known.a=a_can, known.c=b_can, computed=b  → finalA=a_can, finalB=computed, finalC=b_can
+  //   'bc-beta':  known.b=a_can, known.c=b_can, computed=a  → finalA=computed, finalB=a_can, finalC=b_can
+  //   'bc-gamma': known.c=a_can, known.b=b_can, computed=a  → finalA=computed, finalB=b_can, finalC=a_can
+  //   'ac-gamma': known.c=a_can, known.a=b_can, computed=b  → finalA=b_can, finalB=computed, finalC=a_can
+  function remapSides(a_can: number, b_can: number, computed: number): [number, number, number] {
+    switch (swapType) {
+      case 'none':     return [a_can, b_can, computed]
+      case 'ab-beta':  return [b_can, a_can, computed]
+      case 'ac-alpha': return [a_can, computed, b_can]
+      case 'bc-beta':  return [computed, a_can, b_can]
+      case 'bc-gamma': return [computed, b_can, a_can]
+      case 'ac-gamma': return [b_can, computed, a_can]
+      default:         return [a_can, b_can, computed]
+    }
+  }
+
   const solutions: Solution[] = []
 
   // First solution
@@ -213,17 +247,8 @@ function solveSSW(known: Partial<Record<string, number>>): SolveResult {
   const gamma1 = 180 - alphaKnown - beta1
 
   if (gamma1 > EPS) {
-    // Sine rule to get side c
     const c1 = a * Math.sin(toRad(gamma1)) / Math.sin(alphaRad)
-    // Reconstruct original sides mapping
-    let finalA: number, finalB: number, finalC: number
-    if (!swapped) {
-      // original: known.a, known.b (or known.c), alpha
-      // a=known.a, beta1 opposite b
-      finalA = a; finalB = b; finalC = c1
-    } else {
-      finalA = c1; finalB = a; finalC = b
-    }
+    const [finalA, finalB, finalC] = remapSides(a, b, c1)
     const err1 = validateSides(finalA, finalB, finalC)
     if (!err1) {
       const vals1 = computeDerivedValues(finalA, finalB, finalC)
@@ -241,12 +266,7 @@ function solveSSW(known: Partial<Record<string, number>>): SolveResult {
 
   if (gamma2 > EPS && Math.abs(beta1 - beta2) > EPS) {
     const c2 = a * Math.sin(toRad(gamma2)) / Math.sin(alphaRad)
-    let finalA: number, finalB: number, finalC: number
-    if (!swapped) {
-      finalA = a; finalB = b; finalC = c2
-    } else {
-      finalA = c2; finalB = a; finalC = b
-    }
+    const [finalA, finalB, finalC] = remapSides(a, b, c2)
     const err2 = validateSides(finalA, finalB, finalC)
     if (!err2) {
       const vals2 = computeDerivedValues(finalA, finalB, finalC)
@@ -298,6 +318,16 @@ function solve(known: Partial<Record<string, number>>): SolveResult {
   for (const [key, val] of Object.entries(known)) {
     if (val !== undefined && val <= 0) {
       return { solutions: [], error: `Wert für ${key} muss positiv sein.` }
+    }
+  }
+
+  // Winkelfelder prüfen
+  const angleKeys = ['alpha', 'beta', 'gamma']
+  for (const key of angleKeys) {
+    if (known[key] !== undefined) {
+      if (known[key]! >= 180) {
+        return { solutions: [], error: 'Winkel muss kleiner als 180° sein' }
+      }
     }
   }
 
