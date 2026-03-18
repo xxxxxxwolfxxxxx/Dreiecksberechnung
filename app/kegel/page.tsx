@@ -1,8 +1,7 @@
 import type { Metadata } from 'next'
 import { ShapeCalculator } from '@/components/calculator/ShapeCalculator'
 import { AdSlot } from '@/components/AdSlot'
-import { shapeList } from '@/lib/shapes'
-import Link from 'next/link'
+import { MoreShapes } from '@/components/MoreShapes'
 
 export const metadata: Metadata = {
   title: 'Kegel berechnen – Volumen, Mantelfläche, Oberfläche online',
@@ -28,17 +27,7 @@ export default function KegelPage() {
       />
       <AdSlot slot="1508045799" format="horizontal" className="mb-6" minHeight={90} />
       <ShapeCalculator shapeId="kegel" />
-      <section className="mt-8">
-        <h2 className="mb-3 text-lg font-semibold">Weitere Formen berechnen</h2>
-        <div className="flex flex-wrap gap-2">
-          {shapeList.filter(s => s.id !== 'kegel').map(s => (
-            <Link key={s.id} href={`/${s.id}`}
-              className="rounded-lg border border-gray-200 px-4 py-2 text-sm hover:bg-gray-50">
-              {s.label}
-            </Link>
-          ))}
-        </div>
-      </section>
+      <MoreShapes currentId="kegel" />
       <AdSlot slot="4403201248" format="horizontal" className="mt-6" minHeight={90} />
     </>
   )
