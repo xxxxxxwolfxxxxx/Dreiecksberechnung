@@ -115,14 +115,16 @@ function ShapeCalculatorInner({ shapeId }: Props) {
 
       {/* Mittlerer Werbebanner – erscheint nur nach der Berechnung */}
       {activeSolution && (
-        <ins
-          className="adsbygoogle"
-          style={{ display: 'block' }}
-          data-ad-client="ca-pub-8687929894744033"
-          data-ad-slot="7625380516"
-          data-ad-format="auto"
-          data-full-width-responsive="true"
-        />
+        <div style={{ minHeight: 90 }}>
+          <ins
+            className="adsbygoogle"
+            style={{ display: 'block' }}
+            data-ad-client="ca-pub-8687929894744033"
+            data-ad-slot="7625380516"
+            data-ad-format="horizontal"
+            data-full-width-responsive="true"
+          />
+        </div>
       )}
 
       {/* Loesungsweg */}
