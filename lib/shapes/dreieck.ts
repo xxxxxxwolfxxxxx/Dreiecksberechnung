@@ -1,9 +1,11 @@
 import { Shape, SolveResult, SVGData, Solution, InputDefinition } from './types'
+import { formatNumber } from '../format'
 
 const toRad = (deg: number) => (deg * Math.PI) / 180
 const toDeg = (rad: number) => (rad * 180) / Math.PI
 
 const EPS = 1e-9
+const fmt = formatNumber
 
 function computeDerivedValues(a: number, b: number, c: number): Record<string, number | string> {
   // All angles via cosine rule
@@ -61,14 +63,33 @@ function solveSSS(known: Partial<Record<string, number>>): SolveResult {
   if (err) return { solutions: [], error: err }
 
   const vals = computeDerivedValues(a, b, c)
+  const alpha = vals.alpha as number
+  const beta = vals.beta as number
+  const gamma = vals.gamma as number
+  const umfang = vals.umfang as number
+  const s = umfang / 2
+  const flaeche = vals.flaeche as number
+
+  const cosAlpha = (b * b + c * c - a * a) / (2 * b * c)
+
+  const steps = [
+    `Gegeben sind drei Seiten: a = ${fmt(a)}, b = ${fmt(b)}, c = ${fmt(c)}.`,
+    `Winkel \u03B1 berechnen (Kosinussatz):\ncos(\u03B1) = (b\u00B2 + c\u00B2 \u2212 a\u00B2) / (2\u00B7b\u00B7c)\ncos(\u03B1) = (${fmt(b)}\u00B2 + ${fmt(c)}\u00B2 \u2212 ${fmt(a)}\u00B2) / (2\u00B7${fmt(b)}\u00B7${fmt(c)}) = ${fmt(cosAlpha)}\n\u03B1 = ${fmt(alpha)}\u00B0`,
+    `Winkel \u03B2 berechnen (Kosinussatz):\ncos(\u03B2) = (a\u00B2 + c\u00B2 \u2212 b\u00B2) / (2\u00B7a\u00B7c)\n\u03B2 = ${fmt(beta)}\u00B0`,
+    `Winkel \u03B3 aus der Winkelsumme:\n\u03B3 = 180\u00B0 \u2212 \u03B1 \u2212 \u03B2 = 180\u00B0 \u2212 ${fmt(alpha)}\u00B0 \u2212 ${fmt(beta)}\u00B0 = ${fmt(gamma)}\u00B0`,
+    `Fl\u00E4che berechnen (Heron\u2019sche Formel):\ns = (a+b+c)/2 = ${fmt(s)}\nA = \u221A(s\u00B7(s\u2212a)\u00B7(s\u2212b)\u00B7(s\u2212c))\nA = \u221A(${fmt(s)}\u00B7${fmt(s - a)}\u00B7${fmt(s - b)}\u00B7${fmt(s - c)}) = ${fmt(flaeche)}`,
+    `Umfang:\nU = a + b + c = ${fmt(a)} + ${fmt(b)} + ${fmt(c)} = ${fmt(umfang)}`,
+  ]
+
   const sol: Solution = {
     values: vals,
     method: 'Kosinussatz (SSS)',
     formulas: [
-      `α = arccos((b²+c²-a²)/(2bc))`,
-      `β = arccos((a²+c²-b²)/(2ac))`,
-      `γ = arccos((a²+b²-c²)/(2ab))`,
+      `\u03B1 = arccos((b\u00B2+c\u00B2-a\u00B2)/(2bc))`,
+      `\u03B2 = arccos((a\u00B2+c\u00B2-b\u00B2)/(2ac))`,
+      `\u03B3 = arccos((a\u00B2+b\u00B2-c\u00B2)/(2ab))`,
     ],
+    steps,
   }
   return { solutions: [sol] }
 }
@@ -77,31 +98,54 @@ function solveSWS(known: Partial<Record<string, number>>): SolveResult {
   // Need 2 sides + 1 angle. Identify the included angle.
   // Supported combos: a,b,gamma | a,c,beta | b,c,alpha
   let a: number, b: number, c: number
+  let givenDesc: string
+  let computedSide: string
 
   if (known.a !== undefined && known.b !== undefined && known.gamma !== undefined) {
     a = known.a; b = known.b
     const gammaRad = toRad(known.gamma)
     c = Math.sqrt(a * a + b * b - 2 * a * b * Math.cos(gammaRad))
+    givenDesc = `a = ${fmt(a)}, b = ${fmt(b)}, \u03B3 = ${fmt(known.gamma)}\u00B0`
+    computedSide = `c = \u221A(a\u00B2 + b\u00B2 \u2212 2\u00B7a\u00B7b\u00B7cos(\u03B3))\nc = \u221A(${fmt(a)}\u00B2 + ${fmt(b)}\u00B2 \u2212 2\u00B7${fmt(a)}\u00B7${fmt(b)}\u00B7cos(${fmt(known.gamma)}\u00B0)) = ${fmt(c)}`
   } else if (known.a !== undefined && known.c !== undefined && known.beta !== undefined) {
     a = known.a; c = known.c
     const betaRad = toRad(known.beta)
     b = Math.sqrt(a * a + c * c - 2 * a * c * Math.cos(betaRad))
+    givenDesc = `a = ${fmt(a)}, c = ${fmt(c)}, \u03B2 = ${fmt(known.beta)}\u00B0`
+    computedSide = `b = \u221A(a\u00B2 + c\u00B2 \u2212 2\u00B7a\u00B7c\u00B7cos(\u03B2)) = ${fmt(b)}`
   } else if (known.b !== undefined && known.c !== undefined && known.alpha !== undefined) {
     b = known.b; c = known.c
     const alphaRad = toRad(known.alpha)
     a = Math.sqrt(b * b + c * c - 2 * b * c * Math.cos(alphaRad))
+    givenDesc = `b = ${fmt(b)}, c = ${fmt(c)}, \u03B1 = ${fmt(known.alpha)}\u00B0`
+    computedSide = `a = \u221A(b\u00B2 + c\u00B2 \u2212 2\u00B7b\u00B7c\u00B7cos(\u03B1)) = ${fmt(a)}`
   } else {
-    return { solutions: [], error: 'Ungültige SWS-Kombination.' }
+    return { solutions: [], error: 'Ung\u00FCltige SWS-Kombination.' }
   }
 
   const err = validateSides(a, b, c)
   if (err) return { solutions: [], error: err }
 
   const vals = computeDerivedValues(a, b, c)
+  const alpha = vals.alpha as number
+  const beta = vals.beta as number
+  const gamma = vals.gamma as number
+  const flaeche = vals.flaeche as number
+  const umfang = vals.umfang as number
+
+  const steps = [
+    `Gegeben: ${givenDesc}`,
+    `Fehlende Seite mit dem Kosinussatz berechnen:\n${computedSide}`,
+    `Restliche Winkel mit dem Kosinussatz:\n\u03B1 = ${fmt(alpha)}\u00B0, \u03B2 = ${fmt(beta)}\u00B0, \u03B3 = ${fmt(gamma)}\u00B0`,
+    `Fl\u00E4che (Heron):\nA = ${fmt(flaeche)}`,
+    `Umfang:\nU = ${fmt(a)} + ${fmt(b)} + ${fmt(c)} = ${fmt(umfang)}`,
+  ]
+
   const sol: Solution = {
     values: vals,
     method: 'Kosinussatz (SWS)',
-    formulas: [`c = √(a²+b²-2ab·cos(γ))`],
+    formulas: [`c = \u221A(a\u00B2+b\u00B2-2ab\u00B7cos(\u03B3))`],
+    steps,
   }
   return { solutions: [sol] }
 }
@@ -126,26 +170,30 @@ function solveWSW_WWS(known: Partial<Record<string, number>>): SolveResult {
   }
 
   if (alpha <= 0 || beta <= 0 || gamma <= 0 || alpha + beta + gamma > 180 + EPS) {
-    return { solutions: [], error: 'Ungültige Winkel: Summe muss 180° ergeben.' }
+    return { solutions: [], error: 'Ung\u00FCltige Winkel: Summe muss 180\u00B0 ergeben.' }
   }
 
   // Find the known side and compute all sides via sine rule: a/sin(α) = b/sin(β) = c/sin(γ)
   let a: number, b: number, c: number
+  let knownSideDesc: string
 
   if (known.a !== undefined) {
     a = known.a
     b = a * Math.sin(toRad(beta))  / Math.sin(toRad(alpha))
     c = a * Math.sin(toRad(gamma)) / Math.sin(toRad(alpha))
+    knownSideDesc = `a = ${fmt(a)}`
   } else if (known.b !== undefined) {
     b = known.b
     a = b * Math.sin(toRad(alpha)) / Math.sin(toRad(beta))
     c = b * Math.sin(toRad(gamma)) / Math.sin(toRad(beta))
+    knownSideDesc = `b = ${fmt(b)}`
   } else if (known.c !== undefined) {
     c = known.c
     a = c * Math.sin(toRad(alpha)) / Math.sin(toRad(gamma))
     b = c * Math.sin(toRad(beta))  / Math.sin(toRad(gamma))
+    knownSideDesc = `c = ${fmt(c)}`
   } else {
-    return { solutions: [], error: 'Keine bekannte Seite für WSW/WWS.' }
+    return { solutions: [], error: 'Keine bekannte Seite f\u00FCr WSW/WWS.' }
   }
 
   const err = validateSides(a, b, c)
@@ -157,6 +205,22 @@ function solveWSW_WWS(known: Partial<Record<string, number>>): SolveResult {
   vals.beta  = beta
   vals.gamma = gamma
 
+  const flaeche = vals.flaeche as number
+  const umfang = vals.umfang as number
+
+  const givenAngles = []
+  if (known.alpha !== undefined) givenAngles.push(`\u03B1 = ${fmt(known.alpha)}\u00B0`)
+  if (known.beta !== undefined) givenAngles.push(`\u03B2 = ${fmt(known.beta)}\u00B0`)
+  if (known.gamma !== undefined) givenAngles.push(`\u03B3 = ${fmt(known.gamma)}\u00B0`)
+
+  const steps = [
+    `Gegeben: ${givenAngles.join(', ')} und ${knownSideDesc}`,
+    `Fehlenden Winkel aus der Winkelsumme:\n\u03B1 + \u03B2 + \u03B3 = 180\u00B0\n\u03B1 = ${fmt(alpha)}\u00B0, \u03B2 = ${fmt(beta)}\u00B0, \u03B3 = ${fmt(gamma)}\u00B0`,
+    `Seiten mit dem Sinussatz berechnen:\na/sin(\u03B1) = b/sin(\u03B2) = c/sin(\u03B3)\na = ${fmt(a)}, b = ${fmt(b)}, c = ${fmt(c)}`,
+    `Fl\u00E4che (Heron):\nA = ${fmt(flaeche)}`,
+    `Umfang:\nU = ${fmt(a)} + ${fmt(b)} + ${fmt(c)} = ${fmt(umfang)}`,
+  ]
+
   const method = known.gamma !== undefined || known.beta !== undefined || known.alpha !== undefined
     ? 'Sinussatz (WWS/WSW)'
     : 'Sinussatz (WSW)'
@@ -165,68 +229,58 @@ function solveWSW_WWS(known: Partial<Record<string, number>>): SolveResult {
     values: vals,
     method,
     formulas: [
-      `γ = 180° - α - β`,
-      `a/sin(α) = b/sin(β) = c/sin(γ)`,
+      `\u03B3 = 180\u00B0 - \u03B1 - \u03B2`,
+      `a/sin(\u03B1) = b/sin(\u03B2) = c/sin(\u03B3)`,
     ],
+    steps,
   }
   return { solutions: [sol] }
 }
 
 function solveSSW(known: Partial<Record<string, number>>): SolveResult {
   // Ambiguous case: 2 sides + non-included angle
-  // Canonical form: sides a, b and angle alpha (opposite to a)
-  // We normalise to always work with: known angle α opposite to side a, with b as the other side
-  // swapType encodes which swap was applied so we can reverse it correctly:
-  //   'none'      – no swap (a=known.a, b=known.b, computed 3rd side → c)
-  //   'ab-beta'   – a↔b swap: a=known.b, b=known.a → computed side is c (stays c)
-  //   'ac-alpha'  – a known as a, b stands for known.c → computed side is b
-  //   'bc-beta'   – a=known.b, b=known.c → computed side is a
-  //   'bc-gamma'  – a=known.c, b=known.b → computed side is a
-  //   'ac-gamma'  – a=known.c, b=known.a → computed side is b
   let a: number, b: number, alphaKnown: number
   let swapType: string = 'none'
+  let givenDesc: string
 
   if (known.a !== undefined && known.b !== undefined && known.alpha !== undefined) {
     a = known.a; b = known.b; alphaKnown = known.alpha
     swapType = 'none'
+    givenDesc = `a = ${fmt(known.a)}, b = ${fmt(known.b)}, \u03B1 = ${fmt(known.alpha)}\u00B0`
   } else if (known.a !== undefined && known.b !== undefined && known.beta !== undefined) {
-    // beta opposite b → rename so alpha is the known angle opposite a
     a = known.b; b = known.a; alphaKnown = known.beta
     swapType = 'ab-beta'
+    givenDesc = `a = ${fmt(known.a)}, b = ${fmt(known.b)}, \u03B2 = ${fmt(known.beta)}\u00B0`
   } else if (known.a !== undefined && known.c !== undefined && known.alpha !== undefined) {
     a = known.a; b = known.c; alphaKnown = known.alpha
     swapType = 'ac-alpha'
+    givenDesc = `a = ${fmt(known.a)}, c = ${fmt(known.c)}, \u03B1 = ${fmt(known.alpha)}\u00B0`
   } else if (known.b !== undefined && known.c !== undefined && known.beta !== undefined) {
     a = known.b; b = known.c; alphaKnown = known.beta
     swapType = 'bc-beta'
+    givenDesc = `b = ${fmt(known.b)}, c = ${fmt(known.c)}, \u03B2 = ${fmt(known.beta)}\u00B0`
   } else if (known.b !== undefined && known.c !== undefined && known.gamma !== undefined) {
     a = known.c; b = known.b; alphaKnown = known.gamma
     swapType = 'bc-gamma'
+    givenDesc = `b = ${fmt(known.b)}, c = ${fmt(known.c)}, \u03B3 = ${fmt(known.gamma)}\u00B0`
   } else if (known.a !== undefined && known.c !== undefined && known.gamma !== undefined) {
     a = known.c; b = known.a; alphaKnown = known.gamma
     swapType = 'ac-gamma'
+    givenDesc = `a = ${fmt(known.a)}, c = ${fmt(known.c)}, \u03B3 = ${fmt(known.gamma)}\u00B0`
   } else {
-    return { solutions: [], error: 'Ungültige SSW-Kombination.' }
+    return { solutions: [], error: 'Ung\u00FCltige SSW-Kombination.' }
   }
 
-  if (a <= 0 || b <= 0) return { solutions: [], error: 'Seiten müssen positiv sein.' }
-  if (alphaKnown <= 0 || alphaKnown >= 180) return { solutions: [], error: 'Winkel muss zwischen 0° und 180° liegen.' }
+  if (a <= 0 || b <= 0) return { solutions: [], error: 'Seiten m\u00FCssen positiv sein.' }
+  if (alphaKnown <= 0 || alphaKnown >= 180) return { solutions: [], error: 'Winkel muss zwischen 0\u00B0 und 180\u00B0 liegen.' }
 
   const alphaRad = toRad(alphaKnown)
   const sinBeta = (b * Math.sin(alphaRad)) / a
 
   if (sinBeta > 1 + EPS) {
-    return { solutions: [], error: 'Kein Dreieck möglich (sin(β) > 1).' }
+    return { solutions: [], error: 'Kein Dreieck m\u00F6glich (sin(\u03B2) > 1).' }
   }
 
-  // Reconstruct original sides (a, b, c) from canonical (a_can, b_can) and computed third side
-  // swapType determines which original key gets which value:
-  //   'none':     known.a=a_can, known.b=b_can, computed=c  → finalA=a_can, finalB=b_can, finalC=computed
-  //   'ab-beta':  known.a=b_can, known.b=a_can, computed=c  → finalA=b_can, finalB=a_can, finalC=computed
-  //   'ac-alpha': known.a=a_can, known.c=b_can, computed=b  → finalA=a_can, finalB=computed, finalC=b_can
-  //   'bc-beta':  known.b=a_can, known.c=b_can, computed=a  → finalA=computed, finalB=a_can, finalC=b_can
-  //   'bc-gamma': known.c=a_can, known.b=b_can, computed=a  → finalA=computed, finalB=b_can, finalC=a_can
-  //   'ac-gamma': known.c=a_can, known.a=b_can, computed=b  → finalA=b_can, finalB=computed, finalC=a_can
   function remapSides(a_can: number, b_can: number, computed: number): [number, number, number] {
     switch (swapType) {
       case 'none':     return [a_can, b_can, computed]
@@ -252,10 +306,26 @@ function solveSSW(known: Partial<Record<string, number>>): SolveResult {
     const err1 = validateSides(finalA, finalB, finalC)
     if (!err1) {
       const vals1 = computeDerivedValues(finalA, finalB, finalC)
+      const v1alpha = vals1.alpha as number
+      const v1beta = vals1.beta as number
+      const v1gamma = vals1.gamma as number
+      const v1flaeche = vals1.flaeche as number
+      const v1umfang = vals1.umfang as number
+
+      const steps1 = [
+        `Gegeben: ${givenDesc}`,
+        `Sinussatz anwenden:\nsin(\u03B2) / b = sin(\u03B1) / a\nsin(\u03B2) = ${fmt(b)} \u00B7 sin(${fmt(alphaKnown)}\u00B0) / ${fmt(a)} = ${fmt(sinBeta)}`,
+        `\u03B2 = arcsin(${fmt(sinBeta)}) = ${fmt(beta1)}\u00B0`,
+        `Fehlenden Winkel berechnen:\n\u03B3 = 180\u00B0 \u2212 ${fmt(alphaKnown)}\u00B0 \u2212 ${fmt(beta1)}\u00B0 = ${fmt(gamma1)}\u00B0`,
+        `Fehlende Seite mit dem Sinussatz:\nc = a \u00B7 sin(\u03B3) / sin(\u03B1) = ${fmt(c1)}`,
+        `Ergebnis: a = ${fmt(finalA)}, b = ${fmt(finalB)}, c = ${fmt(finalC)}\n\u03B1 = ${fmt(v1alpha)}\u00B0, \u03B2 = ${fmt(v1beta)}\u00B0, \u03B3 = ${fmt(v1gamma)}\u00B0\nA = ${fmt(v1flaeche)}, U = ${fmt(v1umfang)}`,
+      ]
+
       solutions.push({
         values: vals1,
-        method: 'Sinussatz (SSW) – Lösung 1',
-        formulas: [`sin(β)/b = sin(α)/a`, `γ = 180° - α - β`, `c = a·sin(γ)/sin(α)`],
+        method: 'Sinussatz (SSW) \u2013 L\u00F6sung 1',
+        formulas: [`sin(\u03B2)/b = sin(\u03B1)/a`, `\u03B3 = 180\u00B0 - \u03B1 - \u03B2`, `c = a\u00B7sin(\u03B3)/sin(\u03B1)`],
+        steps: steps1,
       })
     }
   }
@@ -270,16 +340,32 @@ function solveSSW(known: Partial<Record<string, number>>): SolveResult {
     const err2 = validateSides(finalA, finalB, finalC)
     if (!err2) {
       const vals2 = computeDerivedValues(finalA, finalB, finalC)
+      const v2alpha = vals2.alpha as number
+      const v2beta = vals2.beta as number
+      const v2gamma = vals2.gamma as number
+      const v2flaeche = vals2.flaeche as number
+      const v2umfang = vals2.umfang as number
+
+      const steps2 = [
+        `Gegeben: ${givenDesc}`,
+        `Mehrdeutiger Fall (SSW): sin(\u03B2) = ${fmt(sinBeta)} hat zwei m\u00F6gliche Winkel.`,
+        `Zweite L\u00F6sung: \u03B2' = 180\u00B0 \u2212 ${fmt(beta1)}\u00B0 = ${fmt(beta2)}\u00B0`,
+        `\u03B3' = 180\u00B0 \u2212 ${fmt(alphaKnown)}\u00B0 \u2212 ${fmt(beta2)}\u00B0 = ${fmt(gamma2)}\u00B0`,
+        `c' = a \u00B7 sin(\u03B3') / sin(\u03B1) = ${fmt(c2)}`,
+        `Ergebnis: a = ${fmt(finalA)}, b = ${fmt(finalB)}, c = ${fmt(finalC)}\n\u03B1 = ${fmt(v2alpha)}\u00B0, \u03B2 = ${fmt(v2beta)}\u00B0, \u03B3 = ${fmt(v2gamma)}\u00B0\nA = ${fmt(v2flaeche)}, U = ${fmt(v2umfang)}`,
+      ]
+
       solutions.push({
         values: vals2,
-        method: 'Sinussatz (SSW) – Lösung 2',
-        formulas: [`sin(β)/b = sin(α)/a`, `γ = 180° - α - β'`, `c = a·sin(γ)/sin(α)`],
+        method: 'Sinussatz (SSW) \u2013 L\u00F6sung 2',
+        formulas: [`sin(\u03B2)/b = sin(\u03B1)/a`, `\u03B3 = 180\u00B0 - \u03B1 - \u03B2'`, `c = a\u00B7sin(\u03B3)/sin(\u03B1)`],
+        steps: steps2,
       })
     }
   }
 
   if (solutions.length === 0) {
-    return { solutions: [], error: 'Kein gültiges Dreieck gefunden.' }
+    return { solutions: [], error: 'Kein g\u00FCltiges Dreieck gefunden.' }
   }
 
   return { solutions }
@@ -301,8 +387,6 @@ function classifyInputs(known: Partial<Record<string, number>>): string {
     const hasSideC = known.c !== undefined
 
     // SWS: angle is included between the two sides
-    // a opposite alpha, b opposite beta, c opposite gamma
-    // Included combos: a+b+gamma, a+c+beta, b+c+alpha
     if (hasSideA && hasSideB && known.gamma !== undefined) return 'SWS'
     if (hasSideA && hasSideC && known.beta  !== undefined) return 'SWS'
     if (hasSideB && hasSideC && known.alpha !== undefined) return 'SWS'
@@ -317,7 +401,7 @@ function solve(known: Partial<Record<string, number>>): SolveResult {
   // Validate no negative values
   for (const [key, val] of Object.entries(known)) {
     if (val !== undefined && val <= 0) {
-      return { solutions: [], error: `Wert für ${key} muss positiv sein.` }
+      return { solutions: [], error: `Wert f\u00FCr ${key} muss positiv sein.` }
     }
   }
 
@@ -326,7 +410,7 @@ function solve(known: Partial<Record<string, number>>): SolveResult {
   for (const key of angleKeys) {
     if (known[key] !== undefined) {
       if (known[key]! >= 180) {
-        return { solutions: [], error: 'Winkel muss kleiner als 180° sein' }
+        return { solutions: [], error: 'Winkel muss kleiner als 180\u00B0 sein' }
       }
     }
   }
@@ -339,7 +423,7 @@ function solve(known: Partial<Record<string, number>>): SolveResult {
     case 'WSW_WWS':   return solveWSW_WWS(known)
     case 'SSW':       return solveSSW(known)
     case 'WWW':       return { solutions: [], error: 'Mit nur Winkeln kann kein Dreieck eindeutig bestimmt werden.' }
-    default:          return { solutions: [], error: 'Ungültige oder unvollständige Eingabe.' }
+    default:          return { solutions: [], error: 'Ung\u00FCltige oder unvollst\u00E4ndige Eingabe.' }
   }
 }
 
@@ -387,7 +471,7 @@ function toSVG(values: Record<string, number>, size: number): SVGData {
   const pB = proj(axB, ayB)
   const pC = proj(axC, ayC)
 
-  const fmt = (n: number) => Math.round(n * 100) / 100
+  const fmtSvg = (n: number) => Math.round(n * 100) / 100
 
   return {
     points: [
@@ -396,9 +480,9 @@ function toSVG(values: Record<string, number>, size: number): SVGData {
       { ...pC, label: 'C' },
     ],
     lines: [
-      { from: 0, to: 1, label: `c = ${fmt(c)}` }, // A-B
-      { from: 1, to: 2, label: `a = ${fmt(a)}` }, // B-C
-      { from: 2, to: 0, label: `b = ${fmt(b)}` }, // C-A
+      { from: 0, to: 1, label: `c = ${fmtSvg(c)}` }, // A-B
+      { from: 1, to: 2, label: `a = ${fmtSvg(a)}` }, // B-C
+      { from: 2, to: 0, label: `b = ${fmtSvg(b)}` }, // C-A
     ],
     width: size,
     height: size,
@@ -409,9 +493,9 @@ const inputs: InputDefinition[] = [
   { key: 'a',     label: 'Seite a',   unit: 'length' },
   { key: 'b',     label: 'Seite b',   unit: 'length' },
   { key: 'c',     label: 'Seite c',   unit: 'length' },
-  { key: 'alpha', label: 'Winkel α',  unit: 'angle',  optional: true },
-  { key: 'beta',  label: 'Winkel β',  unit: 'angle',  optional: true },
-  { key: 'gamma', label: 'Winkel γ',  unit: 'angle',  optional: true },
+  { key: 'alpha', label: 'Winkel \u03B1',  unit: 'angle',  optional: true },
+  { key: 'beta',  label: 'Winkel \u03B2',  unit: 'angle',  optional: true },
+  { key: 'gamma', label: 'Winkel \u03B3',  unit: 'angle',  optional: true },
 ]
 
 export const dreieck: Shape = {
@@ -419,6 +503,7 @@ export const dreieck: Shape = {
   label: 'Dreieck',
   inputs,
   minRequired: 3,
+  defaultValues: { a: 3, b: 4, c: 5, alpha: 36.87, beta: 53.13, gamma: 90, flaeche: 6, umfang: 12, h_a: 4, h_b: 3, h_c: 2.4, inkreis: 1, umkreis: 2.5 },
   solve,
   toSVG,
 }

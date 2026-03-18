@@ -34,52 +34,81 @@ function ShapeCalculatorInner({ shapeId }: Props) {
   const activeSolution = result?.solutions[activeIdx]
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">{shape.label} berechnen</h1>
-        <select
-          value={unit}
-          onChange={e => setUnit(e.target.value)}
-          className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm"
-        >
-          {UNITS.map(u => <option key={u}>{u}</option>)}
-        </select>
+    <div className="mx-auto max-w-2xl space-y-5">
+      {/* Header */}
+      <div className="rounded-2xl bg-gradient-to-r from-blue-600 to-blue-700 p-5 text-white shadow-lg">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-extrabold">{shape.label} berechnen</h1>
+          <select
+            value={unit}
+            onChange={e => setUnit(e.target.value)}
+            className="rounded-lg bg-white/20 border border-white/30 px-3 py-1.5 text-sm text-white backdrop-blur-sm"
+          >
+            {UNITS.map(u => <option key={u} value={u} className="text-gray-900">{u}</option>)}
+          </select>
+        </div>
+        <p className="mt-1 text-sm text-blue-100">
+          {result?.solutions.length ? `Ergebnis berechnet` : `Gib mindestens ${shape.minRequired} Werte ein`}
+        </p>
       </div>
 
-      <InputPanel shape={shape} values={values} onChange={handleChange} unit={unit} />
+      {/* Zeichnung (immer sichtbar) */}
+      <div className="rounded-2xl bg-white shadow-sm border border-blue-100 p-4">
+        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Zeichnung</p>
+        <ShapeDrawing
+          shape={shape}
+          data={activeSolution ? shape.toSVG(activeSolution.values as Record<string, number>, 280) : undefined}
+          isPreview={!activeSolution}
+        />
+      </div>
 
+      {/* Eingabe-Panel */}
+      <div className="rounded-2xl bg-white shadow-sm border border-blue-100 p-5">
+        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">Werte eingeben</p>
+        <InputPanel shape={shape} values={values} onChange={handleChange} unit={unit} />
+      </div>
+
+      {/* Fehler */}
       {result?.error && (
-        <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-900/20">
-          {result.error}
+        <div className="rounded-2xl bg-red-50 border border-red-200 p-4 text-sm text-red-700 flex items-start gap-3">
+          <span>{result.error}</span>
         </div>
       )}
 
+      {/* Mehrere Loesungen (SSW) */}
       {result && result.solutions.length > 1 && (
-        <div className="flex gap-2">
-          {result.solutions.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setActiveIdx(i)}
-              className={`rounded-lg px-4 py-2 text-sm font-medium ${
-                i === activeIdx ? 'bg-blue-600 text-white' : 'border border-gray-300'
-              }`}
-            >
-              Lösung {i + 1}
-            </button>
-          ))}
+        <div className="rounded-2xl bg-amber-50 border border-amber-200 p-4">
+          <p className="text-sm font-semibold text-amber-800 mb-3">Zwei L&ouml;sungen m&ouml;glich (mehrdeutiger Fall)</p>
+          <div className="flex gap-2">
+            {result.solutions.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setActiveIdx(i)}
+                className={`rounded-full px-5 py-2 text-sm font-semibold transition-all ${
+                  i === activeIdx
+                    ? 'bg-amber-500 text-white shadow-sm'
+                    : 'bg-white border border-amber-300 text-amber-700 hover:bg-amber-50'
+                }`}
+              >
+                L&ouml;sung {i + 1}
+              </button>
+            ))}
+          </div>
         </div>
       )}
 
-      {activeSolution && (
-        <ShapeDrawing data={shape.toSVG(activeSolution.values as Record<string, number>, 280)} />
-      )}
-
+      {/* Ergebnisse */}
       {activeSolution && (
         <ResultsPanel solution={activeSolution} unit={unit} />
       )}
 
+      {/* Loesungsweg */}
       {activeSolution && (
-        <FormulaExplainer formulas={activeSolution.formulas} method={activeSolution.method} />
+        <FormulaExplainer
+          steps={activeSolution.steps}
+          formulas={activeSolution.formulas}
+          method={activeSolution.method}
+        />
       )}
     </div>
   )
