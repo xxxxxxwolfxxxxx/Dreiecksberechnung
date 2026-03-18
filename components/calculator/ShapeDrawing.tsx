@@ -17,14 +17,7 @@ export function ShapeDrawing({ shape, data, isPreview = false }: Props) {
   )
 
   return (
-    <div className="relative">
-      {isPreview && (
-        <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-          <span className="bg-white/90 text-xs text-gray-500 px-3 py-1 rounded-full border">
-            Vorschau &ndash; Werte eingeben zum Berechnen
-          </span>
-        </div>
-      )}
+    <div className="flex flex-col gap-2">
       <svg
         viewBox={`0 0 ${svgData.width} ${svgData.height}`}
         className={`w-full rounded-xl border bg-white ${isPreview ? 'opacity-60 border-dashed border-gray-300' : 'border-blue-200'}`}
@@ -61,6 +54,11 @@ export function ShapeDrawing({ shape, data, isPreview = false }: Props) {
           </g>
         ))}
       </svg>
+      {isPreview && (
+        <p className="text-center text-xs text-gray-400">
+          Vorschau &ndash; Werte eingeben zum Berechnen
+        </p>
+      )}
     </div>
   )
 }
