@@ -12,6 +12,21 @@ export const metadata: Metadata = {
 export default function ParallelogrammPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "MathSolver",
+            "name": "Parallelogramm berechnen",
+            "description": "Parallelogramm online berechnen: Fläche, Umfang, Winkel und Diagonalen.",
+            "url": "https://geometrie-rechner.de/parallelogramm",
+            "educationalLevel": "secondary",
+            "inLanguage": "de",
+            "applicationCategory": "EducationalApplication"
+          })
+        }}
+      />
       <AdSlot slot="XXXXXXXXXX" format="horizontal" className="mb-6" minHeight={90} />
       <ShapeCalculator shapeId="parallelogramm" />
       <AdSlot slot="XXXXXXXXXX" format="rectangle" className="my-6" minHeight={250} />

@@ -12,6 +12,21 @@ export const metadata: Metadata = {
 export default function DreieckPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "MathSolver",
+            "name": "Dreieck berechnen",
+            "description": "Dreieck online berechnen: Fläche, Umfang, alle Winkel, Höhen und Radien.",
+            "url": "https://geometrie-rechner.de/dreieck",
+            "educationalLevel": "secondary",
+            "inLanguage": "de",
+            "applicationCategory": "EducationalApplication"
+          })
+        }}
+      />
       <AdSlot slot="XXXXXXXXXX" format="horizontal" className="mb-6" minHeight={90} />
       <ShapeCalculator shapeId="dreieck" />
       <AdSlot slot="XXXXXXXXXX" format="rectangle" className="my-6" minHeight={250} />

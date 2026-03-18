@@ -12,6 +12,21 @@ export const metadata: Metadata = {
 export default function RechteckPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "MathSolver",
+            "name": "Rechteck berechnen",
+            "description": "Rechteck online berechnen: Fläche, Umfang, Diagonale.",
+            "url": "https://geometrie-rechner.de/rechteck",
+            "educationalLevel": "secondary",
+            "inLanguage": "de",
+            "applicationCategory": "EducationalApplication"
+          })
+        }}
+      />
       <AdSlot slot="XXXXXXXXXX" format="horizontal" className="mb-6" minHeight={90} />
       <ShapeCalculator shapeId="rechteck" />
       <AdSlot slot="XXXXXXXXXX" format="rectangle" className="my-6" minHeight={250} />

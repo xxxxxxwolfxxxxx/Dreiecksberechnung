@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import Script from 'next/script'
+import Link from 'next/link'
 import { Navigation } from '@/components/Navigation'
 import './globals.css'
 
@@ -51,8 +52,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </main>
         <footer className="border-t border-gray-200 py-6 text-center text-sm text-gray-500 dark:border-gray-700">
-          <a href="/impressum" className="hover:underline mr-4">Impressum</a>
-          <a href="/datenschutz" className="hover:underline">Datenschutz</a>
+          <Link href="/impressum" className="hover:underline mr-4">Impressum</Link>
+          <Link href="/datenschutz" className="hover:underline">Datenschutz</Link>
         </footer>
       </body>
     </html>
