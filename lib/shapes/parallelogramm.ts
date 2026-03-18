@@ -1,4 +1,4 @@
-import type { Shape, SVGData } from './types'
+import type { Shape } from './types'
 
 const toRad = (d: number) => (d * Math.PI) / 180
 
@@ -13,7 +13,7 @@ export const parallelogramm: Shape = {
   ],
   solve(k) {
     const { a, b, alpha, h_a, d1 } = k as Record<string, number>
-    let aVal = a, alphaVal = alpha, h = h_a
+    const aVal = a; let alphaVal = alpha, h = h_a
     if (!aVal) return { solutions: [], error: 'Seite a eingeben' }
 
     // d1 + a + b → alpha berechnen

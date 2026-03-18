@@ -1,4 +1,4 @@
-import type { Shape, SVGData } from './types'
+import type { Shape } from './types'
 
 export const trapez: Shape = {
   id: 'trapez', label: 'Trapez', minRequired: 3,

@@ -1,11 +1,10 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import { shapes } from '@/lib/shapes'
 import { InputPanel } from './InputPanel'
 import { ShapeDrawing } from './ShapeDrawing'
 import { ResultsPanel } from './ResultsPanel'
 import { FormulaExplainer } from './FormulaExplainer'
-import type { SolveResult } from '@/lib/shapes/types'
 
 const UNITS = ['mm', 'cm', 'm', 'km']
 
@@ -13,30 +12,22 @@ interface Props {
   shapeId: string
 }
 
-export function ShapeCalculator({ shapeId }: Props) {
+function ShapeCalculatorInner({ shapeId }: Props) {
   const shape = shapes[shapeId]
   const [values, setValues] = useState<Partial<Record<string, number>>>({})
   const [unit, setUnit] = useState('cm')
-  const [result, setResult] = useState<SolveResult | null>(null)
   const [activeIdx, setActiveIdx] = useState(0)
 
-  useEffect(() => {
-    setValues({})
-    setResult(null)
-    setActiveIdx(0)
-  }, [shapeId])
-
-  useEffect(() => {
-    const filled = Object.values(values).filter(v => v !== undefined && !isNaN(v)).length
+  const result = useMemo(() => {
+    const filled = Object.values(values).filter(v => v !== undefined && !isNaN(v as number)).length
     if (filled >= shape.minRequired) {
-      setResult(shape.solve(values))
-      setActiveIdx(0)
-    } else {
-      setResult(null)
+      return shape.solve(values)
     }
+    return null
   }, [values, shape])
 
   const handleChange = (key: string, value: number | undefined) => {
+    setActiveIdx(0)
     setValues(prev => ({ ...prev, [key]: value }))
   }
 
@@ -92,4 +83,9 @@ export function ShapeCalculator({ shapeId }: Props) {
       )}
     </div>
   )
+}
+
+export function ShapeCalculator({ shapeId }: Props) {
+  // key={shapeId} resets all state when the shape changes
+  return <ShapeCalculatorInner key={shapeId} shapeId={shapeId} />
 }

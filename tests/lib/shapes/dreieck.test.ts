@@ -1,8 +1,5 @@
 import { dreieck } from '@/lib/shapes/dreieck'
 
-const deg = (d: number) => (d * Math.PI) / 180
-const rad = (r: number) => (r * 180) / Math.PI
-
 describe('Dreieck Solver', () => {
   // SSS
   test('SSS: 3-4-5 Dreieck gibt korrekten Winkel', () => {

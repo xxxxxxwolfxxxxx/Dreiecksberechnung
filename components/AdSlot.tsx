@@ -18,8 +18,8 @@ export function AdSlot({ slot, format = 'auto', className = '', minHeight = 90 }
       if (entry.isIntersecting && !loaded.current) {
         loaded.current = true
         try {
-          // @ts-ignore
-          (window.adsbygoogle = window.adsbygoogle || []).push({})
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          ;((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({})
         } catch {}
         observer.disconnect()
       }
