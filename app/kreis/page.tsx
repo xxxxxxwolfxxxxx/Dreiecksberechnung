@@ -29,7 +29,6 @@ export default function KreisPage() {
       />
       <AdSlot slot="1508045799" format="horizontal" className="mb-6" minHeight={90} />
       <ShapeCalculator shapeId="kreis" />
-      <AdSlot slot="7625380516" format="auto" className="my-6" minHeight={90} />
       <section className="mt-8">
         <h2 className="mb-3 text-lg font-semibold">Weitere Formen berechnen</h2>
         <div className="flex flex-wrap gap-2">
