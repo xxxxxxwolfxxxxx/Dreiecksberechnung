@@ -1,5 +1,5 @@
 'use client'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { shapes } from '@/lib/shapes'
 import { InputPanel } from './InputPanel'
 import { ShapeDrawing } from './ShapeDrawing'
@@ -32,6 +32,17 @@ function ShapeCalculatorInner({ shapeId }: Props) {
   }
 
   const activeSolution = result?.solutions[activeIdx]
+  const midAdPushed = useRef(false)
+
+  useEffect(() => {
+    if (activeSolution && !midAdPushed.current) {
+      midAdPushed.current = true
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ;((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({})
+      } catch {}
+    }
+  }, [activeSolution])
 
   return (
     <div className="mx-auto max-w-2xl space-y-5">
@@ -100,6 +111,18 @@ function ShapeCalculatorInner({ shapeId }: Props) {
       {/* Ergebnisse */}
       {activeSolution && (
         <ResultsPanel solution={activeSolution} unit={unit} />
+      )}
+
+      {/* Mittlerer Werbebanner – erscheint nur nach der Berechnung */}
+      {activeSolution && (
+        <ins
+          className="adsbygoogle"
+          style={{ display: 'block' }}
+          data-ad-client="ca-pub-8687929894744033"
+          data-ad-slot="7625380516"
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+        />
       )}
 
       {/* Loesungsweg */}
