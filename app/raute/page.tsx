@@ -12,6 +12,21 @@ export const metadata: Metadata = {
 export default function RautePage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "MathSolver",
+            "name": "Raute berechnen",
+            "description": "Raute (Rhombus) online berechnen: Fläche, Diagonalen, Winkel und Umfang.",
+            "url": "https://geometrie-rechner.de/raute",
+            "educationalLevel": "secondary",
+            "inLanguage": "de",
+            "applicationCategory": "EducationalApplication"
+          })
+        }}
+      />
       <AdSlot slot="XXXXXXXXXX" format="horizontal" className="mb-6" minHeight={90} />
       <ShapeCalculator shapeId="raute" />
       <AdSlot slot="XXXXXXXXXX" format="rectangle" className="my-6" minHeight={250} />
