@@ -1,7 +1,7 @@
 export interface InputDefinition {
   key: string           // z.B. 'a', 'alpha', 'flaeche'
   label: string         // z.B. 'Seite a', 'Winkel α'
-  unit: 'length' | 'angle' | 'area' | 'none'
+  unit: 'length' | 'angle' | 'area' | 'volume' | 'none'
   optional?: boolean
 }
 
@@ -19,8 +19,9 @@ export interface SolveResult {
 
 export interface SVGData {
   points: Array<{ x: number; y: number; label: string }>
-  lines: Array<{ from: number; to: number; label?: string }>
+  lines: Array<{ from: number; to: number; label?: string; dashed?: boolean }>
   circles?: Array<{ cx: number; cy: number; r: number; label?: string }>
+  ellipses?: Array<{ cx: number; cy: number; rx: number; ry: number; dashed?: boolean; label?: string }>
   width: number
   height: number
 }

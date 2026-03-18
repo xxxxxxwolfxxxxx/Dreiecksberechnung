@@ -15,7 +15,7 @@ export function InputPanel({ shape, values, onChange, unit }: Props) {
         const val = values[input.key]
         const isNegative = val !== undefined && val < 0
         const hasValue = val !== undefined && !isNegative
-        const displayUnit = input.unit === 'angle' ? '\u00B0' : input.unit === 'area' ? unit + '\u00B2' : unit
+        const displayUnit = input.unit === 'angle' ? '\u00B0' : input.unit === 'area' ? unit + '\u00B2' : input.unit === 'volume' ? unit + '\u00B3' : unit
         return (
           <div key={input.key} className="flex flex-col gap-1">
             <label

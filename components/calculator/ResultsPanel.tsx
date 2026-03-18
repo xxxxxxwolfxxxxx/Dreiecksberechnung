@@ -16,10 +16,19 @@ const LABELS: Record<string, string> = {
   diagonale: 'Diagonale', mittellinie: 'Mittellinie',
   d1: 'Diagonale d\u2081', d2: 'Diagonale d\u2082', h: 'H\u00F6he h', h_a_pg: 'H\u00F6he h_a',
   typ: 'Dreieckstyp',
+  // 3D-Formen
+  volumen: 'Volumen', oberflaeche: 'Oberfl\u00E4che',
+  mantelflaeche: 'Mantelfl\u00E4che', grundflaeche: 'Grundfl\u00E4che',
+  raumdiagonale: 'Raumdiagonale', flaechendiagonale: 'Fl\u00E4chendiagonale',
+  mantellinie: 'Mantellinie (s)', apothema: 'Apothema',
 }
 
-// Wichtige Felder die oben angezeigt werden
-const HIGHLIGHT_KEYS = ['flaeche', 'umfang', 'r', 'diagonale']
+// Wichtige Felder die oben hervorgehoben werden
+const HIGHLIGHT_KEYS = ['flaeche', 'umfang', 'r', 'diagonale', 'volumen', 'oberflaeche']
+// Felder die in m³ angezeigt werden
+const VOLUME_KEYS = ['volumen']
+// Felder die in m² angezeigt werden
+const AREA_KEYS = ['flaeche', 'oberflaeche', 'mantelflaeche', 'grundflaeche']
 
 export function ResultsPanel({ solution, unit }: Props) {
   const entries = Object.entries(solution.values)
@@ -37,12 +46,12 @@ export function ResultsPanel({ solution, unit }: Props) {
         <div className="grid grid-cols-2 gap-3 p-4 border-b border-gray-100">
           {highlighted.map(([key, value]) => {
             if (typeof value !== 'number') return null
-            const isArea = key === 'flaeche'
+            const power = VOLUME_KEYS.includes(key) ? 3 : AREA_KEYS.includes(key) ? 2 : 1
             return (
               <div key={key} className="rounded-xl bg-blue-50 p-3 text-center">
                 <div className="text-xs font-semibold text-blue-500 uppercase tracking-wide">{LABELS[key] ?? key}</div>
                 <div className="mt-1 text-xl font-extrabold text-blue-800">
-                  {formatUnit(value, unit, isArea ? 2 : 1)}
+                  {formatUnit(value, unit, power)}
                 </div>
               </div>
             )
@@ -64,11 +73,12 @@ export function ResultsPanel({ solution, unit }: Props) {
           )
           if (typeof value !== 'number') return null
           const isAngle = ['alpha', 'beta', 'gamma'].includes(key)
+          const power = VOLUME_KEYS.includes(key) ? 3 : AREA_KEYS.includes(key) ? 2 : 1
           return (
             <div key={key}>
               <dt className="text-xs text-gray-400 font-medium">{LABELS[key] ?? key}</dt>
               <dd className="font-semibold text-gray-800">
-                {isAngle ? formatUnit(value, '\u00B0') : formatUnit(value, unit, 1)}
+                {isAngle ? formatUnit(value, '\u00B0') : formatUnit(value, unit, power)}
               </dd>
             </div>
           )
