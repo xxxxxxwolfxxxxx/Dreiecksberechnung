@@ -20,14 +20,14 @@ export function ShapeDrawing({ shape, data, isPreview = false }: Props) {
     <div className="relative">
       {isPreview && (
         <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-          <span className="bg-white/80 dark:bg-gray-900/80 text-xs text-gray-500 px-3 py-1 rounded-full border">
+          <span className="bg-white/90 text-xs text-gray-500 px-3 py-1 rounded-full border">
             Vorschau &ndash; Werte eingeben zum Berechnen
           </span>
         </div>
       )}
       <svg
         viewBox={`0 0 ${svgData.width} ${svgData.height}`}
-        className={`w-full rounded-xl border bg-white dark:bg-gray-900 ${isPreview ? 'opacity-60 border-dashed border-gray-300' : 'border-blue-200'}`}
+        className={`w-full rounded-xl border bg-white ${isPreview ? 'opacity-60 border-dashed border-gray-300' : 'border-blue-200'}`}
         style={{ maxHeight: '300px' }}
       >
         {svgData.lines.map((line, i) => {
