@@ -1,4 +1,4 @@
-import type { Shape, SVGData } from './types'
+import type { Shape } from './types'
 
 export const rechteck: Shape = {
   id: 'rechteck', label: 'Rechteck', minRequired: 2,

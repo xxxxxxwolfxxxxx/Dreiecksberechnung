@@ -1,4 +1,4 @@
-import type { Shape, SVGData } from './types'
+import type { Shape } from './types'
 
 export const kreis: Shape = {
   id: 'kreis', label: 'Kreis', minRequired: 1,

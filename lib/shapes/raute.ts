@@ -1,4 +1,4 @@
-import type { Shape, SVGData } from './types'
+import type { Shape } from './types'
 
 const toRad2 = (d: number) => (d * Math.PI) / 180
 

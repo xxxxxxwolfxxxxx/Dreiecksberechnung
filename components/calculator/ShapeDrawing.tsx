@@ -2,10 +2,9 @@ import type { SVGData } from '@/lib/shapes/types'
 
 interface Props {
   data: SVGData
-  size?: number
 }
 
-export function ShapeDrawing({ data, size = 280 }: Props) {
+export function ShapeDrawing({ data }: Props) {
   if (!data.points.length) return (
     <div className="flex h-[280px] items-center justify-center rounded-xl border-2 border-dashed border-gray-200 text-gray-400">
       Zeichnung erscheint nach der Berechnung
