@@ -6,7 +6,7 @@ export interface InputDefinition {
 }
 
 export interface Solution {
-  values: Record<string, number>
+  values: Record<string, number | string>
   method: string        // z.B. 'Kosinussatz (SSS)'
   formulas: string[]    // Klartext-Beschreibung der verwendeten Formeln
 }
