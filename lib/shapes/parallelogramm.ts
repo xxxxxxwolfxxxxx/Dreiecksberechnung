@@ -6,25 +6,48 @@ export const parallelogramm: Shape = {
   id: 'parallelogramm', label: 'Parallelogramm', minRequired: 3,
   inputs: [
     { key: 'a',     label: 'Seite a',  unit: 'length' },
-    { key: 'b',     label: 'Seite b',  unit: 'length' },
-    { key: 'alpha', label: 'Winkel α', unit: 'angle' },
+    { key: 'b',     label: 'Seite b',  unit: 'length', optional: true },
+    { key: 'alpha', label: 'Winkel α', unit: 'angle',  optional: true },
     { key: 'h_a',   label: 'Höhe h_a', unit: 'length', optional: true },
+    { key: 'd1',    label: 'Diagonale d1', unit: 'length', optional: true },
   ],
   solve(k) {
-    const { a, b, alpha, h_a } = k as Record<string, number>
+    const { a, b, alpha, h_a, d1 } = k as Record<string, number>
     let aVal = a, alphaVal = alpha, h = h_a
+    if (!aVal) return { solutions: [], error: 'Seite a eingeben' }
+
+    // d1 + a + b → alpha berechnen
+    if (!alphaVal && aVal && b && d1) {
+      const cosAlpha = (aVal * aVal + b * b - d1 * d1) / (2 * aVal * b)
+      if (Math.abs(cosAlpha) > 1) return { solutions: [], error: 'Kein Parallelogramm mit diesen Werten möglich' }
+      alphaVal = Math.acos(cosAlpha) * 180 / Math.PI
+    }
+
     if (!h && aVal && alphaVal) h = aVal * Math.sin(toRad(alphaVal))
-    if (!aVal || !b) return { solutions: [], error: 'Seiten a und b eingeben' }
-    if (!alphaVal && !h) return { solutions: [], error: 'Winkel α oder Höhe h_a eingeben' }
-    if (!alphaVal) alphaVal = Math.asin(h / aVal) * 180 / Math.PI
-    if (!h) h = aVal * Math.sin(toRad(alphaVal))
-    const flaeche = aVal * b * Math.sin(toRad(alphaVal))
-    const d1 = Math.sqrt(aVal**2 + b**2 - 2*aVal*b*Math.cos(toRad(alphaVal)))
-    const d2 = Math.sqrt(aVal**2 + b**2 - 2*aVal*b*Math.cos(toRad(180-alphaVal)))
+    if (!alphaVal && h && aVal) alphaVal = Math.asin(Math.min(h / aVal, 1)) * 180 / Math.PI
+    if (!h && alphaVal) h = aVal * Math.sin(toRad(alphaVal))
+
+    if (!h && !alphaVal) return { solutions: [], error: 'Winkel α oder Höhe h_a eingeben' }
+
+    const hSafe = h as number
+    const flaecheVal = b && alphaVal ? aVal * b * Math.sin(toRad(alphaVal)) : aVal * hSafe
+    const values: Record<string, number> = { a: aVal, h_a: hSafe, flaeche: flaecheVal }
+
+    if (b) {
+      values.b = b
+      values.umfang = 2 * (aVal + b)
+      if (alphaVal) {
+        values.alpha = alphaVal
+        values.beta = 180 - alphaVal
+        values.d1 = Math.sqrt(aVal**2 + b**2 - 2*aVal*b*Math.cos(toRad(alphaVal)))
+        values.d2 = Math.sqrt(aVal**2 + b**2 - 2*aVal*b*Math.cos(toRad(180 - alphaVal)))
+      }
+    }
+
     return { solutions: [{
-      values: { a: aVal, b, alpha: alphaVal, beta: 180 - alphaVal, h_a: h, flaeche, umfang: 2*(aVal+b), d1, d2 },
+      values,
       method: 'Parallelogramm-Formeln',
-      formulas: ['A = a · h = a · b · sin(α)', 'U = 2(a + b)'],
+      formulas: ['A = a · h', 'U = 2(a + b)'],
     }] }
   },
   toSVG(v, size) {
