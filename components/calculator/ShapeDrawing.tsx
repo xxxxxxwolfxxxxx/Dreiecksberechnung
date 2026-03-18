@@ -10,11 +10,14 @@ interface Props {
 export function ShapeDrawing({ shape, data, isPreview = false }: Props) {
   const svgData = data ?? shape.toSVG(shape.defaultValues, 280)
 
-  if (!svgData.points.length) return (
+  if (!svgData.points.length && !svgData.circles?.length && !svgData.ellipses?.length) return (
     <div className="flex h-[280px] items-center justify-center rounded-xl border-2 border-dashed border-gray-200 text-gray-400">
       Zeichnung erscheint nach der Berechnung
     </div>
   )
+
+  const stroke = isPreview ? '#94a3b8' : '#3b82f6'
+  const textFill = isPreview ? '#64748b' : '#1d4ed8'
 
   return (
     <div className="flex flex-col gap-2">
@@ -29,16 +32,36 @@ export function ShapeDrawing({ shape, data, isPreview = false }: Props) {
             <circle
               cx={c.cx} cy={c.cy} r={c.r}
               fill={isPreview ? 'rgba(148,163,184,0.1)' : 'rgba(59,130,246,0.08)'}
-              stroke={isPreview ? '#94a3b8' : '#3b82f6'}
+              stroke={stroke}
               strokeWidth="2"
             />
             {c.label && (
-              <text x={c.cx + c.r * 0.7} y={c.cy - c.r * 0.7} textAnchor="middle" fontSize="12" fontWeight="600" fill={isPreview ? '#64748b' : '#1d4ed8'}>
+              <text x={c.cx + c.r * 0.7} y={c.cy - c.r * 0.7} textAnchor="middle" fontSize="12" fontWeight="600" fill={textFill}>
                 {c.label}
               </text>
             )}
           </g>
         ))}
+
+        {/* Ellipsen (für 3D-Formen) */}
+        {svgData.ellipses?.map((e, i) => (
+          <g key={`el${i}`}>
+            <ellipse
+              cx={e.cx} cy={e.cy} rx={e.rx} ry={e.ry}
+              fill="none"
+              stroke={stroke}
+              strokeWidth="2"
+              strokeDasharray={e.dashed ? '6,4' : undefined}
+            />
+            {e.label && (
+              <text x={e.cx + e.rx * 0.6} y={e.cy - e.ry - 4} textAnchor="middle" fontSize="12" fontWeight="600" fill={textFill}>
+                {e.label}
+              </text>
+            )}
+          </g>
+        ))}
+
+        {/* Linien */}
         {svgData.lines.map((line, i) => {
           const from = svgData.points[line.from]
           const to   = svgData.points[line.to]
@@ -49,19 +72,22 @@ export function ShapeDrawing({ shape, data, isPreview = false }: Props) {
             <g key={i}>
               <line
                 x1={from.x} y1={from.y} x2={to.x} y2={to.y}
-                stroke={isPreview ? "#94a3b8" : "#3b82f6"} strokeWidth="2"
+                stroke={stroke} strokeWidth="2"
+                strokeDasharray={line.dashed ? '6,4' : undefined}
               />
               {line.label && (
-                <text x={mx} y={my - 6} textAnchor="middle" fontSize="12" fontWeight="600" fill={isPreview ? "#64748b" : "#1d4ed8"}>
+                <text x={mx} y={my - 6} textAnchor="middle" fontSize="12" fontWeight="600" fill={textFill}>
                   {line.label}
                 </text>
               )}
             </g>
           )
         })}
+
+        {/* Punkte */}
         {svgData.points.map((pt, i) => (
           <g key={i}>
-            <circle cx={pt.x} cy={pt.y} r="4" fill={isPreview ? "#94a3b8" : "#3b82f6"} />
+            <circle cx={pt.x} cy={pt.y} r="4" fill={stroke} />
             {pt.label && (
               <text x={pt.x} y={pt.y - 10} textAnchor="middle" fontSize="13" fontWeight="bold" fill={isPreview ? "#64748b" : "#1e40af"}>
                 {pt.label}
