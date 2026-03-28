@@ -61,11 +61,11 @@ function ShapeCalculatorInner({ shapeId }: Props) {
   const activeSolution = result?.solutions[activeIdx]
 
   return (
-    <div className="mx-auto max-w-2xl space-y-5">
+    <div className="space-y-4">
       {/* Header */}
-      <div className="rounded-2xl bg-gradient-to-r from-blue-600 to-blue-700 p-5 text-white shadow-lg">
+      <div className="rounded-2xl bg-gradient-to-r from-blue-600 to-blue-700 p-4 sm:p-5 text-white shadow-lg">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-extrabold">{shape.label} berechnen</h1>
+          <h1 className="text-xl sm:text-2xl font-extrabold">{shape.label} berechnen</h1>
           <select
             value={unit}
             onChange={e => setUnit(e.target.value)}

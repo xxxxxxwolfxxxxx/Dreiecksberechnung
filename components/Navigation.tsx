@@ -12,7 +12,7 @@ export function Navigation() {
   const shapes3d = shapeList.filter(s => SHAPES_3D.includes(s.id))
 
   const linkClass = (id: string) =>
-    `whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-semibold transition-all ${
+    `whitespace-nowrap rounded-full px-3 py-1 sm:px-4 sm:py-1.5 text-xs sm:text-sm font-semibold transition-all ${
       pathname === `/${id}`
         ? 'bg-blue-600 text-white shadow-md'
         : 'text-gray-600 hover:bg-blue-50 hover:text-blue-700'
@@ -20,17 +20,17 @@ export function Navigation() {
 
   return (
     <nav className="sticky top-0 z-40 bg-white shadow-sm border-b border-blue-100">
-      <div className="mx-auto max-w-4xl px-4 py-3">
-        {/* Logo + Trennlinie */}
-        <div className="flex items-center justify-center gap-3 mb-2.5">
-          <span className="text-xl font-extrabold text-blue-600 tracking-tight whitespace-nowrap">
+      <div className="mx-auto max-w-2xl px-3 sm:px-4 py-2 sm:py-3">
+        {/* Logo */}
+        <div className="flex items-center justify-center mb-2">
+          <span className="text-base sm:text-xl font-extrabold text-blue-600 tracking-tight whitespace-nowrap">
             Geo-Rechner
           </span>
         </div>
 
-        {/* 2D-Formen – zentriert */}
-        <div className="flex flex-wrap justify-center items-center gap-1.5 mb-2">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-blue-400 mr-0.5">
+        {/* 2D-Formen */}
+        <div className="flex flex-wrap justify-center items-center gap-1 sm:gap-1.5 mb-1.5">
+          <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-blue-400 mr-0.5">
             2D
           </span>
           {shapes2d.map(shape => (
@@ -40,9 +40,9 @@ export function Navigation() {
           ))}
         </div>
 
-        {/* 3D-Körper – zentriert */}
-        <div className="flex flex-wrap justify-center items-center gap-1.5">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-purple-400 mr-0.5">
+        {/* 3D-Körper */}
+        <div className="flex flex-wrap justify-center items-center gap-1 sm:gap-1.5">
+          <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-purple-400 mr-0.5">
             3D
           </span>
           {shapes3d.map(shape => (
