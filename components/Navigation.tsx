@@ -12,7 +12,7 @@ export function Navigation() {
   const shapes3d = shapeList.filter(s => SHAPES_3D.includes(s.id))
 
   const linkClass = (id: string) =>
-    `whitespace-nowrap rounded-full px-3 py-1 sm:px-4 sm:py-1.5 text-xs sm:text-sm font-semibold transition-all ${
+    `whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold transition-all ${
       pathname === `/${id}`
         ? 'bg-blue-600 text-white shadow-md'
         : 'text-gray-600 hover:bg-blue-50 hover:text-blue-700'
@@ -29,8 +29,8 @@ export function Navigation() {
         </div>
 
         {/* 2D-Formen */}
-        <div className="flex flex-wrap justify-center items-center gap-1 sm:gap-1.5 mb-1.5">
-          <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-blue-400 mr-0.5">
+        <div className="flex flex-wrap justify-center items-center gap-1 mb-1.5">
+          <span className="text-[9px] font-bold uppercase tracking-widest text-blue-400 mr-0.5">
             2D
           </span>
           {shapes2d.map(shape => (
@@ -41,8 +41,8 @@ export function Navigation() {
         </div>
 
         {/* 3D-Körper */}
-        <div className="flex flex-wrap justify-center items-center gap-1 sm:gap-1.5">
-          <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-purple-400 mr-0.5">
+        <div className="flex flex-wrap justify-center items-center gap-1">
+          <span className="text-[9px] font-bold uppercase tracking-widest text-purple-400 mr-0.5">
             3D
           </span>
           {shapes3d.map(shape => (
