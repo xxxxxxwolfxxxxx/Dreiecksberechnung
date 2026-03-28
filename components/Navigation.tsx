@@ -1,6 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useEffect, useRef, useState } from 'react'
 import { shapeList } from '@/lib/shapes'
 
 const SHAPES_2D = ['dreieck', 'kreis', 'rechteck', 'trapez', 'parallelogramm', 'raute']
@@ -10,6 +11,19 @@ export function Navigation() {
   const pathname = usePathname()
   const shapes2d = shapeList.filter(s => SHAPES_2D.includes(s.id))
   const shapes3d = shapeList.filter(s => SHAPES_3D.includes(s.id))
+  const [visible, setVisible] = useState(true)
+  const lastY = useRef(0)
+
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY
+      if (y < 60) { setVisible(true); lastY.current = y; return }
+      setVisible(y < lastY.current)
+      lastY.current = y
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   const linkClass = (id: string) =>
     `whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold transition-all ${
@@ -19,7 +33,7 @@ export function Navigation() {
     }`
 
   return (
-    <nav className="sticky top-0 z-40 bg-white shadow-sm border-b border-blue-100">
+    <nav className={`sticky top-0 z-40 bg-white shadow-sm border-b border-blue-100 transition-transform duration-300 ${visible ? 'translate-y-0' : '-translate-y-full'}`}>
       <div className="mx-auto max-w-2xl px-3 sm:px-4 py-2 sm:py-3">
         {/* Logo */}
         <div className="flex items-center justify-center mb-2">
