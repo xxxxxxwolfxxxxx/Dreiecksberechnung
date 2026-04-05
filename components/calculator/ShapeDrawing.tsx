@@ -84,6 +84,21 @@ export function ShapeDrawing({ shape, data, isPreview = false }: Props) {
           )
         })}
 
+        {/* Zusätzliche Text-Labels (z.B. Winkel) */}
+        {svgData.labels?.map((lbl, i) => (
+          <text
+            key={`lbl${i}`}
+            x={lbl.x} y={lbl.y}
+            textAnchor="middle"
+            fontSize={lbl.small ? '11' : '13'}
+            fontWeight="600"
+            fontStyle="italic"
+            fill={isPreview ? '#94a3b8' : '#7c3aed'}
+          >
+            {lbl.text}
+          </text>
+        ))}
+
         {/* Punkte */}
         {svgData.points.map((pt, i) => (
           <g key={i}>

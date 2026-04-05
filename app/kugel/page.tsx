@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { ShapeCalculator } from '@/components/calculator/ShapeCalculator'
 import { AdSlot } from '@/components/AdSlot'
 import { MoreShapes } from '@/components/MoreShapes'
+import { ShapeInfo } from '@/components/ShapeInfo'
 
 export const metadata: Metadata = {
   title: 'Kugel berechnen – Volumen, Oberfläche, Radius online',
@@ -27,6 +28,7 @@ export default function KugelPage() {
       />
       <AdSlot slot="1508045799" format="horizontal" className="mb-6" minHeight={90} />
       <ShapeCalculator shapeId="kugel" />
+      <ShapeInfo shapeId="kugel" />
       <MoreShapes currentId="kugel" />
       <AdSlot slot="4403201248" format="horizontal" className="mt-6" minHeight={90} />
     </>
