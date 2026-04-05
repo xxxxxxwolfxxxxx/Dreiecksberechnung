@@ -405,17 +405,70 @@ function solve(known: Partial<Record<string, number>>): SolveResult {
     }
   }
 
+  // Höhen in Seiten umrechnen: h_a = 2*A/a → brauchen eine weitere Größe
+  // Einfacher Fall: h_a + eine Seite → A bekannt, dann SSS oder SWS möglich
+  // h_a = 2*A/a, h_b = 2*A/b, h_c = 2*A/c
+  // Mit zwei Seiten und einer Höhe: A = h_a * a / 2, dann dritte Seite via Heron
+  // Für jetzt: h + Seite → andere Seiten berechnen wenn zwei Seiten bekannt
+  const derived = { ...known }
+  // h_a bekannt + a bekannt → Fläche bekannt
+  if (derived.h_a && derived.a && !derived.h_b && !derived.h_c) {
+    const A = derived.h_a * derived.a / 2
+    // Mit A und a: wenn b bekannt → c via Heron; wenn c bekannt → b via Heron
+    if (derived.b && !derived.c) {
+      // A = sqrt(s(s-a)(s-b)(s-c)), lösen nach c numerisch – zu komplex
+      // Einfacher: h_a + a + b = bekannt → Winkel gamma via A = (1/2)*a*b*sin(gamma)
+      const sinGamma = (2 * A) / (derived.a * derived.b)
+      if (sinGamma <= 1) {
+        derived.gamma = toDeg(Math.asin(sinGamma))
+        delete derived.h_a
+        return solve(derived) // SWS
+      }
+    }
+    if (derived.c && !derived.b) {
+      const sinBeta = (2 * A) / (derived.a * derived.c)
+      if (sinBeta <= 1) {
+        derived.beta = toDeg(Math.asin(sinBeta))
+        delete derived.h_a
+        return solve(derived)
+      }
+    }
+  }
+  if (derived.h_b && derived.b && !derived.h_a && !derived.h_c) {
+    const A = derived.h_b * derived.b / 2
+    if (derived.a && !derived.c) {
+      const sinGamma = (2 * A) / (derived.a * derived.b)
+      if (sinGamma <= 1) { derived.gamma = toDeg(Math.asin(sinGamma)); delete derived.h_b; return solve(derived) }
+    }
+    if (derived.c && !derived.a) {
+      const sinAlpha = (2 * A) / (derived.b * derived.c)
+      if (sinAlpha <= 1) { derived.alpha = toDeg(Math.asin(sinAlpha)); delete derived.h_b; return solve(derived) }
+    }
+  }
+  if (derived.h_c && derived.c && !derived.h_a && !derived.h_b) {
+    const A = derived.h_c * derived.c / 2
+    if (derived.a && !derived.b) {
+      const sinBeta = (2 * A) / (derived.a * derived.c)
+      if (sinBeta <= 1) { derived.beta = toDeg(Math.asin(sinBeta)); delete derived.h_c; return solve(derived) }
+    }
+    if (derived.b && !derived.a) {
+      const sinAlpha = (2 * A) / (derived.b * derived.c)
+      if (sinAlpha <= 1) { derived.alpha = toDeg(Math.asin(sinAlpha)); delete derived.h_c; return solve(derived) }
+    }
+  }
+
   // Winkelfelder prüfen
   const angleKeys = ['alpha', 'beta', 'gamma']
   for (const key of angleKeys) {
-    if (known[key] !== undefined) {
-      if (known[key]! >= 180) {
+    if (derived[key] !== undefined) {
+      if (derived[key]! >= 180) {
         return { solutions: [], error: 'Winkel muss kleiner als 180\u00B0 sein' }
       }
     }
   }
 
-  const type = classifyInputs(known)
+  const type = classifyInputs(derived)
+  known = derived
 
   switch (type) {
     case 'SSS':       return solveSSS(known)
@@ -423,7 +476,7 @@ function solve(known: Partial<Record<string, number>>): SolveResult {
     case 'WSW_WWS':   return solveWSW_WWS(known)
     case 'SSW':       return solveSSW(known)
     case 'WWW':       return { solutions: [], error: 'Mit nur Winkeln kann kein Dreieck eindeutig bestimmt werden.' }
-    default:          return { solutions: [], error: 'Ung\u00FCltige oder unvollst\u00E4ndige Eingabe.' }
+    default:          return { solutions: [], error: 'Ung\u00FCltige oder unvollst\u00E4ndige Eingabe. Tipp: Gib mind. 3 Werte ein (Seiten und/oder Winkel).' }
   }
 }
 
@@ -473,6 +526,20 @@ function toSVG(values: Record<string, number>, size: number): SVGData {
 
   const fmtSvg = (n: number) => Math.round(n * 100) / 100
 
+  // Winkel-Labels: leicht ins Innere verschoben
+  const cx = (pA.x + pB.x + pC.x) / 3
+  const cy = (pA.y + pB.y + pC.y) / 3
+  const off = 18
+  const angleLabel = (p: {x:number,y:number}, text: string) => ({
+    x: p.x + (cx - p.x) / Math.hypot(cx - p.x, cy - p.y) * off,
+    y: p.y + (cy - p.y) / Math.hypot(cx - p.x, cy - p.y) * off,
+    text,
+  })
+
+  const alpha = values.alpha
+  const beta  = values.beta
+  const gamma = values.gamma
+
   return {
     points: [
       { ...pA, label: 'A' },
@@ -484,18 +551,26 @@ function toSVG(values: Record<string, number>, size: number): SVGData {
       { from: 1, to: 2, label: `a = ${fmtSvg(a)}` }, // B-C
       { from: 2, to: 0, label: `b = ${fmtSvg(b)}` }, // C-A
     ],
+    labels: [
+      alpha !== undefined ? angleLabel(pA, `\u03B1=${fmtSvg(alpha)}\u00B0`) : angleLabel(pA, '\u03B1'),
+      beta  !== undefined ? angleLabel(pB, `\u03B2=${fmtSvg(beta)}\u00B0`)  : angleLabel(pB, '\u03B2'),
+      gamma !== undefined ? angleLabel(pC, `\u03B3=${fmtSvg(gamma)}\u00B0`) : angleLabel(pC, '\u03B3'),
+    ],
     width: size,
     height: size,
   }
 }
 
 const inputs: InputDefinition[] = [
-  { key: 'a',     label: 'Seite a',   unit: 'length' },
-  { key: 'b',     label: 'Seite b',   unit: 'length' },
-  { key: 'c',     label: 'Seite c',   unit: 'length' },
-  { key: 'alpha', label: 'Winkel \u03B1',  unit: 'angle',  optional: true },
-  { key: 'beta',  label: 'Winkel \u03B2',  unit: 'angle',  optional: true },
-  { key: 'gamma', label: 'Winkel \u03B3',  unit: 'angle',  optional: true },
+  { key: 'a',     label: 'Seite a',      unit: 'length' },
+  { key: 'b',     label: 'Seite b',      unit: 'length' },
+  { key: 'c',     label: 'Seite c',      unit: 'length' },
+  { key: 'alpha', label: 'Winkel \u03B1', unit: 'angle',  optional: true },
+  { key: 'beta',  label: 'Winkel \u03B2', unit: 'angle',  optional: true },
+  { key: 'gamma', label: 'Winkel \u03B3', unit: 'angle',  optional: true },
+  { key: 'h_a',   label: 'H\u00F6he h\u2090', unit: 'length', optional: true },
+  { key: 'h_b',   label: 'H\u00F6he h\u2095', unit: 'length', optional: true },
+  { key: 'h_c',   label: 'H\u00F6he h\u1D9C', unit: 'length', optional: true },
 ]
 
 export const dreieck: Shape = {

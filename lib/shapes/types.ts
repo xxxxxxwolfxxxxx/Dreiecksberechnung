@@ -22,6 +22,7 @@ export interface SVGData {
   lines: Array<{ from: number; to: number; label?: string; dashed?: boolean }>
   circles?: Array<{ cx: number; cy: number; r: number; label?: string }>
   ellipses?: Array<{ cx: number; cy: number; rx: number; ry: number; dashed?: boolean; label?: string }>
+  labels?: Array<{ x: number; y: number; text: string; small?: boolean }>
   width: number
   height: number
 }
