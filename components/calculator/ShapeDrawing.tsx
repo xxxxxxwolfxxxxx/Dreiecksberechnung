@@ -24,7 +24,7 @@ export function ShapeDrawing({ shape, data, isPreview = false }: Props) {
       <svg
         viewBox={`0 0 ${svgData.width} ${svgData.height}`}
         className={`w-full rounded-xl border bg-white ${isPreview ? 'opacity-60 border-dashed border-gray-300' : 'border-blue-200'}`}
-        style={{ maxHeight: 'min(300px, 70vw)' }}
+        style={{ maxHeight: 'min(480px, 85vw)' }}
       >
         {/* Kreise */}
         {svgData.circles?.map((c, i) => (

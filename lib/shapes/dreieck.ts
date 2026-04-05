@@ -486,7 +486,7 @@ function toSVG(values: Record<string, number>, size: number): SVGData {
     return { points: [], lines: [], width: size, height: size }
   }
 
-  const padding = size * 0.15
+  const padding = size * 0.2
 
   // Place triangle: A at origin, B along x-axis
   const axA = 0, ayA = 0
@@ -524,17 +524,18 @@ function toSVG(values: Record<string, number>, size: number): SVGData {
   const pB = proj(axB, ayB)
   const pC = proj(axC, ayC)
 
-  const fmtSvg = (n: number) => Math.round(n * 100) / 100
+  const fmtSvg = (n: number) => Math.round(n * 10) / 10  // 1 Dezimalstelle
 
-  // Winkel-Labels: leicht ins Innere verschoben
+  // Winkel-Labels: ins Dreieckinnere verschoben
   const cx = (pA.x + pB.x + pC.x) / 3
   const cy = (pA.y + pB.y + pC.y) / 3
-  const off = 18
-  const angleLabel = (p: {x:number,y:number}, text: string) => ({
-    x: p.x + (cx - p.x) / Math.hypot(cx - p.x, cy - p.y) * off,
-    y: p.y + (cy - p.y) / Math.hypot(cx - p.x, cy - p.y) * off,
-    text,
-  })
+  // Abstand vom Eckpunkt: 28% des Abstands zum Schwerpunkt
+  const angleLabel = (p: {x:number,y:number}, text: string) => {
+    const dx = cx - p.x, dy = cy - p.y
+    const dist = Math.hypot(dx, dy)
+    const frac = Math.min(0.38, 28 / dist)  // nie mehr als 38% Richtung Mitte
+    return { x: p.x + dx * frac, y: p.y + dy * frac, text, small: true }
+  }
 
   const alpha = values.alpha
   const beta  = values.beta
@@ -547,14 +548,14 @@ function toSVG(values: Record<string, number>, size: number): SVGData {
       { ...pC, label: 'C' },
     ],
     lines: [
-      { from: 0, to: 1, label: `c = ${fmtSvg(c)}` }, // A-B
-      { from: 1, to: 2, label: `a = ${fmtSvg(a)}` }, // B-C
-      { from: 2, to: 0, label: `b = ${fmtSvg(b)}` }, // C-A
+      { from: 0, to: 1, label: `c = ${fmtSvg(c)}` },
+      { from: 1, to: 2, label: `a = ${fmtSvg(a)}` },
+      { from: 2, to: 0, label: `b = ${fmtSvg(b)}` },
     ],
     labels: [
-      alpha !== undefined ? angleLabel(pA, `\u03B1=${fmtSvg(alpha)}\u00B0`) : angleLabel(pA, '\u03B1'),
-      beta  !== undefined ? angleLabel(pB, `\u03B2=${fmtSvg(beta)}\u00B0`)  : angleLabel(pB, '\u03B2'),
-      gamma !== undefined ? angleLabel(pC, `\u03B3=${fmtSvg(gamma)}\u00B0`) : angleLabel(pC, '\u03B3'),
+      alpha !== undefined ? angleLabel(pA, `${fmtSvg(alpha)}\u00B0`) : angleLabel(pA, '\u03B1'),
+      beta  !== undefined ? angleLabel(pB, `${fmtSvg(beta)}\u00B0`)  : angleLabel(pB, '\u03B2'),
+      gamma !== undefined ? angleLabel(pC, `${fmtSvg(gamma)}\u00B0`) : angleLabel(pC, '\u03B3'),
     ],
     width: size,
     height: size,
