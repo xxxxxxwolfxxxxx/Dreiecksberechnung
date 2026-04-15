@@ -38,4 +38,35 @@ describe('pdfGenerator', () => {
     const pdf = await generateSpickzettel(mockSolution, 'cm')
     expect(pdf.type).toBe('application/pdf')
   })
+
+  it('handles empty formulas array', async () => {
+    const solutionNoFormulas = { ...mockSolution, formulas: [] }
+    const pdf = await generateSpickzettel(solutionNoFormulas, 'cm')
+    expect(pdf).toBeInstanceOf(Blob)
+  })
+
+  it('handles missing optional properties gracefully', async () => {
+    const minimal: Solution = {
+      values: {
+        a: 5,
+        b: 5,
+        c: 5,
+        alpha: 60,
+        beta: 60,
+        gamma: 60,
+        flaeche: 10.8,
+        umfang: 15,
+        h_a: 4.3,
+        h_b: 4.3,
+        h_c: 4.3,
+        inkreis: 1.4,
+        umkreis: 2.9,
+        typ: 'gleichseitig'
+      },
+      method: 'SSS',
+      formulas: []
+    }
+    const pdf = await generateSpickzettel(minimal, 'cm')
+    expect(pdf).toBeInstanceOf(Blob)
+  })
 })
