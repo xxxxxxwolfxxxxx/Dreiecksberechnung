@@ -42,13 +42,13 @@ export function SpickzettelExport({ solution, shapeId, svgElement, onExport }: P
   }
 
   return (
-    <div>
+    <div className="flex justify-center">
       <button
         onClick={handleExport}
         disabled={isLoading}
         aria-label="PDF Spickzettel herunterladen"
         aria-busy={isLoading}
-        className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-green-500 to-emerald-600 px-4 py-2.5 font-semibold text-white hover:from-green-600 hover:to-emerald-700 transition-all disabled:opacity-50"
+        className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-green-500 to-emerald-600 px-6 py-2.5 font-semibold text-white hover:from-green-600 hover:to-emerald-700 transition-all disabled:opacity-50"
       >
         <svg
           className="w-5 h-5"
