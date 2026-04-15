@@ -1,6 +1,7 @@
 'use client'
 import { useState, useMemo, useEffect, useRef } from 'react'
 import { shapes } from '@/lib/shapes'
+import { getErrorExplanation } from '@/utils/errorExplanations'
 import { InputPanel } from './InputPanel'
 import { ShapeDrawing } from './ShapeDrawing'
 import { ResultsPanel } from './ResultsPanel'
@@ -97,11 +98,25 @@ function ShapeCalculatorInner({ shapeId }: Props) {
       </div>
 
       {/* Fehler */}
-      {result?.error && (
-        <div className="rounded-2xl bg-red-50 border border-red-200 p-4 text-sm text-red-700 flex items-start gap-3">
-          <span>{result.error}</span>
-        </div>
-      )}
+      {result?.error && (() => {
+        const explanation = getErrorExplanation(result.error, values)
+        return (
+          <div className="rounded-2xl bg-red-50 border-2 border-red-300 p-4 text-sm text-red-700">
+            <div className="flex items-start gap-3">
+              <span className="text-lg">{explanation.emoji}</span>
+              <div className="flex-1">
+                <p className="font-semibold mb-2">Fehler bei der Berechnung</p>
+                <p className="whitespace-pre-wrap text-sm text-red-800 mb-3">{explanation.message}</p>
+                {explanation.suggestion && (
+                  <div className="bg-red-100 border border-red-200 rounded p-2 text-xs text-red-900">
+                    <strong>💡 Tipp:</strong> {explanation.suggestion}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )
+      })()}
 
       {/* Mehrere Loesungen (SSW) */}
       {result && result.solutions.length > 1 && (
