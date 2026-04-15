@@ -13,22 +13,22 @@ function decodeFormula(formula: string): string {
     })
 
     // jsPDF uses Latin-1 encoding by default which doesn't support Greek letters and math symbols
-    // Add text labels next to problematic Unicode characters for clarity
+    // Replace with readable ASCII alternatives
     const replacements: Record<string, string> = {
-      'α': 'alpha',       // Greek letter alpha
-      'β': 'beta',        // Greek letter beta
-      'γ': 'gamma',       // Greek letter gamma
-      'Δ': 'Delta',       // Greek letter delta
-      '√': 'sqrt',        // Square root
-      '°': 'Grad',        // Degree symbol -> "Grad" (German for degree)
-      '²': 'hoch2',       // Superscript 2
-      '³': 'hoch3',       // Superscript 3
-      '±': '+/-',         // Plus-minus
-      'π': 'pi',          // Pi
-      'ε': 'epsilon',     // Epsilon
-      'λ': 'lambda',      // Lambda
-      '∑': 'sum',         // Sum
-      '∫': 'integral',    // Integral
+      'α': 'alpha',        // Greek letter alpha
+      'β': 'beta',         // Greek letter beta
+      'γ': 'gamma',        // Greek letter gamma
+      'Δ': 'Delta',        // Greek letter delta
+      '√': 'sqrt',         // Square root
+      '°': ' Grad',        // Degree symbol
+      '²': '^2',           // Superscript 2
+      '³': '^3',           // Superscript 3
+      '±': ' ± ',          // Plus-minus (keep symbol if supported, fallback to text)
+      'π': 'pi',           // Pi
+      'ε': 'epsilon',      // Epsilon
+      'λ': 'lambda',       // Lambda
+      '∑': 'sum',          // Sum
+      '∫': 'integral',     // Integral
     }
 
     for (const [symbol, replacement] of Object.entries(replacements)) {
