@@ -6,10 +6,12 @@ import type { Solution } from '@/lib/shapes/types'
 
 interface Props {
   solution: Solution
+  shapeId: string
+  svgElement?: SVGElement | null
   onExport?: () => void
 }
 
-export function SpickzettelExport({ solution, onExport }: Props) {
+export function SpickzettelExport({ solution, shapeId, svgElement, onExport }: Props) {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -17,8 +19,18 @@ export function SpickzettelExport({ solution, onExport }: Props) {
     setIsLoading(true)
     setError(null)
     try {
-      const pdf = await generateSpickzettel(solution, 'cm')
-      downloadPDF(pdf, `dreieck-spickzettel-${Date.now()}.pdf`)
+      // Get the SVG element from the DOM if not provided
+      let svg = svgElement
+      if (!svg) {
+        const svgContainer = document.querySelector('svg[data-shape-drawing]')
+        if (svgContainer instanceof SVGElement) {
+          svg = svgContainer
+        }
+      }
+
+      const pdf = await generateSpickzettel(solution, 'cm', shapeId, svg || undefined)
+      const shapeLabel = getShapeLabel(shapeId)
+      downloadPDF(pdf, `${shapeLabel.toLowerCase()}-spickzettel-${Date.now()}.pdf`)
       onExport?.()
     } catch (err) {
       const message = err instanceof Error ? err.message : 'PDF konnte nicht erstellt werden'
@@ -61,4 +73,22 @@ export function SpickzettelExport({ solution, onExport }: Props) {
       )}
     </div>
   )
+}
+
+function getShapeLabel(shapeId: string): string {
+  const labels: Record<string, string> = {
+    dreieck: 'Dreieck',
+    kreis: 'Kreis',
+    rechteck: 'Rechteck',
+    trapez: 'Trapez',
+    parallelogramm: 'Parallelogramm',
+    raute: 'Raute',
+    wuerfel: 'Würfel',
+    quader: 'Quader',
+    kugel: 'Kugel',
+    zylinder: 'Zylinder',
+    kegel: 'Kegel',
+    pyramide: 'Pyramide'
+  }
+  return labels[shapeId] || 'Form'
 }

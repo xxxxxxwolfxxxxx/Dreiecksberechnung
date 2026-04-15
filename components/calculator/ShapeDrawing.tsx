@@ -26,6 +26,7 @@ export function ShapeDrawing({ shape, data, isPreview = false }: Props) {
   return (
     <div className="flex flex-col gap-2">
       <svg
+        data-shape-drawing="true"
         viewBox={`0 0 ${svgData.width} ${svgData.height}`}
         className={`w-full rounded-xl border bg-white ${isPreview ? 'opacity-60 border-dashed border-gray-300' : 'border-blue-200'}`}
         style={{ maxHeight: 'min(480px, 85vw)' }}

@@ -166,16 +166,17 @@ function ShapeCalculatorInner({ shapeId }: Props) {
         <ResultsPanel solution={activeSolution} unit={unit} />
       )}
 
-      {/* Export Button - nur für Dreieck */}
-      {activeSolution && shapeId === 'dreieck' && (
+      {/* Export Button - für alle Formen */}
+      {activeSolution && (
         <div className="rounded-2xl bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 p-5">
           <p className="text-sm text-gray-600 mb-3">
             💡 Speichere diese Lösung als PDF – perfekt für deine Hausaufgaben!
           </p>
           <SpickzettelExport
             solution={activeSolution}
+            shapeId={shapeId}
             onExport={() => trackEvent(EVENTS.SPICKZETTEL_EXPORTED, {
-              triangleType: activeSolution.values.typ as string
+              shape: shapeId
             })}
           />
         </div>

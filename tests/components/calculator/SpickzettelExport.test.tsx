@@ -20,9 +20,9 @@ const mockSolution = {
     umfang: 12,
     typ: 'rechtwinklig'
   },
-  method: 'Kosinussatz',
+  method: 'Pythagoras',
   formulas: ['a² + b² = c²'],
-  steps: ['Schritt 1', 'Schritt 2']
+  steps: []
 }
 
 describe('SpickzettelExport', () => {
@@ -31,14 +31,77 @@ describe('SpickzettelExport', () => {
   })
 
   it('renders export button', () => {
-    render(<SpickzettelExport solution={mockSolution} />)
+    render(<SpickzettelExport solution={mockSolution} shapeId="dreieck" />)
     const button = screen.getByRole('button')
     expect(button).toBeInTheDocument()
     expect(button).toHaveTextContent(/Spickzettel/)
   })
 
+  it('accepts shapeId prop for different shapes', () => {
+    render(<SpickzettelExport solution={mockSolution} shapeId="kreis" />)
+    expect(screen.getByRole('button')).toBeInTheDocument()
+  })
+
+  it('passes shapeId to generateSpickzettel', async () => {
+    const mockBlob = new Blob(['pdf content'], { type: 'application/pdf' })
+    ;(pdfGenerator.generateSpickzettel as jest.Mock).mockResolvedValue(mockBlob)
+
+    render(<SpickzettelExport solution={mockSolution} shapeId="rechteck" />)
+    const button = screen.getByRole('button')
+
+    fireEvent.click(button)
+
+    await waitFor(() => {
+      expect(pdfGenerator.generateSpickzettel).toHaveBeenCalledWith(
+        mockSolution,
+        'cm',
+        'rechteck',
+        undefined
+      )
+    })
+  })
+
+  it('passes svgElement to generateSpickzettel when provided', async () => {
+    const mockBlob = new Blob(['pdf content'], { type: 'application/pdf' })
+    const mockSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg') as SVGElement
+    ;(pdfGenerator.generateSpickzettel as jest.Mock).mockResolvedValue(mockBlob)
+
+    render(
+      <SpickzettelExport solution={mockSolution} shapeId="kreis" svgElement={mockSvg} />
+    )
+    const button = screen.getByRole('button')
+
+    fireEvent.click(button)
+
+    await waitFor(() => {
+      expect(pdfGenerator.generateSpickzettel).toHaveBeenCalledWith(
+        mockSolution,
+        'cm',
+        'kreis',
+        mockSvg
+      )
+    })
+  })
+
+  it('generates filename with correct shape label', async () => {
+    const mockBlob = new Blob(['pdf content'], { type: 'application/pdf' })
+    ;(pdfGenerator.generateSpickzettel as jest.Mock).mockResolvedValue(mockBlob)
+
+    render(<SpickzettelExport solution={mockSolution} shapeId="trapez" />)
+    const button = screen.getByRole('button')
+
+    fireEvent.click(button)
+
+    await waitFor(() => {
+      expect(pdfGenerator.downloadPDF).toHaveBeenCalledWith(
+        mockBlob,
+        expect.stringMatching(/^trapez-spickzettel-\d+\.pdf$/)
+      )
+    })
+  })
+
   it('shows download icon in button', () => {
-    const { container } = render(<SpickzettelExport solution={mockSolution} />)
+    const { container } = render(<SpickzettelExport solution={mockSolution} shapeId="dreieck" />)
     const svg = container.querySelector('svg')
     expect(svg).toBeInTheDocument()
   })
@@ -47,13 +110,13 @@ describe('SpickzettelExport', () => {
     const mockBlob = new Blob(['pdf content'], { type: 'application/pdf' })
     ;(pdfGenerator.generateSpickzettel as jest.Mock).mockResolvedValue(mockBlob)
 
-    render(<SpickzettelExport solution={mockSolution} />)
+    render(<SpickzettelExport solution={mockSolution} shapeId="dreieck" />)
     const button = screen.getByRole('button')
 
     fireEvent.click(button)
 
     await waitFor(() => {
-      expect(pdfGenerator.generateSpickzettel).toHaveBeenCalledWith(mockSolution, 'cm')
+      expect(pdfGenerator.generateSpickzettel).toHaveBeenCalledWith(mockSolution, 'cm', 'dreieck', undefined)
       expect(pdfGenerator.downloadPDF).toHaveBeenCalledWith(
         mockBlob,
         expect.stringMatching(/^dreieck-spickzettel-\d+\.pdf$/)
@@ -66,7 +129,7 @@ describe('SpickzettelExport', () => {
       () => new Promise(resolve => setTimeout(() => resolve(new Blob()), 100))
     )
 
-    render(<SpickzettelExport solution={mockSolution} />)
+    render(<SpickzettelExport solution={mockSolution} shapeId="dreieck" />)
     const button = screen.getByRole('button')
 
     fireEvent.click(button)
@@ -85,7 +148,7 @@ describe('SpickzettelExport', () => {
     const mockBlob = new Blob(['pdf content'], { type: 'application/pdf' })
     ;(pdfGenerator.generateSpickzettel as jest.Mock).mockResolvedValue(mockBlob)
 
-    render(<SpickzettelExport solution={mockSolution} onExport={onExport} />)
+    render(<SpickzettelExport solution={mockSolution} shapeId="dreieck" onExport={onExport} />)
     const button = screen.getByRole('button')
 
     fireEvent.click(button)
@@ -101,7 +164,7 @@ describe('SpickzettelExport', () => {
       new Error('PDF generation failed')
     )
 
-    render(<SpickzettelExport solution={mockSolution} />)
+    render(<SpickzettelExport solution={mockSolution} shapeId="dreieck" />)
     const button = screen.getByRole('button')
 
     fireEvent.click(button)
@@ -125,7 +188,7 @@ describe('SpickzettelExport', () => {
       () => new Promise(resolve => setTimeout(() => resolve(new Blob()), 100))
     )
 
-    render(<SpickzettelExport solution={mockSolution} />)
+    render(<SpickzettelExport solution={mockSolution} shapeId="dreieck" />)
     const button = screen.getByRole('button')
 
     fireEvent.click(button)
@@ -138,7 +201,7 @@ describe('SpickzettelExport', () => {
   })
 
   it('has accessibility attributes for screenreaders', () => {
-    render(<SpickzettelExport solution={mockSolution} />)
+    render(<SpickzettelExport solution={mockSolution} shapeId="dreieck" />)
     const button = screen.getByRole('button')
 
     expect(button).toHaveAttribute('aria-label', 'PDF Spickzettel herunterladen')
@@ -150,7 +213,7 @@ describe('SpickzettelExport', () => {
       () => new Promise(resolve => setTimeout(() => resolve(new Blob()), 100))
     )
 
-    render(<SpickzettelExport solution={mockSolution} />)
+    render(<SpickzettelExport solution={mockSolution} shapeId="dreieck" />)
     const button = screen.getByRole('button')
 
     fireEvent.click(button)
@@ -165,7 +228,7 @@ describe('SpickzettelExport', () => {
   })
 
   it('hides SVG from screenreaders', () => {
-    const { container } = render(<SpickzettelExport solution={mockSolution} />)
+    const { container } = render(<SpickzettelExport solution={mockSolution} shapeId="dreieck" />)
     const svg = container.querySelector('svg')
 
     expect(svg).toHaveAttribute('aria-hidden', 'true')
@@ -177,7 +240,7 @@ describe('SpickzettelExport', () => {
       .mockRejectedValueOnce(new Error('First attempt failed'))
       .mockResolvedValueOnce(mockBlob)
 
-    render(<SpickzettelExport solution={mockSolution} />)
+    render(<SpickzettelExport solution={mockSolution} shapeId="dreieck" />)
     const button = screen.getByRole('button')
 
     // First attempt fails
@@ -201,7 +264,7 @@ describe('SpickzettelExport', () => {
   it('shows generic error message for non-Error exceptions', async () => {
     ;(pdfGenerator.generateSpickzettel as jest.Mock).mockRejectedValue('Unknown error')
 
-    render(<SpickzettelExport solution={mockSolution} />)
+    render(<SpickzettelExport solution={mockSolution} shapeId="dreieck" />)
     const button = screen.getByRole('button')
 
     fireEvent.click(button)
