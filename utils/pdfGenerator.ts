@@ -3,6 +3,18 @@ import type { Solution } from '@/lib/shapes/types'
 import { svgElementToImageData } from './svgToImage'
 
 // PDF Layout Constants
+// Helper to properly decode Unicode in formulas
+function decodeFormula(formula: string): string {
+  try {
+    // Decode Unicode escapes to actual characters
+    return formula.replace(/\\u[0-9a-fA-F]{4}/g, (match) => {
+      return String.fromCharCode(parseInt(match.slice(2), 16))
+    })
+  } catch {
+    return formula
+  }
+}
+
 const PDF_MARGIN_TOP = 20
 const PDF_MARGIN_SIDE = 20
 const PDF_MARGIN_BOTTOM = 20
@@ -149,7 +161,7 @@ export async function generateSpickzettel(
       doc.addPage()
       yPosition = PDF_MARGIN_TOP
     }
-    doc.text(result, PDF_MARGIN_SIDE + 10, yPosition)
+    doc.text(decodeFormula(result), PDF_MARGIN_SIDE + 10, yPosition)
     yPosition += PDF_LINE_SPACING
   })
 
@@ -178,7 +190,7 @@ export async function generateSpickzettel(
         doc.addPage()
         yPosition = PDF_MARGIN_TOP
       }
-      doc.text(`• ${formula}`, PDF_MARGIN_SIDE + 5, yPosition)
+      doc.text(`• ${decodeFormula(formula)}`, PDF_MARGIN_SIDE + 5, yPosition)
       yPosition += PDF_SMALL_SIZE
     })
   }
