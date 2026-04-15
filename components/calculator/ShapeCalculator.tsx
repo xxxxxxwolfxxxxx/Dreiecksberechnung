@@ -6,7 +6,6 @@ import { InputPanel } from './InputPanel'
 import { ShapeDrawing } from './ShapeDrawing'
 import { ResultsPanel } from './ResultsPanel'
 import { FormulaExplainer } from './FormulaExplainer'
-import { ModeSelector } from './ModeSelector'
 import { QuizChallenge } from './QuizChallenge'
 import { RelatedTriangles } from './RelatedTriangles'
 import { SpickzettelExport } from './SpickzettelExport'
@@ -213,25 +212,5 @@ function ShapeCalculatorInner({ shapeId }: Props) {
 }
 
 export function ShapeCalculator({ shapeId }: Props) {
-  const [selectedMode, setSelectedMode] = useState<string | null>(null)
-
-  const handleModeSelect = (mode: string) => {
-    trackEvent(EVENTS.MODE_SELECTED, { mode })
-    setSelectedMode(mode)
-  }
-
-  // ModeSelector nur für Dreieck, und immer zusätzlich zum Calculator zeigen
-  const isTriangle = shapeId === 'dreieck'
-
-  return (
-    <div className="space-y-6">
-      {/* Mode Selector - nur für Dreieck, oben */}
-      {isTriangle && !selectedMode && (
-        <ModeSelector onSelect={handleModeSelect} />
-      )}
-
-      {/* Calculator - immer sichtbar mit Zeichnung, SVG bleibt */}
-      <ShapeCalculatorInner key={shapeId} shapeId={shapeId} />
-    </div>
-  )
+  return <ShapeCalculatorInner key={shapeId} shapeId={shapeId} />
 }
