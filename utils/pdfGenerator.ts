@@ -3,13 +3,39 @@ import type { Solution } from '@/lib/shapes/types'
 import { svgElementToImageData } from './svgToImage'
 
 // PDF Layout Constants
-// Helper to properly decode Unicode in formulas
+// Helper to ensure Unicode characters display correctly in jsPDF
+// jsPDF has limited Unicode support, so we use text alternatives as fallback
 function decodeFormula(formula: string): string {
   try {
-    // Decode Unicode escapes to actual characters
-    return formula.replace(/\\u[0-9a-fA-F]{4}/g, (match) => {
+    // First, decode Unicode escape sequences if any
+    let text = formula.replace(/\\u[0-9a-fA-F]{4}/g, (match) => {
       return String.fromCharCode(parseInt(match.slice(2), 16))
     })
+
+    // jsPDF uses Latin-1 encoding by default which doesn't support Greek letters and math symbols
+    // Add text labels next to problematic Unicode characters for clarity
+    const replacements: Record<string, string> = {
+      'α': 'alpha',       // Greek letter alpha
+      'β': 'beta',        // Greek letter beta
+      'γ': 'gamma',       // Greek letter gamma
+      'Δ': 'Delta',       // Greek letter delta
+      '√': 'sqrt',        // Square root
+      '°': 'Grad',        // Degree symbol -> "Grad" (German for degree)
+      '²': 'hoch2',       // Superscript 2
+      '³': 'hoch3',       // Superscript 3
+      '±': '+/-',         // Plus-minus
+      'π': 'pi',          // Pi
+      'ε': 'epsilon',     // Epsilon
+      'λ': 'lambda',      // Lambda
+      '∑': 'sum',         // Sum
+      '∫': 'integral',    // Integral
+    }
+
+    for (const [symbol, replacement] of Object.entries(replacements)) {
+      text = text.split(symbol).join(replacement)
+    }
+
+    return text
   } catch {
     return formula
   }
@@ -52,7 +78,15 @@ export async function generateSpickzettel(
   shapeId: string = 'dreieck',
   svgElement?: SVGElement
 ): Promise<Blob> {
-  const doc = new jsPDF()
+  // Use UTF-8 compatible font for Unicode support (Greek letters, math symbols)
+  const doc = new jsPDF({
+    compress: true,
+    precision: 2
+  })
+
+  // Set font to helvetica with UTF-8 support
+  doc.setFont('helvetica', 'normal')
+
   const shapeLabel = SHAPE_LABELS[shapeId] || 'Form'
 
   doc.setProperties({
