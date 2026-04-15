@@ -8,7 +8,7 @@ export interface AnalyticsEvent {
  * @param eventName - The name of the event to track
  * @param eventData - Optional data associated with the event
  */
-export function trackEvent(eventName: string, eventData?: Record<string, any>) {
+export function trackEvent(eventName: string, eventData?: Record<string, string | number | boolean>) {
   // Google Analytics 4 integration
   if (typeof window !== 'undefined' && (window as any).gtag) {
     (window as any).gtag('event', eventName, eventData || {})
