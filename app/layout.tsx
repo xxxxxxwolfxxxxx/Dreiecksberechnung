@@ -61,6 +61,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               Dachplattenrechner.de
             </a>
           </p>
+          <p className="mt-2 text-xs text-gray-400">
+            Weitere Rechner:{' '}
+            <a href="https://www.deutschland-rechnet.de" target="_blank" rel="noopener"
+              className="hover:underline hover:text-gray-500">
+              Deutschland-rechnet.de
+            </a>
+          </p>
         </footer>
       </body>
     </html>
