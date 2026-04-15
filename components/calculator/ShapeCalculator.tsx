@@ -166,8 +166,8 @@ function ShapeCalculatorInner({ shapeId }: Props) {
         <ResultsPanel solution={activeSolution} unit={unit} />
       )}
 
-      {/* Export Button */}
-      {activeSolution && (
+      {/* Export Button - nur für Dreieck */}
+      {activeSolution && shapeId === 'dreieck' && (
         <div className="rounded-2xl bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 p-5">
           <p className="text-sm text-gray-600 mb-3">
             💡 Speichere diese Lösung als PDF – perfekt für deine Hausaufgaben!
@@ -193,13 +193,13 @@ function ShapeCalculatorInner({ shapeId }: Props) {
         />
       )}
 
-      {/* Quiz Section */}
-      {activeSolution && (
+      {/* Quiz Section - nur für Dreieck */}
+      {activeSolution && shapeId === 'dreieck' && (
         <QuizChallenge solution={activeSolution} />
       )}
 
-      {/* Related Triangles Section */}
-      {activeSolution && (
+      {/* Related Triangles Section - nur für Dreieck */}
+      {activeSolution && shapeId === 'dreieck' && (
         <RelatedTriangles
           typ={activeSolution.values.typ as string}
           onSelect={(newValues) => {
