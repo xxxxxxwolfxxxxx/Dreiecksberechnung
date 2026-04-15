@@ -220,11 +220,18 @@ export function ShapeCalculator({ shapeId }: Props) {
     setSelectedMode(mode)
   }
 
-  // Wenn noch keine Mode ausgewählt ist, zeige ModeSelector
-  if (!selectedMode) {
-    return <ModeSelector onSelect={handleModeSelect} />
-  }
+  // ModeSelector nur für Dreieck, und immer zusätzlich zum Calculator zeigen
+  const isTriangle = shapeId === 'dreieck'
 
-  // Sonst zeige Calculator mit key={shapeId} der state resetzt wenn die Form ändert
-  return <ShapeCalculatorInner key={shapeId} shapeId={shapeId} />
+  return (
+    <div className="space-y-6">
+      {/* Mode Selector - nur für Dreieck, oben */}
+      {isTriangle && !selectedMode && (
+        <ModeSelector onSelect={handleModeSelect} />
+      )}
+
+      {/* Calculator - immer sichtbar mit Zeichnung, SVG bleibt */}
+      <ShapeCalculatorInner key={shapeId} shapeId={shapeId} />
+    </div>
+  )
 }
