@@ -38,8 +38,9 @@ export async function generateSpickzettel(
   // Dreieck-Typ
   doc.setFontSize(PDF_SUBTITLE_SIZE)
   doc.setTextColor(100, 100, 100)
+  const typStr = String(solution.values.typ)
   doc.text(
-    `Typ: ${solution.values.typ.charAt(0).toUpperCase() + solution.values.typ.slice(1)}`,
+    `Typ: ${typStr.charAt(0).toUpperCase() + typStr.slice(1)}`,
     PDF_MARGIN_SIDE,
     yPosition
   )

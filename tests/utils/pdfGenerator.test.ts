@@ -64,7 +64,8 @@ describe('pdfGenerator', () => {
         typ: 'gleichseitig'
       },
       method: 'SSS',
-      formulas: []
+      formulas: [],
+      steps: []
     }
     const pdf = await generateSpickzettel(minimal, 'cm')
     expect(pdf).toBeInstanceOf(Blob)
