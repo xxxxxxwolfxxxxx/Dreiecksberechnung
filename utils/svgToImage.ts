@@ -48,6 +48,9 @@ export async function svgElementToImageData(
         ctx.fillStyle = 'white'
         ctx.fillRect(0, 0, width, height)
 
+        // Set font to support Unicode characters
+        ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+
         // Draw the image
         ctx.drawImage(img, 0, 0, width, height)
 
