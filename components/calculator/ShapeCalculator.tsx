@@ -5,6 +5,7 @@ import { InputPanel } from './InputPanel'
 import { ShapeDrawing } from './ShapeDrawing'
 import { ResultsPanel } from './ResultsPanel'
 import { FormulaExplainer } from './FormulaExplainer'
+import { ModeSelector } from './ModeSelector'
 
 const UNITS = ['mm', 'cm', 'm', 'km']
 
@@ -145,6 +146,13 @@ function ShapeCalculatorInner({ shapeId }: Props) {
 }
 
 export function ShapeCalculator({ shapeId }: Props) {
-  // key={shapeId} resets all state when the shape changes
+  const [selectedMode, setSelectedMode] = useState<string | null>(null)
+
+  // Wenn noch keine Mode ausgewählt ist, zeige ModeSelector
+  if (!selectedMode) {
+    return <ModeSelector onSelect={setSelectedMode} />
+  }
+
+  // Sonst zeige Calculator mit key={shapeId} der state resetzt wenn die Form ändert
   return <ShapeCalculatorInner key={shapeId} shapeId={shapeId} />
 }
