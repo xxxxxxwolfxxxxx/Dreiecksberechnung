@@ -14,27 +14,27 @@ interface Mode {
 const MODES: Mode[] = [
   {
     id: 'sss',
-    title: 'Alle 3 Seiten',
-    description: 'Du kennst die Längen aller drei Seiten deines Dreiecks.',
-    hint: 'SSS',
+    title: 'Alle 3 Seiten (SSS)',
+    description: 'Du kennst alle drei Seitenlängen – das reicht vollkommen!',
+    hint: 'Die einfachste Methode',
   },
   {
     id: 'sws',
-    title: '2 Seiten + 1 Winkel',
-    description: 'Du kennst zwei Seitenlängen und den Winkel zwischen ihnen.',
-    hint: 'SWS',
+    title: '2 Seiten + 1 Winkel (SWS)',
+    description: 'Du kennst zwei Seiten und den Winkel dazwischen',
+    hint: 'Der Klassiker in der Schule',
   },
   {
     id: 'wsw',
-    title: '1 Seite + 2 Winkel',
-    description: 'Du kennst eine Seitenlänge und zwei angrenzende Winkel.',
-    hint: 'WSW',
+    title: '1 Seite + 2 Winkel (WSW)',
+    description: 'Du kennst eine Seite und zwei anliegende Winkel',
+    hint: 'Für spezielle Aufgaben',
   },
   {
     id: 'www',
     title: 'Weiß nicht / Alle Felder',
-    description: 'Du möchtest alle Felder selbst ausfüllen oder weißt nicht, welche Informationen du hast.',
-    hint: 'WWW',
+    description: 'Gib einfach Werte ein – wir zeigen dir, was möglich ist',
+    hint: 'Einfach ausprobieren!',
   },
 ]
 

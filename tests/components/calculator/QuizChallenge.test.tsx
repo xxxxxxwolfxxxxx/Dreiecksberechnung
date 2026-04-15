@@ -24,7 +24,7 @@ describe('QuizChallenge', () => {
     render(<QuizChallenge solution={mockSolution} />)
 
     // Header sollte angezeigt werden
-    expect(screen.getByText(/🤓 Kleine Prüfung/)).toBeInTheDocument()
+    expect(screen.getByText(/Schnelltest – Hast du verstanden\?/)).toBeInTheDocument()
 
     // Die Frage sollte angezeigt werden (für rechtwinklig Triangle)
     expect(screen.getByText(/Hypotenuse/i)).toBeInTheDocument()

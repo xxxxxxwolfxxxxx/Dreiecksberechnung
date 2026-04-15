@@ -95,7 +95,10 @@ function ShapeCalculatorInner({ shapeId }: Props) {
           </select>
         </div>
         <p className="mt-1 text-sm text-blue-100">
-          {result?.solutions.length ? `Ergebnis berechnet` : `Gib mindestens ${shape.minRequired} Werte ein`}
+          {result?.solutions.length
+            ? `✅ Berechnet! ${Object.values(values).filter(v => v !== undefined).length} Werte eingegeben`
+            : `Gib ${shape.minRequired} Werte ein – das Dreieck ist ganz easy zu berechnen! 🎯`
+          }
         </p>
       </div>
 

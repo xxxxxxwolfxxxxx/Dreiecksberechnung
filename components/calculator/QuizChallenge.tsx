@@ -26,8 +26,9 @@ export function QuizChallenge({ solution }: Props) {
   return (
     <div className="rounded-2xl bg-blue-50 border-2 border-blue-300 p-5">
       {/* Header */}
-      <div className="mb-5">
-        <h3 className="text-lg font-bold text-gray-800">🤓 Kleine Prüfung</h3>
+      <div className="flex items-center gap-2 mb-5">
+        <span className="text-2xl">🎓</span>
+        <h3 className="font-bold text-blue-900">Schnelltest – Hast du verstanden?</h3>
       </div>
 
       {/* Frage */}

@@ -12,9 +12,13 @@ export function RelatedTriangles({ typ, onSelect }: Props) {
 
   return (
     <div className="rounded-2xl bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200 p-5">
-      <h2 className="font-bold text-gray-800 text-sm">🔺 Ähnliche Dreiecke erkunden</h2>
-      <p className="text-xs text-gray-600 mt-1">
-        Probiere diese Varianten aus und vergleiche die Ergebnisse:
+      <div className="flex items-center gap-2 mb-4">
+        <span className="text-2xl">🔬</span>
+        <h3 className="font-bold text-purple-900">Noch mehr ausprobieren?</h3>
+      </div>
+
+      <p className="text-sm text-gray-600 mb-4">
+        Vergleiche dein Dreieck mit klassischen Beispielen. Klick drauf und beobachte, wie sich die Werte ändern:
       </p>
 
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 mt-4">

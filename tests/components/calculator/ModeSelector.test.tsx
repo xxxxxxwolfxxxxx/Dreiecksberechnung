@@ -33,9 +33,9 @@ describe('ModeSelector', () => {
 
   test('zeigt Hint-Texte unter den Buttons', () => {
     render(<ModeSelector onSelect={() => {}} />)
-    expect(screen.getByText(/SSS/i)).toBeInTheDocument()
-    expect(screen.getByText(/SWS/i)).toBeInTheDocument()
-    expect(screen.getByText(/WSW/i)).toBeInTheDocument()
-    expect(screen.getByText(/WWW/i)).toBeInTheDocument()
+    expect(screen.getByText(/Die einfachste Methode/i)).toBeInTheDocument()
+    expect(screen.getByText(/Der Klassiker in der Schule/i)).toBeInTheDocument()
+    expect(screen.getByText(/Für spezielle Aufgaben/i)).toBeInTheDocument()
+    expect(screen.getByText(/Einfach ausprobieren!/i)).toBeInTheDocument()
   })
 })
