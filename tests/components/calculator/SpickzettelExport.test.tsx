@@ -95,7 +95,7 @@ describe('SpickzettelExport', () => {
     })
   })
 
-  it('handles PDF generation errors gracefully', async () => {
+  it('handles PDF generation errors gracefully and shows error message', async () => {
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation()
     ;(pdfGenerator.generateSpickzettel as jest.Mock).mockRejectedValue(
       new Error('PDF generation failed')
@@ -113,6 +113,8 @@ describe('SpickzettelExport', () => {
       )
       // Button should be re-enabled after error
       expect(button).not.toBeDisabled()
+      // Error message should be displayed
+      expect(screen.getByText(/PDF generation failed/)).toBeInTheDocument()
     })
 
     consoleSpy.mockRestore()
@@ -132,6 +134,80 @@ describe('SpickzettelExport', () => {
 
     await waitFor(() => {
       expect(button).not.toBeDisabled()
+    })
+  })
+
+  it('has accessibility attributes for screenreaders', () => {
+    render(<SpickzettelExport solution={mockSolution} />)
+    const button = screen.getByRole('button')
+
+    expect(button).toHaveAttribute('aria-label', 'PDF Spickzettel herunterladen')
+    expect(button).toHaveAttribute('aria-busy', 'false')
+  })
+
+  it('sets aria-busy to true during loading', async () => {
+    ;(pdfGenerator.generateSpickzettel as jest.Mock).mockImplementation(
+      () => new Promise(resolve => setTimeout(() => resolve(new Blob()), 100))
+    )
+
+    render(<SpickzettelExport solution={mockSolution} />)
+    const button = screen.getByRole('button')
+
+    fireEvent.click(button)
+
+    // aria-busy should be true while loading
+    expect(button).toHaveAttribute('aria-busy', 'true')
+
+    await waitFor(() => {
+      // aria-busy should be false after loading
+      expect(button).toHaveAttribute('aria-busy', 'false')
+    })
+  })
+
+  it('hides SVG from screenreaders', () => {
+    const { container } = render(<SpickzettelExport solution={mockSolution} />)
+    const svg = container.querySelector('svg')
+
+    expect(svg).toHaveAttribute('aria-hidden', 'true')
+  })
+
+  it('clears error message when retrying after failure', async () => {
+    const mockBlob = new Blob(['pdf content'], { type: 'application/pdf' })
+    ;(pdfGenerator.generateSpickzettel as jest.Mock)
+      .mockRejectedValueOnce(new Error('First attempt failed'))
+      .mockResolvedValueOnce(mockBlob)
+
+    render(<SpickzettelExport solution={mockSolution} />)
+    const button = screen.getByRole('button')
+
+    // First attempt fails
+    fireEvent.click(button)
+
+    await waitFor(() => {
+      expect(screen.getByText(/First attempt failed/)).toBeInTheDocument()
+    })
+
+    // Retry succeeds
+    fireEvent.click(button)
+
+    await waitFor(() => {
+      // Error message should be cleared
+      expect(screen.queryByText(/First attempt failed/)).not.toBeInTheDocument()
+      // Download should have been called
+      expect(pdfGenerator.downloadPDF).toHaveBeenCalled()
+    })
+  })
+
+  it('shows generic error message for non-Error exceptions', async () => {
+    ;(pdfGenerator.generateSpickzettel as jest.Mock).mockRejectedValue('Unknown error')
+
+    render(<SpickzettelExport solution={mockSolution} />)
+    const button = screen.getByRole('button')
+
+    fireEvent.click(button)
+
+    await waitFor(() => {
+      expect(screen.getByText(/PDF konnte nicht erstellt werden/)).toBeInTheDocument()
     })
   })
 })
