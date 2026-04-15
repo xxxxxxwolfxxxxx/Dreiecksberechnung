@@ -7,6 +7,8 @@ import { ShapeDrawing } from './ShapeDrawing'
 import { ResultsPanel } from './ResultsPanel'
 import { FormulaExplainer } from './FormulaExplainer'
 import { ModeSelector } from './ModeSelector'
+import { QuizChallenge } from './QuizChallenge'
+import { RelatedTriangles } from './RelatedTriangles'
 
 const UNITS = ['mm', 'cm', 'm', 'km']
 
@@ -154,6 +156,22 @@ function ShapeCalculatorInner({ shapeId }: Props) {
           steps={activeSolution.steps}
           formulas={activeSolution.formulas}
           method={activeSolution.method}
+        />
+      )}
+
+      {/* Quiz Section */}
+      {activeSolution && (
+        <QuizChallenge solution={activeSolution} />
+      )}
+
+      {/* Related Triangles Section */}
+      {activeSolution && (
+        <RelatedTriangles
+          typ={activeSolution.values.typ as string}
+          onSelect={(newValues) => {
+            setValues(newValues)
+            setActiveIdx(0)
+          }}
         />
       )}
     </div>
