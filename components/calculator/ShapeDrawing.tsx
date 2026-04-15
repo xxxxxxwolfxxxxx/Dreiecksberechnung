@@ -1,4 +1,5 @@
 'use client'
+import { useState } from 'react'
 import type { Shape, SVGData } from '@/lib/shapes/types'
 
 interface Props {
@@ -8,6 +9,9 @@ interface Props {
 }
 
 export function ShapeDrawing({ shape, data, isPreview = false }: Props) {
+  const [hoveredPointLabel, setHoveredPointLabel] = useState<string | null>(null)
+  const [hoveredLineLabel, setHoveredLineLabel] = useState<string | null>(null)
+
   const svgData = data ?? shape.toSVG(shape.defaultValues, 280)
 
   if (!svgData.points.length && !svgData.circles?.length && !svgData.ellipses?.length) return (
@@ -25,6 +29,10 @@ export function ShapeDrawing({ shape, data, isPreview = false }: Props) {
         viewBox={`0 0 ${svgData.width} ${svgData.height}`}
         className={`w-full rounded-xl border bg-white ${isPreview ? 'opacity-60 border-dashed border-gray-300' : 'border-blue-200'}`}
         style={{ maxHeight: 'min(480px, 85vw)' }}
+        onMouseLeave={() => {
+          setHoveredPointLabel(null)
+          setHoveredLineLabel(null)
+        }}
       >
         {/* Kreise */}
         {svgData.circles?.map((c, i) => (
@@ -68,15 +76,30 @@ export function ShapeDrawing({ shape, data, isPreview = false }: Props) {
           if (!from || !to) return null
           const mx = (from.x + to.x) / 2
           const my = (from.y + to.y) / 2
+          const isHovered = hoveredLineLabel === line.label
           return (
-            <g key={i}>
+            <g
+              key={i}
+              onMouseEnter={() => !isPreview && setHoveredLineLabel(line.label)}
+              onMouseLeave={() => setHoveredLineLabel(null)}
+              className={!isPreview ? 'cursor-pointer' : ''}
+            >
               <line
                 x1={from.x} y1={from.y} x2={to.x} y2={to.y}
-                stroke={stroke} strokeWidth="2"
+                stroke={isHovered ? '#ef4444' : stroke}
+                strokeWidth={isHovered ? '4' : '2'}
                 strokeDasharray={line.dashed ? '6,4' : undefined}
+                className="transition-all duration-150"
               />
               {line.label && (
-                <text x={mx} y={my - 6} textAnchor="middle" fontSize="12" fontWeight="600" fill={textFill}>
+                <text
+                  x={mx} y={my - 6}
+                  textAnchor="middle"
+                  fontSize={isHovered ? '14' : '12'}
+                  fontWeight={isHovered ? '700' : '600'}
+                  fill={isHovered ? '#ef4444' : textFill}
+                  className="transition-all duration-150"
+                >
                   {line.label}
                 </text>
               )}
@@ -100,16 +123,37 @@ export function ShapeDrawing({ shape, data, isPreview = false }: Props) {
         ))}
 
         {/* Punkte */}
-        {svgData.points.map((pt, i) => (
-          <g key={i}>
-            <circle cx={pt.x} cy={pt.y} r="4" fill={stroke} />
-            {pt.label && (
-              <text x={pt.x} y={pt.y - 10} textAnchor="middle" fontSize="13" fontWeight="bold" fill={isPreview ? "#64748b" : "#1e40af"}>
-                {pt.label}
-              </text>
-            )}
-          </g>
-        ))}
+        {svgData.points.map((pt, i) => {
+          const isHovered = hoveredPointLabel === pt.label
+          return (
+            <g
+              key={i}
+              onMouseEnter={() => !isPreview && setHoveredPointLabel(pt.label)}
+              onMouseLeave={() => setHoveredPointLabel(null)}
+              className={!isPreview ? 'cursor-pointer' : ''}
+            >
+              <circle
+                cx={pt.x} cy={pt.y}
+                r={isHovered ? 6 : 4}
+                fill={isHovered ? '#ef4444' : stroke}
+                className="transition-all duration-150"
+              />
+              {pt.label && (
+                <text
+                  x={pt.x}
+                  y={pt.y - (isHovered ? 16 : 10)}
+                  textAnchor="middle"
+                  fontSize={isHovered ? '15' : '13'}
+                  fontWeight={isHovered ? '700' : 'bold'}
+                  fill={isHovered ? '#ef4444' : isPreview ? "#64748b" : "#1e40af"}
+                  className="transition-all duration-150"
+                >
+                  {pt.label}
+                </text>
+              )}
+            </g>
+          )
+        })}
       </svg>
       {isPreview && (
         <p className="text-center text-xs text-gray-400">
