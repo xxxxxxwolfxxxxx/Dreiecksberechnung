@@ -65,11 +65,12 @@ export async function generateSpickzettel(
     }
 
     try {
-      const imageData = await svgElementToImageData(svgElement, 150, 150)
+      // Render at 300x300 for sharp quality, display as 100x100 in PDF
+      const imageData = await svgElementToImageData(svgElement, 300, 300)
       // Center the image
-      const imgX = (pageWidth - 150) / 2
-      doc.addImage(imageData, 'PNG', imgX, yPosition, 150, 150)
-      yPosition += 160
+      const imgX = (pageWidth - 100) / 2
+      doc.addImage(imageData, 'PNG', imgX, yPosition, 100, 100)
+      yPosition += 110
     } catch (error) {
       console.warn('Failed to embed SVG in PDF:', error)
       // Continue without image
