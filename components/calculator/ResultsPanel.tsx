@@ -1,5 +1,6 @@
 import { formatUnit } from '@/lib/format'
 import type { Solution } from '@/lib/shapes/types'
+import { getResultHint, getComparison, getContextForKey } from '@/utils/resultHints'
 
 interface Props {
   solution: Solution
@@ -47,12 +48,25 @@ export function ResultsPanel({ solution, unit }: Props) {
           {highlighted.map(([key, value]) => {
             if (typeof value !== 'number') return null
             const power = VOLUME_KEYS.includes(key) ? 3 : AREA_KEYS.includes(key) ? 2 : 1
+            const hint = getResultHint(key)
+            const comparison = AREA_KEYS.includes(key) ? getComparison(value) : ''
+            const context = getContextForKey(key)
+            const hasTooltip = hint || comparison || context
+
             return (
-              <div key={key} className="rounded-xl bg-blue-50 p-3 text-center">
+              <div key={key} className={`rounded-xl bg-blue-50 p-3 text-center ${hasTooltip ? 'group relative' : ''}`}>
                 <div className="text-xs font-semibold text-blue-500 uppercase tracking-wide">{LABELS[key] ?? key}</div>
                 <div className="mt-1 text-xl font-extrabold text-blue-800">
                   {formatUnit(value, unit, power)}
                 </div>
+
+                {hasTooltip && (
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-900 text-white text-xs rounded-lg p-3 whitespace-normal w-48 z-10 shadow-lg pointer-events-none">
+                    {hint && <p className="mb-2">{hint}</p>}
+                    {comparison && <p className="mb-2">{comparison}</p>}
+                    {context && <p>{context}</p>}
+                  </div>
+                )}
               </div>
             )
           })}
@@ -62,24 +76,44 @@ export function ResultsPanel({ solution, unit }: Props) {
       {/* Alle weiteren Werte */}
       <dl className="grid grid-cols-2 gap-x-4 gap-y-3 p-4 sm:grid-cols-3">
         {rest.map(([key, value]) => {
-          if (key === 'typ') return (
-            <div key={key} className="col-span-full rounded-lg bg-purple-50 px-3 py-2 flex items-center gap-2">
-              <span className="text-purple-600">{'\u25B2'}</span>
-              <div>
-                <dt className="text-xs text-purple-500">Dreieckstyp</dt>
-                <dd className="font-bold text-purple-800 capitalize">{String(value)}</dd>
+          if (key === 'typ') {
+            const hint = getResultHint(key)
+            const context = getContextForKey(key)
+            const hasTooltip = hint || context
+            return (
+              <div key={key} className={`col-span-full rounded-lg bg-purple-50 px-3 py-2 flex items-center gap-2 ${hasTooltip ? 'group relative' : ''}`}>
+                <span className="text-purple-600">{'\u25B2'}</span>
+                <div>
+                  <dt className="text-xs text-purple-500">Dreieckstyp</dt>
+                  <dd className="font-bold text-purple-800 capitalize">{String(value)}</dd>
+                </div>
+                {hasTooltip && (
+                  <div className="absolute bottom-full left-0 mb-2 hidden group-hover:block bg-gray-900 text-white text-xs rounded-lg p-2 whitespace-normal w-48 z-10 shadow-lg pointer-events-none">
+                    {hint && <p className="mb-1">{hint}</p>}
+                    {context && <p>{context}</p>}
+                  </div>
+                )}
               </div>
-            </div>
-          )
+            )
+          }
           if (typeof value !== 'number') return null
           const isAngle = ['alpha', 'beta', 'gamma'].includes(key)
           const power = VOLUME_KEYS.includes(key) ? 3 : AREA_KEYS.includes(key) ? 2 : 1
+          const hint = getResultHint(key)
+          const context = getContextForKey(key)
+          const hasTooltip = hint || context
           return (
-            <div key={key}>
+            <div key={key} className={hasTooltip ? 'group relative' : ''}>
               <dt className="text-xs text-gray-400 font-medium">{LABELS[key] ?? key}</dt>
               <dd className="font-semibold text-gray-800">
                 {isAngle ? formatUnit(value, '\u00B0') : formatUnit(value, unit, power)}
               </dd>
+              {hasTooltip && (
+                <div className="absolute bottom-full left-0 mb-2 hidden group-hover:block bg-gray-900 text-white text-xs rounded-lg p-2 whitespace-normal w-48 z-10 shadow-lg pointer-events-none">
+                  {hint && <p className="mb-1">{hint}</p>}
+                  {context && <p>{context}</p>}
+                </div>
+              )}
             </div>
           )
         })}
