@@ -9,6 +9,8 @@ import { FormulaExplainer } from './FormulaExplainer'
 import { ModeSelector } from './ModeSelector'
 import { QuizChallenge } from './QuizChallenge'
 import { RelatedTriangles } from './RelatedTriangles'
+import { SpickzettelExport } from './SpickzettelExport'
+import { trackEvent, EVENTS } from '@/utils/analytics'
 
 const UNITS = ['mm', 'cm', 'm', 'km']
 
@@ -52,7 +54,21 @@ function ShapeCalculatorInner({ shapeId }: Props) {
   const result = useMemo(() => {
     const filled = Object.values(values).filter(v => v !== undefined && !isNaN(v as number)).length
     if (filled >= shape.minRequired) {
-      return shape.solve(values)
+      const solved = shape.solve(values)
+      // Track successful calculation
+      if (solved?.solutions.length && !solved.error) {
+        trackEvent(EVENTS.CALCULATION_COMPLETE, {
+          triangleType: solved.solutions[0].values.typ as string,
+          method: solved.solutions[0].method as string
+        })
+      }
+      // Track calculation errors
+      if (solved?.error) {
+        trackEvent(EVENTS.CALCULATION_ERROR, {
+          error: solved.error as string
+        })
+      }
+      return solved
     }
     return null
   }, [values, shape])
@@ -147,6 +163,21 @@ function ShapeCalculatorInner({ shapeId }: Props) {
         <ResultsPanel solution={activeSolution} unit={unit} />
       )}
 
+      {/* Export Button */}
+      {activeSolution && (
+        <div className="rounded-2xl bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 p-5">
+          <p className="text-sm text-gray-600 mb-3">
+            💡 Speichere diese Lösung als PDF – perfekt für deine Hausaufgaben!
+          </p>
+          <SpickzettelExport
+            solution={activeSolution}
+            onExport={() => trackEvent(EVENTS.SPICKZETTEL_EXPORTED, {
+              triangleType: activeSolution.values.typ as string
+            })}
+          />
+        </div>
+      )}
+
       {/* Mittlerer Werbebanner – erscheint nur nach der Berechnung */}
       {activeSolution && <MidBanner />}
 
@@ -181,9 +212,14 @@ function ShapeCalculatorInner({ shapeId }: Props) {
 export function ShapeCalculator({ shapeId }: Props) {
   const [selectedMode, setSelectedMode] = useState<string | null>(null)
 
+  const handleModeSelect = (mode: string) => {
+    trackEvent(EVENTS.MODE_SELECTED, { mode })
+    setSelectedMode(mode)
+  }
+
   // Wenn noch keine Mode ausgewählt ist, zeige ModeSelector
   if (!selectedMode) {
-    return <ModeSelector onSelect={setSelectedMode} />
+    return <ModeSelector onSelect={handleModeSelect} />
   }
 
   // Sonst zeige Calculator mit key={shapeId} der state resetzt wenn die Form ändert
