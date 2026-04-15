@@ -6,6 +6,7 @@ import { InputPanel } from './InputPanel'
 import { ShapeDrawing } from './ShapeDrawing'
 import { ResultsPanel } from './ResultsPanel'
 import { FormulaExplainer } from './FormulaExplainer'
+import { DeepExplanation } from './DeepExplanation'
 import { QuizChallenge } from './QuizChallenge'
 import { RelatedTriangles } from './RelatedTriangles'
 import { SpickzettelExport } from './SpickzettelExport'
@@ -190,6 +191,11 @@ function ShapeCalculatorInner({ shapeId }: Props) {
           formulas={activeSolution.formulas}
           method={activeSolution.method}
         />
+      )}
+
+      {/* Deep Explanation - nur für Dreieck (bessere SEO) */}
+      {activeSolution && shapeId === 'dreieck' && (
+        <DeepExplanation solution={activeSolution} />
       )}
 
       {/* Quiz Section - nur für Dreieck */}
