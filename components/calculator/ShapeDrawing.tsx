@@ -80,7 +80,7 @@ export function ShapeDrawing({ shape, data, isPreview = false }: Props) {
           return (
             <g
               key={i}
-              onMouseEnter={() => !isPreview && setHoveredLineLabel(line.label)}
+              onMouseEnter={() => !isPreview && line.label && setHoveredLineLabel(line.label)}
               onMouseLeave={() => setHoveredLineLabel(null)}
               className={!isPreview ? 'cursor-pointer' : ''}
             >
@@ -128,7 +128,7 @@ export function ShapeDrawing({ shape, data, isPreview = false }: Props) {
           return (
             <g
               key={i}
-              onMouseEnter={() => !isPreview && setHoveredPointLabel(pt.label)}
+              onMouseEnter={() => !isPreview && pt.label && setHoveredPointLabel(pt.label)}
               onMouseLeave={() => setHoveredPointLabel(null)}
               className={!isPreview ? 'cursor-pointer' : ''}
             >
