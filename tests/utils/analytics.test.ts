@@ -4,8 +4,6 @@ describe('analytics', () => {
   beforeEach(() => {
     // Mock window.gtag
     ;(global as any).gtag = jest.fn()
-    // Reset NODE_ENV to test
-    process.env.NODE_ENV = 'test'
   })
 
   afterEach(() => {
@@ -49,23 +47,27 @@ describe('analytics', () => {
     })
 
     it('logs to console in development mode', () => {
-      process.env.NODE_ENV = 'development'
+      const originalEnv = process.env.NODE_ENV
+      ;(process.env as any).NODE_ENV = 'development'
       const consoleSpy = jest.spyOn(console, 'log').mockImplementation()
 
       trackEvent('test_event', { foo: 'bar' })
 
       expect(consoleSpy).toHaveBeenCalledWith('Analytics:', 'test_event', { foo: 'bar' })
       consoleSpy.mockRestore()
+      ;(process.env as any).NODE_ENV = originalEnv
     })
 
     it('does not log to console in production mode', () => {
-      process.env.NODE_ENV = 'production'
+      const originalEnv = process.env.NODE_ENV
+      ;(process.env as any).NODE_ENV = 'production'
       const consoleSpy = jest.spyOn(console, 'log').mockImplementation()
 
       trackEvent('test_event', { foo: 'bar' })
 
       expect(consoleSpy).not.toHaveBeenCalled()
       consoleSpy.mockRestore()
+      ;(process.env as any).NODE_ENV = originalEnv
     })
 
     it('handles multiple event calls', () => {
