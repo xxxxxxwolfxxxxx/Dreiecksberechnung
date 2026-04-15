@@ -32,32 +32,32 @@ describe('DeepExplanation', () => {
   }
 
   it('rendert Deep Explanation für rechtwinkliges Dreieck', () => {
-    render(<DeepExplanation solution={mockRightTriangleSolution} />)
+    render(<DeepExplanation solution={mockRightTriangleSolution} shapeId="dreieck" />)
     expect(screen.getByText(/Das rechtwinklige Dreieck/i)).toBeInTheDocument()
     const headings = screen.getAllByRole('heading')
     expect(headings.some(h => h.textContent?.includes('Der Satz des Pythagoras'))).toBe(true)
   })
 
   it('zeigt Pythagoras-Berechnung mit konkreten Zahlen', () => {
-    render(<DeepExplanation solution={mockRightTriangleSolution} />)
+    render(<DeepExplanation solution={mockRightTriangleSolution} shapeId="dreieck" />)
     expect(screen.getByText(/3² \+ 4² = 5/i)).toBeInTheDocument()
   })
 
   it('rendert Deep Explanation für gleichseitiges Dreieck', () => {
-    render(<DeepExplanation solution={mockEqualTriangleSolution} />)
+    render(<DeepExplanation solution={mockEqualTriangleSolution} shapeId="dreieck" />)
     expect(screen.getByText(/Das gleichseitige Dreieck/i)).toBeInTheDocument()
     expect(screen.getByText(/Symmetrieachsen/i)).toBeInTheDocument()
   })
 
   it('hat mehrere Sections mit Überschriften', () => {
-    render(<DeepExplanation solution={mockRightTriangleSolution} />)
+    render(<DeepExplanation solution={mockRightTriangleSolution} shapeId="dreieck" />)
     expect(screen.getByText(/Was ist ein rechtwinkliges Dreieck/i)).toBeInTheDocument()
     expect(screen.getByText(/Praktische Anwendungen/i)).toBeInTheDocument()
     expect(screen.getByText(/Flächen- und Umfangsberechnung/i)).toBeInTheDocument()
   })
 
   it('zeigt Merksatz am Ende', () => {
-    render(<DeepExplanation solution={mockRightTriangleSolution} />)
+    render(<DeepExplanation solution={mockRightTriangleSolution} shapeId="dreieck" />)
     expect(screen.getByText(/Merksatz/i)).toBeInTheDocument()
   })
 })

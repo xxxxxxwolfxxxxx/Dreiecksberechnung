@@ -195,7 +195,7 @@ function ShapeCalculatorInner({ shapeId }: Props) {
 
       {/* Deep Explanation - nur für Dreieck (bessere SEO) */}
       {activeSolution && shapeId === 'dreieck' && (
-        <DeepExplanation solution={activeSolution} />
+        <DeepExplanation solution={activeSolution} shapeId={shapeId} />
       )}
 
       {/* Quiz Section - nur für Dreieck */}
