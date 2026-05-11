@@ -9,26 +9,22 @@ interface Props {
 
 const LABELS: Record<string, string> = {
   a: 'Seite a', b: 'Seite b', c: 'Seite c',
-  alpha: 'Winkel \u03B1', beta: 'Winkel \u03B2', gamma: 'Winkel \u03B3',
-  flaeche: 'Fl\u00E4che', umfang: 'Umfang',
-  h_a: 'H\u00F6he h_a', h_b: 'H\u00F6he h_b', h_c: 'H\u00F6he h_c',
+  alpha: 'Winkel α', beta: 'Winkel β', gamma: 'Winkel γ',
+  flaeche: 'Fläche', umfang: 'Umfang',
+  h_a: 'Höhe h_a', h_b: 'Höhe h_b', h_c: 'Höhe h_c',
   inkreis: 'Inkreisradius', umkreis: 'Umkreisradius',
   r: 'Radius', d: 'Durchmesser',
   diagonale: 'Diagonale', mittellinie: 'Mittellinie',
-  d1: 'Diagonale d\u2081', d2: 'Diagonale d\u2082', h: 'H\u00F6he h', h_a_pg: 'H\u00F6he h_a',
+  d1: 'Diagonale d₁', d2: 'Diagonale d₂', h: 'Höhe h', h_a_pg: 'Höhe h_a',
   typ: 'Dreieckstyp',
-  // 3D-Formen
-  volumen: 'Volumen', oberflaeche: 'Oberfl\u00E4che',
-  mantelflaeche: 'Mantelfl\u00E4che', grundflaeche: 'Grundfl\u00E4che',
-  raumdiagonale: 'Raumdiagonale', flaechendiagonale: 'Fl\u00E4chendiagonale',
+  volumen: 'Volumen', oberflaeche: 'Oberfläche',
+  mantelflaeche: 'Mantelfläche', grundflaeche: 'Grundfläche',
+  raumdiagonale: 'Raumdiagonale', flaechendiagonale: 'Flächendiagonale',
   mantellinie: 'Mantellinie (s)', apothema: 'Apothema',
 }
 
-// Wichtige Felder die oben hervorgehoben werden
 const HIGHLIGHT_KEYS = ['flaeche', 'umfang', 'r', 'diagonale', 'volumen', 'oberflaeche']
-// Felder die in m³ angezeigt werden
 const VOLUME_KEYS = ['volumen']
-// Felder die in m² angezeigt werden
 const AREA_KEYS = ['flaeche', 'oberflaeche', 'mantelflaeche', 'grundflaeche']
 
 export function ResultsPanel({ solution, unit }: Props) {
@@ -37,14 +33,13 @@ export function ResultsPanel({ solution, unit }: Props) {
   const rest = entries.filter(([k]) => !HIGHLIGHT_KEYS.includes(k))
 
   return (
-    <div className="rounded-2xl bg-white border border-blue-100 shadow-sm overflow-hidden">
-      <div className="bg-gradient-to-r from-green-500 to-emerald-600 px-5 py-3">
-        <h3 className="font-bold text-white text-sm uppercase tracking-wide">Ergebnis</h3>
+    <div className="rounded-3xl bg-white border border-slate-200 shadow-xl shadow-slate-100 overflow-hidden">
+      <div className="bg-gradient-to-r from-emerald-500 to-teal-600 px-6 py-4">
+        <h3 className="font-black text-white text-xs uppercase tracking-[0.2em]">Ergebnis</h3>
       </div>
 
-      {/* Hervorgehobene Hauptwerte */}
       {highlighted.length > 0 && (
-        <div className="grid grid-cols-2 gap-3 p-4 border-b border-gray-100">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-6 border-b border-slate-100 bg-slate-50/30">
           {highlighted.map(([key, value]) => {
             if (typeof value !== 'number') return null
             const power = VOLUME_KEYS.includes(key) ? 3 : AREA_KEYS.includes(key) ? 2 : 1
@@ -54,9 +49,9 @@ export function ResultsPanel({ solution, unit }: Props) {
             const hasTooltip = hint || comparison || context
 
             return (
-              <div key={key} className={`rounded-xl bg-blue-50 p-3 text-center ${hasTooltip ? 'group relative' : ''}`}>
-                <div className="text-xs font-semibold text-blue-500 uppercase tracking-wide">{LABELS[key] ?? key}</div>
-                <div className="mt-1 text-xl font-extrabold text-blue-800">
+              <div key={key} className={`rounded-2xl bg-white border border-indigo-100 p-5 shadow-sm hover:scale-[1.02] transition-transform ${hasTooltip ? 'group relative' : ''}`}>
+                <div className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-1">{LABELS[key] ?? key}</div>
+                <div className="text-2xl font-black text-indigo-600">
                   {formatUnit(value, unit, power)}
                 </div>
 
@@ -73,19 +68,18 @@ export function ResultsPanel({ solution, unit }: Props) {
         </div>
       )}
 
-      {/* Alle weiteren Werte */}
-      <dl className="grid grid-cols-2 gap-x-4 gap-y-3 p-4 sm:grid-cols-3">
+      <dl className="grid grid-cols-2 gap-x-6 gap-y-4 p-6 sm:grid-cols-3">
         {rest.map(([key, value]) => {
           if (key === 'typ') {
             const hint = getResultHint(key)
             const context = getContextForKey(key)
             const hasTooltip = hint || context
             return (
-              <div key={key} className={`col-span-full rounded-lg bg-purple-50 px-3 py-2 flex items-center gap-2 ${hasTooltip ? 'group relative' : ''}`}>
-                <span className="text-purple-600">{'\u25B2'}</span>
+              <div key={key} className={`col-span-full rounded-2xl bg-violet-50 px-5 py-4 flex items-center gap-4 border border-violet-100 shadow-sm ${hasTooltip ? 'group relative' : ''}`}>
+                <span className="text-2xl">{'\u{1F4D0}'}</span>
                 <div>
-                  <dt className="text-xs text-purple-500">Dreieckstyp</dt>
-                  <dd className="font-bold text-purple-800 capitalize">{String(value)}</dd>
+                  <dt className="text-[10px] font-black text-violet-400 uppercase tracking-widest">Dreieckstyp</dt>
+                  <dd className="font-black text-violet-700 text-lg capitalize">{String(value)}</dd>
                 </div>
                 {hasTooltip && (
                   <div className="absolute bottom-full left-0 mb-2 hidden group-hover:block bg-gray-900 text-white text-xs rounded-lg p-2 whitespace-normal w-48 z-10 shadow-lg pointer-events-none">
@@ -103,10 +97,10 @@ export function ResultsPanel({ solution, unit }: Props) {
           const context = getContextForKey(key)
           const hasTooltip = hint || context
           return (
-            <div key={key} className={hasTooltip ? 'group relative' : ''}>
-              <dt className="text-xs text-gray-400 font-medium">{LABELS[key] ?? key}</dt>
-              <dd className="font-semibold text-gray-800">
-                {isAngle ? formatUnit(value, '\u00B0') : formatUnit(value, unit, power)}
+            <div key={key} className={`p-1 ${hasTooltip ? 'group relative' : ''}`}>
+              <dt className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{LABELS[key] ?? key}</dt>
+              <dd className="font-black text-slate-700 text-base">
+                {isAngle ? formatUnit(value, '°') : formatUnit(value, unit, power)}
               </dd>
               {hasTooltip && (
                 <div className="absolute bottom-full left-0 mb-2 hidden group-hover:block bg-gray-900 text-white text-xs rounded-lg p-2 whitespace-normal w-48 z-10 shadow-lg pointer-events-none">

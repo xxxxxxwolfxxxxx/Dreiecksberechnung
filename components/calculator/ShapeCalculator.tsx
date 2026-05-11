@@ -81,30 +81,33 @@ function ShapeCalculatorInner({ shapeId }: Props) {
   const activeSolution = result?.solutions[activeIdx]
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Header */}
-      <div className="rounded-2xl bg-gradient-to-r from-blue-600 to-blue-700 p-4 sm:p-5 text-white shadow-lg">
-        <div className="flex items-center justify-between">
-          <h1 className="text-xl sm:text-2xl font-extrabold">{shape.label} berechnen</h1>
+      <div className="rounded-3xl bg-gradient-to-br from-indigo-500 to-indigo-700 p-6 sm:p-8 text-white shadow-xl shadow-indigo-100">
+        <div className="flex items-center justify-between gap-4">
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight leading-tight">
+            {shape.label} <span className="text-indigo-200">berechnen</span>
+          </h1>
           <select
             value={unit}
             onChange={e => setUnit(e.target.value)}
-            className="rounded-lg bg-white/20 border border-white/30 px-3 py-1.5 text-sm text-white backdrop-blur-sm"
+            className="rounded-xl bg-white/10 border border-white/20 px-4 py-2 text-sm font-bold text-white backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-white/50 transition-all cursor-pointer"
           >
-            {UNITS.map(u => <option key={u} value={u} className="text-gray-900">{u}</option>)}
+            {UNITS.map(u => <option key={u} value={u} className="text-slate-900">{u}</option>)}
           </select>
         </div>
-        <p className="mt-1 text-sm text-blue-100">
+        <p className="mt-3 text-sm sm:text-base text-indigo-100 font-medium flex items-center gap-2">
           {result?.solutions.length
-            ? `✅ Berechnet! ${Object.values(values).filter(v => v !== undefined).length} Werte eingegeben`
-            : `Gib ${shape.minRequired} Werte ein – das Dreieck ist ganz easy zu berechnen! 🎯`
-          }
+            ? <><span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" /> Ergebnis berechnet</>
+            : <><span className="w-2 h-2 rounded-full bg-indigo-300" /> Gib mindestens {shape.minRequired} Werte ein</>}
         </p>
       </div>
 
       {/* Zeichnung (immer sichtbar) */}
-      <div className="rounded-2xl bg-white shadow-sm border border-blue-100 p-4">
-        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Zeichnung</p>
+      <div className="rounded-3xl bg-white shadow-sm border border-slate-200 p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 bg-slate-50 px-2 py-1 rounded">Zeichnung</span>
+        </div>
         <ShapeDrawing
           shape={shape}
           data={activeSolution ? shape.toSVG(activeSolution.values as Record<string, number>, 280) : undefined}
@@ -113,8 +116,10 @@ function ShapeCalculatorInner({ shapeId }: Props) {
       </div>
 
       {/* Eingabe-Panel */}
-      <div className="rounded-2xl bg-white shadow-sm border border-blue-100 p-5">
-        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">Werte eingeben</p>
+      <div className="rounded-3xl bg-white shadow-sm border border-slate-200 p-6">
+        <div className="flex items-center gap-2 mb-6">
+          <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 bg-slate-50 px-2 py-1 rounded">Werte eingeben</span>
+        </div>
         <InputPanel shape={shape} values={values} onChange={handleChange} unit={unit} />
       </div>
 
@@ -122,15 +127,15 @@ function ShapeCalculatorInner({ shapeId }: Props) {
       {result?.error && (() => {
         const explanation = getErrorExplanation(result.error, values)
         return (
-          <div className="rounded-2xl bg-red-50 border-2 border-red-300 p-4 text-sm text-red-700">
+          <div className="rounded-2xl bg-rose-50 border border-rose-200 p-5 text-sm font-medium text-rose-700 shadow-sm">
             <div className="flex items-start gap-3">
               <span className="text-lg">{explanation.emoji}</span>
               <div className="flex-1">
-                <p className="font-semibold mb-2">Fehler bei der Berechnung</p>
-                <p className="whitespace-pre-wrap text-sm text-red-800 mb-3">{explanation.message}</p>
+                <p className="font-black mb-2">Fehler bei der Berechnung</p>
+                <p className="whitespace-pre-wrap text-sm text-rose-800 mb-3">{explanation.message}</p>
                 {explanation.suggestion && (
-                  <div className="bg-red-100 border border-red-200 rounded p-2 text-xs text-red-900">
-                    <strong>💡 Tipp:</strong> {explanation.suggestion}
+                  <div className="bg-rose-100 border border-rose-200 rounded-xl p-3 text-xs text-rose-900">
+                    <strong>Tipp:</strong> {explanation.suggestion}
                   </div>
                 )}
               </div>
@@ -141,20 +146,23 @@ function ShapeCalculatorInner({ shapeId }: Props) {
 
       {/* Mehrere Loesungen (SSW) */}
       {result && result.solutions.length > 1 && (
-        <div className="rounded-2xl bg-amber-50 border border-amber-200 p-4">
-          <p className="text-sm font-semibold text-amber-800 mb-3">Zwei L&ouml;sungen m&ouml;glich (mehrdeutiger Fall)</p>
-          <div className="flex gap-2">
+        <div className="rounded-3xl bg-amber-50 border border-amber-200 p-6 shadow-sm">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-[10px] font-black uppercase tracking-widest text-amber-500 bg-white px-2 py-1 rounded border border-amber-100">Auswahl</span>
+            <p className="text-sm font-black text-amber-900">Zwei Lösungen möglich</p>
+          </div>
+          <div className="flex gap-3">
             {result.solutions.map((_, i) => (
               <button
                 key={i}
                 onClick={() => setActiveIdx(i)}
-                className={`rounded-full px-5 py-2 text-sm font-semibold transition-all ${
+                className={`rounded-xl px-6 py-3 text-sm font-black transition-all ${
                   i === activeIdx
-                    ? 'bg-amber-500 text-white shadow-sm'
-                    : 'bg-white border border-amber-300 text-amber-700 hover:bg-amber-50'
+                    ? 'bg-amber-500 text-white shadow-lg shadow-amber-200 scale-105'
+                    : 'bg-white border border-amber-200 text-amber-700 hover:bg-amber-100/50'
                 }`}
               >
-                L&ouml;sung {i + 1}
+                Lösung {i + 1}
               </button>
             ))}
           </div>

@@ -2,14 +2,16 @@
 
 @layer base {
   :root {
-    --color-primary: #2563eb;
-    --color-primary-light: #dbeafe;
-    --color-accent: #f59e0b;
+    --color-primary: #4f46e5; /* Indigo 600 */
+    --color-primary-light: #eef2ff; /* Indigo 50 */
+    --color-accent: #f59e0b; /* Amber 500 */
+    --color-accent-light: #fffbeb; /* Amber 50 */
   }
 
   body {
-    background-color: #f0f4ff;
-    color: #1e293b;
+    background-color: #f8fafc; /* Slate 50 */
+    color: #0f172a; /* Slate 900 */
+    line-height: 1.6;
   }
 }
 
