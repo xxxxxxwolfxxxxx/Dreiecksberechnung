@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import { shapeList } from '@/lib/shapes'
+import { PEILUNGS_ROUTEN } from '@/lib/navigation/routen'
 
 const SHAPES_2D = ['dreieck', 'kreis', 'rechteck', 'trapez', 'parallelogramm', 'raute']
 const SHAPES_3D = ['wuerfel', 'quader', 'kugel', 'zylinder', 'kegel', 'pyramide']
@@ -25,12 +26,17 @@ export function Navigation() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const linkClass = (id: string, is3d: boolean) =>
+  // Jede Rubrik hat ihre eigene Akzentfarbe: 2D indigo, 3D amber, Navigation teal.
+  const AKTIV_KLASSEN = {
+    indigo: 'bg-indigo-100 text-indigo-700 ring-2 ring-indigo-400/20',
+    amber: 'bg-amber-100 text-amber-700 ring-2 ring-amber-400/20',
+    teal: 'bg-teal-100 text-teal-700 ring-2 ring-teal-400/20',
+  } as const
+
+  const linkClass = (id: string, farbe: keyof typeof AKTIV_KLASSEN) =>
     `whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-bold transition-all ${
       pathname === `/${id}`
-        ? is3d 
-          ? 'bg-amber-100 text-amber-700 ring-2 ring-amber-400/20' 
-          : 'bg-indigo-100 text-indigo-700 ring-2 ring-indigo-400/20'
+        ? AKTIV_KLASSEN[farbe]
         : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
     }`
 
@@ -61,7 +67,7 @@ export function Navigation() {
             </span>
             <div className="flex gap-1">
               {shapes2d.map(shape => (
-                <Link key={shape.id} href={`/${shape.id}`} className={linkClass(shape.id, false)}>
+                <Link key={shape.id} href={`/${shape.id}`} className={linkClass(shape.id, 'indigo')}>
                   {shape.label}
                 </Link>
               ))}
@@ -75,8 +81,22 @@ export function Navigation() {
             </span>
             <div className="flex gap-1">
               {shapes3d.map(shape => (
-                <Link key={shape.id} href={`/${shape.id}`} className={linkClass(shape.id, true)}>
+                <Link key={shape.id} href={`/${shape.id}`} className={linkClass(shape.id, 'amber')}>
                   {shape.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Navigation auf dem Wasser – Dreiecksmathematik in der Seefahrt */}
+          <div className="flex items-center gap-3 overflow-x-auto pb-1 scrollbar-hide">
+            <span className="flex-shrink-0 text-[10px] font-black uppercase tracking-[0.2em] text-teal-600 bg-teal-50 px-2 py-1 rounded">
+              See
+            </span>
+            <div className="flex gap-1">
+              {PEILUNGS_ROUTEN.map(route => (
+                <Link key={route.id} href={`/${route.id}`} className={linkClass(route.id, 'teal')}>
+                  {route.label}
                 </Link>
               ))}
             </div>
