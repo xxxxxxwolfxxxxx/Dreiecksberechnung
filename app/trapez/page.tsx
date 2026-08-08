@@ -20,7 +20,7 @@ export default function TrapezPage() {
             "@type": "MathSolver",
             "name": "Trapez berechnen",
             "description": "Trapez online berechnen: Fläche, Umfang und Höhe.",
-            "url": "https://geometrie-rechner.de/trapez",
+            "url": "https://dreieck-berechnen.de/trapez",
             "educationalLevel": "secondary",
             "inLanguage": "de",
             "applicationCategory": "EducationalApplication"

@@ -3,13 +3,17 @@ import { Inter } from 'next/font/google'
 import Script from 'next/script'
 import Link from 'next/link'
 import { Navigation } from '@/components/Navigation'
+import { SITE_URL } from '@/lib/site'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: { template: '%s | Geometrie-Rechner', default: 'Geometrie-Rechner' },
   description: 'Geometrische Formen online berechnen – Dreieck, Kreis, Rechteck und mehr.',
+  // './' löst pro Route auf den eigenen Pfad auf → selbstreferenzierender Canonical
+  alternates: { canonical: './' },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

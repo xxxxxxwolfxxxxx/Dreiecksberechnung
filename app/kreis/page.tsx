@@ -20,7 +20,7 @@ export default function KreisPage() {
             "@type": "MathSolver",
             "name": "Kreis berechnen",
             "description": "Kreis online berechnen: Radius, Durchmesser, Fläche und Umfang.",
-            "url": "https://geometrie-rechner.de/kreis",
+            "url": "https://dreieck-berechnen.de/kreis",
             "educationalLevel": "secondary",
             "inLanguage": "de",
             "applicationCategory": "EducationalApplication"

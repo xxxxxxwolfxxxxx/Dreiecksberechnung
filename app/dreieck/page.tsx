@@ -20,7 +20,7 @@ export default function DreieckPage() {
             "@type": "MathSolver",
             "name": "Dreieck berechnen",
             "description": "Dreieck online berechnen: Fläche, Umfang, alle Winkel, Höhen und Radien.",
-            "url": "https://geometrie-rechner.de/dreieck",
+            "url": "https://dreieck-berechnen.de/dreieck",
             "educationalLevel": "secondary",
             "inLanguage": "de",
             "applicationCategory": "EducationalApplication"

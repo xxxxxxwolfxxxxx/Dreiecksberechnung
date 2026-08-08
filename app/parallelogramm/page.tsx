@@ -20,7 +20,7 @@ export default function ParallelogrammPage() {
             "@type": "MathSolver",
             "name": "Parallelogramm berechnen",
             "description": "Parallelogramm online berechnen: Fläche, Umfang, Winkel und Diagonalen.",
-            "url": "https://geometrie-rechner.de/parallelogramm",
+            "url": "https://dreieck-berechnen.de/parallelogramm",
             "educationalLevel": "secondary",
             "inLanguage": "de",
             "applicationCategory": "EducationalApplication"

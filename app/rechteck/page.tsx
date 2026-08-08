@@ -20,7 +20,7 @@ export default function RechteckPage() {
             "@type": "MathSolver",
             "name": "Rechteck berechnen",
             "description": "Rechteck online berechnen: Fläche, Umfang, Diagonale.",
-            "url": "https://geometrie-rechner.de/rechteck",
+            "url": "https://dreieck-berechnen.de/rechteck",
             "educationalLevel": "secondary",
             "inLanguage": "de",
             "applicationCategory": "EducationalApplication"

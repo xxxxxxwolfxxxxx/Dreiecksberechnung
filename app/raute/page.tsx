@@ -20,7 +20,7 @@ export default function RautePage() {
             "@type": "MathSolver",
             "name": "Raute berechnen",
             "description": "Raute (Rhombus) online berechnen: Fläche, Diagonalen, Winkel und Umfang.",
-            "url": "https://geometrie-rechner.de/raute",
+            "url": "https://dreieck-berechnen.de/raute",
             "educationalLevel": "secondary",
             "inLanguage": "de",
             "applicationCategory": "EducationalApplication"
