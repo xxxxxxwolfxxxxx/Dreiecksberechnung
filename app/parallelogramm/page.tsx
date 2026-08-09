@@ -7,7 +7,7 @@ import { ShapeInfo } from '@/components/ShapeInfo'
 
 export const metadata: Metadata = {
   title: 'Parallelogramm berechnen – Fläche, Umfang, Winkel',
-  description: 'Parallelogramm online berechnen: Fläche, Umfang, Winkel und Diagonalen.',
+  description: 'Parallelogramm online berechnen: Fläche, Umfang, Winkel und beide Diagonalen aus Seiten und Höhe – mit Rechenweg und Skizze.',
 }
 
 export default function ParallelogrammPage() {

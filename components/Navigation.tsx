@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import { shapeList } from '@/lib/shapes'
 import { PEILUNGS_ROUTEN } from '@/lib/navigation/routen'
+import { pfadFuerForm, istAktiverPfad } from '@/lib/navigation/pfade'
 
 const SHAPES_2D = ['dreieck', 'kreis', 'rechteck', 'trapez', 'parallelogramm', 'raute']
 const SHAPES_3D = ['wuerfel', 'quader', 'kugel', 'zylinder', 'kegel', 'pyramide']
@@ -35,7 +36,7 @@ export function Navigation() {
 
   const linkClass = (id: string, farbe: keyof typeof AKTIV_KLASSEN) =>
     `whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-bold transition-all ${
-      pathname === `/${id}`
+      istAktiverPfad(pathname, id)
         ? AKTIV_KLASSEN[farbe]
         : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
     }`
@@ -67,7 +68,7 @@ export function Navigation() {
             </span>
             <div className="flex gap-1">
               {shapes2d.map(shape => (
-                <Link key={shape.id} href={`/${shape.id}`} className={linkClass(shape.id, 'indigo')}>
+                <Link key={shape.id} href={pfadFuerForm(shape.id)} className={linkClass(shape.id, 'indigo')}>
                   {shape.label}
                 </Link>
               ))}
@@ -81,7 +82,7 @@ export function Navigation() {
             </span>
             <div className="flex gap-1">
               {shapes3d.map(shape => (
-                <Link key={shape.id} href={`/${shape.id}`} className={linkClass(shape.id, 'amber')}>
+                <Link key={shape.id} href={pfadFuerForm(shape.id)} className={linkClass(shape.id, 'amber')}>
                   {shape.label}
                 </Link>
               ))}

@@ -1,4 +1,4 @@
-import { SITE_URL } from '@/lib/site'
+import { SITE_URL, absoluteUrl } from '@/lib/site'
 
 type RechnerSchemaProps = {
   name: string
@@ -37,7 +37,7 @@ function JsonLd({ schema }: { schema: object }) {
  * Der q-Parameter wird in lib/rechner-query.ts ausgewertet.
  */
 export function RechnerSchema({ name, description, path, matheThemen }: RechnerSchemaProps) {
-  const url = `${SITE_URL}${path}`
+  const url = absoluteUrl(path)
 
   const webApplication = {
     '@context': 'https://schema.org',

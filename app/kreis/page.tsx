@@ -7,7 +7,7 @@ import { ShapeInfo } from '@/components/ShapeInfo'
 
 export const metadata: Metadata = {
   title: 'Kreis berechnen – Radius, Fläche, Umfang online',
-  description: 'Kreis online berechnen: Radius, Durchmesser, Fläche und Umfang. Alle Formeln erklärt.',
+  description: 'Kreis online berechnen: aus Radius, Durchmesser, Fläche oder Umfang alle anderen Werte – mit Rechenweg und Skizze. Kostenlos, ohne Anmeldung.',
 }
 
 export default function KreisPage() {

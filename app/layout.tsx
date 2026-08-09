@@ -10,8 +10,11 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: { template: '%s | Geometrie-Rechner', default: 'Geometrie-Rechner' },
-  description: 'Geometrische Formen online berechnen – Dreieck, Kreis, Rechteck und mehr.',
+  // Kein Marken-Suffix: die Seitentitel liegen schon bei ~50 Zeichen, ein
+  // Zusatz wuerde im Suchergebnis abgeschnitten. Frueher stand hier
+  // "| Geometrie-Rechner" – eine fremde Domain, die nicht zum Portfolio gehoert.
+  title: { template: '%s', default: 'Dreieck berechnen – Fläche, Umfang & Winkel online' },
+  description: 'Geometrische Formen online berechnen – Dreieck, Kreis, Rechteck, Quader und mehr. Mit Rechenweg, Skizze und allen Formeln.',
   // './' löst pro Route auf den eigenen Pfad auf → selbstreferenzierender Canonical
   alternates: { canonical: './' },
 }

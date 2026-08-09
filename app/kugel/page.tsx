@@ -7,7 +7,7 @@ import { ShapeInfo } from '@/components/ShapeInfo'
 
 export const metadata: Metadata = {
   title: 'Kugel berechnen – Volumen, Oberfläche, Radius online',
-  description: 'Kugel online berechnen: Volumen und Oberfläche aus Radius oder Durchmesser. Formeln mit Schritt-für-Schritt-Erklärung.',
+  description: 'Kugel online berechnen: Volumen und Oberfläche aus Radius oder Durchmesser – mit Rechenweg Schritt für Schritt. Kostenlos, ohne Anmeldung.',
 }
 
 export default function KugelPage() {

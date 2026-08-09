@@ -6,8 +6,8 @@ import { RechnerSchema } from '@/components/RechnerSchema'
 import { ShapeInfo } from '@/components/ShapeInfo'
 
 export const metadata: Metadata = {
-  title: 'Zylinder berechnen – Volumen, Oberfläche, Mantelfläche online',
-  description: 'Zylinder online berechnen: Volumen, Mantelfläche und Oberfläche aus Radius und Höhe. Mit Schritt-für-Schritt-Erklärung.',
+  title: 'Zylinder berechnen – Volumen, Mantel- & Oberfläche',
+  description: 'Zylinder online berechnen: Volumen, Mantelfläche und Oberfläche aus Radius und Höhe – mit Rechenweg Schritt für Schritt und Ergebnis in Litern.',
 }
 
 export default function ZylinderPage() {

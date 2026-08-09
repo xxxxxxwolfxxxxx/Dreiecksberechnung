@@ -6,8 +6,8 @@ import { RechnerSchema } from '@/components/RechnerSchema'
 import { ShapeInfo } from '@/components/ShapeInfo'
 
 export const metadata: Metadata = {
-  title: 'Raute berechnen – Fläche, Diagonalen, Winkel',
-  description: 'Raute (Rhombus) online berechnen: Fläche, Diagonalen, Winkel und Umfang.',
+  title: 'Raute berechnen – Fläche, Diagonalen, Umfang online',
+  description: 'Raute (Rhombus) online berechnen: Fläche, beide Diagonalen, Winkel und Umfang aus zwei bekannten Werten – mit Rechenweg und Skizze.',
 }
 
 export default function RautePage() {

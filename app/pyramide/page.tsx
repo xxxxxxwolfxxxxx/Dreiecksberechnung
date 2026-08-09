@@ -6,8 +6,8 @@ import { RechnerSchema } from '@/components/RechnerSchema'
 import { ShapeInfo } from '@/components/ShapeInfo'
 
 export const metadata: Metadata = {
-  title: 'Pyramide berechnen – Volumen, Oberfläche, Mantelfläche online',
-  description: 'Pyramide (quadratisch) online berechnen: Volumen, Mantelfläche und Oberfläche aus Grundkante und Höhe. Mit Schritt-für-Schritt-Erklärung.',
+  title: 'Pyramide berechnen – Volumen, Oberfläche, Mantel',
+  description: 'Quadratische Pyramide online berechnen: Volumen, Mantelfläche und Oberfläche aus Grundkante und Höhe – mit Rechenweg Schritt für Schritt.',
 }
 
 export default function PyramidePage() {

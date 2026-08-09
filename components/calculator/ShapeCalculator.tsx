@@ -17,6 +17,12 @@ const UNITS = ['mm', 'cm', 'm', 'km']
 
 interface Props {
   shapeId: string
+  /**
+   * Auf den Rechnerseiten ist die Rechner-Ueberschrift die H1 der Seite.
+   * Auf den Dreieck-Themenseiten steht darueber schon eine eigene H1 –
+   * dort wird auf h2 heruntergestuft, damit es nur eine H1 pro Seite gibt.
+   */
+  ueberschriftEbene?: 'h1' | 'h2'
 }
 
 function MidBanner() {
@@ -46,8 +52,9 @@ function MidBanner() {
   )
 }
 
-function ShapeCalculatorInner({ shapeId }: Props) {
+function ShapeCalculatorInner({ shapeId, ueberschriftEbene = 'h1' }: Props) {
   const shape = shapes[shapeId]
+  const Ueberschrift = ueberschriftEbene
   const [values, setValues] = useState<Partial<Record<string, number>>>({})
   const [unit, setUnit] = useState('cm')
   const [activeIdx, setActiveIdx] = useState(0)
@@ -98,9 +105,9 @@ function ShapeCalculatorInner({ shapeId }: Props) {
       {/* Header */}
       <div className="rounded-3xl bg-gradient-to-br from-indigo-500 to-indigo-700 p-6 sm:p-8 text-white shadow-xl shadow-indigo-100">
         <div className="flex items-center justify-between gap-4">
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight leading-tight">
+          <Ueberschrift className="text-2xl sm:text-3xl font-black tracking-tight leading-tight">
             {shape.label} <span className="text-indigo-200">berechnen</span>
-          </h1>
+          </Ueberschrift>
           <select
             value={unit}
             onChange={e => setUnit(e.target.value)}
@@ -239,6 +246,6 @@ function ShapeCalculatorInner({ shapeId }: Props) {
   )
 }
 
-export function ShapeCalculator({ shapeId }: Props) {
-  return <ShapeCalculatorInner key={shapeId} shapeId={shapeId} />
+export function ShapeCalculator({ shapeId, ueberschriftEbene }: Props) {
+  return <ShapeCalculatorInner key={shapeId} shapeId={shapeId} ueberschriftEbene={ueberschriftEbene} />
 }

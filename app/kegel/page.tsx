@@ -6,8 +6,8 @@ import { RechnerSchema } from '@/components/RechnerSchema'
 import { ShapeInfo } from '@/components/ShapeInfo'
 
 export const metadata: Metadata = {
-  title: 'Kegel berechnen – Volumen, Mantelfläche, Oberfläche online',
-  description: 'Kegel online berechnen: Volumen, Mantelfläche, Mantellinie und Oberfläche. Alle Formeln mit Schritt-für-Schritt-Erklärung.',
+  title: 'Kegel berechnen – Volumen, Mantelfläche, Oberfläche',
+  description: 'Kegel online berechnen: Volumen, Mantelfläche, Mantellinie und Oberfläche aus Radius und Höhe – mit Rechenweg Schritt für Schritt.',
 }
 
 export default function KegelPage() {

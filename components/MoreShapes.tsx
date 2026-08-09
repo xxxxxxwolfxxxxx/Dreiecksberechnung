@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { shapeList } from '@/lib/shapes'
 import { PEILUNGS_ROUTEN } from '@/lib/navigation/routen'
+import { pfadFuerForm } from '@/lib/navigation/pfade'
 
 const SHAPES_2D = ['dreieck', 'kreis', 'rechteck', 'trapez', 'parallelogramm', 'raute']
 const SHAPES_3D = ['wuerfel', 'quader', 'kugel', 'zylinder', 'kegel', 'pyramide']
@@ -22,7 +23,7 @@ export function MoreShapes({ currentId }: Props) {
         <div className="flex flex-wrap justify-center items-center gap-1.5 mb-2">
           <span className="text-[10px] font-bold uppercase tracking-widest text-blue-400 mr-0.5">2D</span>
           {shapes2d.map(s => (
-            <Link key={s.id} href={`/${s.id}`}
+            <Link key={s.id} href={pfadFuerForm(s.id)}
               className="whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-semibold text-gray-600 hover:bg-blue-50 hover:text-blue-700 transition-all">
               {s.label}
             </Link>
@@ -34,7 +35,7 @@ export function MoreShapes({ currentId }: Props) {
         <div className="flex flex-wrap justify-center items-center gap-1.5 mb-2">
           <span className="text-[10px] font-bold uppercase tracking-widest text-purple-400 mr-0.5">3D</span>
           {shapes3d.map(s => (
-            <Link key={s.id} href={`/${s.id}`}
+            <Link key={s.id} href={pfadFuerForm(s.id)}
               className="whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-semibold text-gray-600 hover:bg-blue-50 hover:text-blue-700 transition-all">
               {s.label}
             </Link>

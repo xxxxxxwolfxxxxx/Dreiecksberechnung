@@ -6,8 +6,8 @@ import { RechnerSchema } from '@/components/RechnerSchema'
 import { ShapeInfo } from '@/components/ShapeInfo'
 
 export const metadata: Metadata = {
-  title: 'Würfel berechnen – Volumen, Oberfläche, Diagonale online',
-  description: 'Würfel online berechnen: Volumen, Oberfläche, Raumdiagonale und Flächendiagonale. Alle Formeln mit Schritt-für-Schritt-Erklärung.',
+  title: 'Würfel berechnen – Volumen, Oberfläche, Diagonale',
+  description: 'Würfel online berechnen: Volumen, Oberfläche, Raum- und Flächendiagonale aus der Kantenlänge – mit Rechenweg Schritt für Schritt.',
 }
 
 export default function WuerfelPage() {

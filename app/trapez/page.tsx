@@ -6,8 +6,8 @@ import { RechnerSchema } from '@/components/RechnerSchema'
 import { ShapeInfo } from '@/components/ShapeInfo'
 
 export const metadata: Metadata = {
-  title: 'Trapez berechnen – Fläche, Umfang, Höhe',
-  description: 'Trapez online berechnen: Fläche, Umfang und Höhe aus verschiedenen Eingabe-Kombinationen.',
+  title: 'Trapez berechnen – Fläche, Umfang, Höhe online',
+  description: 'Trapez online berechnen: Fläche, Umfang und Höhe aus den beiden parallelen Seiten und den Schenkeln – mit Rechenweg und Skizze.',
 }
 
 export default function TrapezPage() {

@@ -7,7 +7,7 @@ import { ShapeInfo } from '@/components/ShapeInfo'
 
 export const metadata: Metadata = {
   title: 'Rechteck berechnen – Fläche, Umfang, Diagonale',
-  description: 'Rechteck online berechnen: Fläche, Umfang, Diagonale. Alle Eingabe-Kombinationen unterstützt.',
+  description: 'Rechteck online berechnen: Fläche, Umfang und Diagonale aus Länge und Breite. Für das Volumen eines rechteckigen Körpers führt der Quader-Rechner zum Ziel.',
 }
 
 export default function RechteckPage() {
