@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { ShapeCalculator } from '@/components/calculator/ShapeCalculator'
 import { AdSlot } from '@/components/AdSlot'
 import { MoreShapes } from '@/components/MoreShapes'
+import { RechnerSchema } from '@/components/RechnerSchema'
 import { ShapeInfo } from '@/components/ShapeInfo'
 
 export const metadata: Metadata = {
@@ -12,20 +13,10 @@ export const metadata: Metadata = {
 export default function KreisPage() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "MathSolver",
-            "name": "Kreis berechnen",
-            "description": "Kreis online berechnen: Radius, Durchmesser, Fläche und Umfang.",
-            "url": "https://dreieck-berechnen.de/kreis",
-            "educationalLevel": "secondary",
-            "inLanguage": "de",
-            "applicationCategory": "EducationalApplication"
-          })
-        }}
+      <RechnerSchema
+        name="Kreis berechnen"
+        description="Kreis online berechnen: Radius, Durchmesser, Fläche und Umfang."
+        path="/kreis"
       />
       <AdSlot slot="1508045799" format="horizontal" className="mb-6" minHeight={90} />
       <ShapeCalculator shapeId="kreis" />

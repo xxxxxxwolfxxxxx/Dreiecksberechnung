@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { ShapeCalculator } from '@/components/calculator/ShapeCalculator'
 import { AdSlot } from '@/components/AdSlot'
 import { MoreShapes } from '@/components/MoreShapes'
+import { RechnerSchema } from '@/components/RechnerSchema'
 import { ShapeInfo } from '@/components/ShapeInfo'
 
 export const metadata: Metadata = {
@@ -12,19 +13,10 @@ export const metadata: Metadata = {
 export default function ZylinderPage() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "MathSolver",
-            "name": "Zylinder berechnen",
-            "description": "Zylinder online berechnen: Volumen, Mantelfläche und Oberfläche aus Radius und Höhe.",
-            "url": "https://dreieck-berechnen.de/zylinder",
-            "educationalLevel": "secondary",
-            "inLanguage": "de",
-          })
-        }}
+      <RechnerSchema
+        name="Zylinder berechnen"
+        description="Zylinder online berechnen: Volumen, Mantelfläche und Oberfläche aus Radius und Höhe."
+        path="/zylinder"
       />
       <AdSlot slot="1508045799" format="horizontal" className="mb-6" minHeight={90} />
       <ShapeCalculator shapeId="zylinder" />

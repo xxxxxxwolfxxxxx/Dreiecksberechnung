@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
 import { AdSlot } from '@/components/AdSlot'
 import { MoreShapes } from '@/components/MoreShapes'
+import { RechnerSchema } from '@/components/RechnerSchema'
 import { PeilungInfo } from '@/components/navigation/PeilungInfo'
 import { VersegelungRechner } from '@/components/navigation/VersegelungRechner'
 import { PEILUNG_INHALTE } from '@/lib/navigation/peilung-inhalte'
-import { SITE_URL } from '@/lib/site'
 
 const inhalt = PEILUNG_INHALTE['vier-strich-peilung']
 
@@ -16,20 +16,10 @@ export const metadata: Metadata = {
 export default function VierStrichPeilungPage() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'MathSolver',
-            name: 'Vier-Strich-Peilung berechnen',
-            description: inhalt.metaBeschreibung,
-            url: `${SITE_URL}/vier-strich-peilung`,
-            educationalLevel: 'secondary',
-            inLanguage: 'de',
-            applicationCategory: 'EducationalApplication',
-          }),
-        }}
+      <RechnerSchema
+        name="Vier-Strich-Peilung berechnen"
+        description={inhalt.metaBeschreibung}
+        path="/vier-strich-peilung"
       />
       <script
         type="application/ld+json"

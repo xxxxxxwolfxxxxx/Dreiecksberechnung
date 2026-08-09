@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { ShapeCalculator } from '@/components/calculator/ShapeCalculator'
 import { AdSlot } from '@/components/AdSlot'
 import { MoreShapes } from '@/components/MoreShapes'
+import { RechnerSchema } from '@/components/RechnerSchema'
 import { ShapeInfo } from '@/components/ShapeInfo'
 
 export const metadata: Metadata = {
@@ -12,19 +13,10 @@ export const metadata: Metadata = {
 export default function PyramidePage() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "MathSolver",
-            "name": "Pyramide berechnen",
-            "description": "Quadratische Pyramide online berechnen: Volumen, Mantelfläche und Oberfläche.",
-            "url": "https://dreieck-berechnen.de/pyramide",
-            "educationalLevel": "secondary",
-            "inLanguage": "de",
-          })
-        }}
+      <RechnerSchema
+        name="Pyramide berechnen"
+        description="Quadratische Pyramide online berechnen: Volumen, Mantelfläche und Oberfläche."
+        path="/pyramide"
       />
       <AdSlot slot="1508045799" format="horizontal" className="mb-6" minHeight={90} />
       <ShapeCalculator shapeId="pyramide" />
