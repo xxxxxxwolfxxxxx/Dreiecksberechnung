@@ -4,6 +4,7 @@ import Script from 'next/script'
 import Link from 'next/link'
 import { Navigation } from '@/components/Navigation'
 import { SITE_URL } from '@/lib/site'
+import { RELATED_PROJECTS } from '@/lib/relatedProjects'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -58,23 +59,29 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main className="mx-auto max-w-2xl px-4 py-8 sm:py-12 space-y-8">
           {children}
         </main>
-        <footer className="border-t border-gray-200 py-6 text-center text-sm text-gray-500">
-          <Link href="/impressum" className="hover:underline mr-4">Impressum</Link>
-          <Link href="/datenschutz" className="hover:underline">Datenschutz</Link>
-          <p className="mt-3 text-xs text-gray-400">
-            Für Dachdecker &amp; Bauherren:{' '}
-            <a href="https://www.dachplattenrechner.de" target="_blank" rel="noopener"
-              className="hover:underline hover:text-gray-500">
-              Dachplattenrechner.de
-            </a>
-          </p>
-          <p className="mt-2 text-xs text-gray-400">
-            Weitere Rechner:{' '}
-            <a href="https://www.deutschland-rechnet.de" target="_blank" rel="noopener"
-              className="hover:underline hover:text-gray-500">
-              Deutschland-rechnet.de
-            </a>
-          </p>
+        <footer className="border-t border-gray-200 py-6 text-sm text-gray-500">
+          <div className="mx-auto max-w-2xl px-4">
+            <section aria-labelledby="weitere-projekte">
+              <h2 id="weitere-projekte" className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                Weitere Projekte
+              </h2>
+              <ul className="mt-3 grid gap-3 sm:grid-cols-3">
+                {RELATED_PROJECTS.map((project) => (
+                  <li key={project.url}>
+                    <a href={project.url} title={project.title} rel="noopener"
+                      className="font-semibold text-gray-600 hover:underline">
+                      {project.name}
+                    </a>
+                    <p className="mt-0.5 text-xs leading-relaxed text-gray-400">{project.description}</p>
+                  </li>
+                ))}
+              </ul>
+            </section>
+            <p className="mt-6 text-center">
+              <Link href="/impressum" className="hover:underline mr-4">Impressum</Link>
+              <Link href="/datenschutz" className="hover:underline">Datenschutz</Link>
+            </p>
+          </div>
         </footer>
       </body>
     </html>
