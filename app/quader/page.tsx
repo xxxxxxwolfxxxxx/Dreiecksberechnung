@@ -17,6 +17,7 @@ export default function QuaderPage() {
         name="Quader berechnen"
         description="Quader online berechnen: Volumen, Oberfläche, Raumdiagonale."
         path="/quader"
+        matheThemen={['Geometry']}
       />
       <AdSlot slot="1508045799" format="horizontal" className="mb-6" minHeight={90} />
       <ShapeCalculator shapeId="quader" />

@@ -17,6 +17,7 @@ export default function DreieckPage() {
         name="Dreieck berechnen"
         description="Dreieck online berechnen: Fläche, Umfang, alle Winkel, Höhen und Radien."
         path="/dreieck"
+        matheThemen={['Geometry', 'Trigonometry']}
       />
       <AdSlot slot="1508045799" format="horizontal" className="mb-6" minHeight={90} />
       <ShapeCalculator shapeId="dreieck" />

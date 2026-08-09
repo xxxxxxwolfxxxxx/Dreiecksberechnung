@@ -17,6 +17,7 @@ export default function KegelPage() {
         name="Kegel berechnen"
         description="Kegel online berechnen: Volumen, Mantelfläche, Mantellinie und Oberfläche."
         path="/kegel"
+        matheThemen={['Geometry']}
       />
       <AdSlot slot="1508045799" format="horizontal" className="mb-6" minHeight={90} />
       <ShapeCalculator shapeId="kegel" />

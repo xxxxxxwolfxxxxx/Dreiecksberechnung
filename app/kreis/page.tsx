@@ -17,6 +17,7 @@ export default function KreisPage() {
         name="Kreis berechnen"
         description="Kreis online berechnen: Radius, Durchmesser, Fläche und Umfang."
         path="/kreis"
+        matheThemen={['Geometry', 'Circle']}
       />
       <AdSlot slot="1508045799" format="horizontal" className="mb-6" minHeight={90} />
       <ShapeCalculator shapeId="kreis" />

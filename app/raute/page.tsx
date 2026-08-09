@@ -17,6 +17,7 @@ export default function RautePage() {
         name="Raute berechnen"
         description="Raute (Rhombus) online berechnen: Fläche, Diagonalen, Winkel und Umfang."
         path="/raute"
+        matheThemen={['Geometry']}
       />
       <AdSlot slot="1508045799" format="horizontal" className="mb-6" minHeight={90} />
       <ShapeCalculator shapeId="raute" />

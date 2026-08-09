@@ -17,6 +17,7 @@ export default function ZylinderPage() {
         name="Zylinder berechnen"
         description="Zylinder online berechnen: Volumen, Mantelfläche und Oberfläche aus Radius und Höhe."
         path="/zylinder"
+        matheThemen={['Geometry']}
       />
       <AdSlot slot="1508045799" format="horizontal" className="mb-6" minHeight={90} />
       <ShapeCalculator shapeId="zylinder" />

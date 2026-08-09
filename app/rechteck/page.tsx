@@ -17,6 +17,7 @@ export default function RechteckPage() {
         name="Rechteck berechnen"
         description="Rechteck online berechnen: Fläche, Umfang, Diagonale."
         path="/rechteck"
+        matheThemen={['Geometry']}
       />
       <AdSlot slot="1508045799" format="horizontal" className="mb-6" minHeight={90} />
       <ShapeCalculator shapeId="rechteck" />

@@ -17,6 +17,7 @@ export default function PyramidePage() {
         name="Pyramide berechnen"
         description="Quadratische Pyramide online berechnen: Volumen, Mantelfläche und Oberfläche."
         path="/pyramide"
+        matheThemen={['Geometry']}
       />
       <AdSlot slot="1508045799" format="horizontal" className="mb-6" minHeight={90} />
       <ShapeCalculator shapeId="pyramide" />

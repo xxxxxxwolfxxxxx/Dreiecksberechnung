@@ -1,6 +1,7 @@
 'use client'
 import { useState, useMemo, useEffect, useRef } from 'react'
 import { shapes } from '@/lib/shapes'
+import { werteAusQuery, einheitAusQuery } from '@/lib/rechner-query'
 import { getErrorExplanation } from '@/utils/errorExplanations'
 import { InputPanel } from './InputPanel'
 import { ShapeDrawing } from './ShapeDrawing'
@@ -50,6 +51,18 @@ function ShapeCalculatorInner({ shapeId }: Props) {
   const [values, setValues] = useState<Partial<Record<string, number>>>({})
   const [unit, setUnit] = useState('cm')
   const [activeIdx, setActiveIdx] = useState(0)
+
+  // Startwerte aus der URL: /dreieck?a=3&b=4&c=5 oder ?q=... (SolveMathAction).
+  // Bewusst nach der Hydration statt ueber useSearchParams – letzteres erzwingt
+  // eine Suspense-Boundary und wuerde die H1 aus dem statischen HTML nehmen.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const werte = werteAusQuery(shape, params)
+    const einheit = einheitAusQuery(params)
+
+    if (Object.keys(werte).length > 0) setValues(werte)
+    if (einheit) setUnit(einheit)
+  }, [shape])
 
   const result = useMemo(() => {
     const filled = Object.values(values).filter(v => v !== undefined && !isNaN(v as number)).length

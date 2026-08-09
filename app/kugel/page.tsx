@@ -17,6 +17,7 @@ export default function KugelPage() {
         name="Kugel berechnen"
         description="Kugel online berechnen: Volumen und Oberfläche aus Radius oder Durchmesser."
         path="/kugel"
+        matheThemen={['Geometry']}
       />
       <AdSlot slot="1508045799" format="horizontal" className="mb-6" minHeight={90} />
       <ShapeCalculator shapeId="kugel" />

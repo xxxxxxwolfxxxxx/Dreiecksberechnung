@@ -17,6 +17,7 @@ export default function TrapezPage() {
         name="Trapez berechnen"
         description="Trapez online berechnen: Fläche, Umfang und Höhe."
         path="/trapez"
+        matheThemen={['Geometry']}
       />
       <AdSlot slot="1508045799" format="horizontal" className="mb-6" minHeight={90} />
       <ShapeCalculator shapeId="trapez" />
