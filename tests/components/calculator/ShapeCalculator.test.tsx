@@ -4,7 +4,7 @@ import { ShapeCalculator } from '@/components/calculator/ShapeCalculator'
 describe('ShapeCalculator', () => {
   test('zeigt Calculator direkt an (ohne Wizard)', () => {
     render(<ShapeCalculator shapeId="dreieck" />)
-    expect(screen.getByText(/Dreieck berechnen/i)).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /Dreieck berechnen/i })).toBeInTheDocument()
   })
 
   test('zeigt Zeichnung und Eingabe-Panel', () => {
@@ -16,6 +16,6 @@ describe('ShapeCalculator', () => {
 
   test('funktioniert für alle Formen ohne Wizard', () => {
     render(<ShapeCalculator shapeId="rechteck" />)
-    expect(screen.getByText(/Rechteck berechnen/i)).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /Rechteck berechnen/i })).toBeInTheDocument()
   })
 })

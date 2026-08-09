@@ -105,7 +105,7 @@ describe('quizQuestions', () => {
 
     it('should have explanation text for all quiz types', () => {
       const types = ['gleichseitig', 'rechtwinklig', 'gleichschenklig', 'allgemein']
-      const testValues = [
+      const testValues: Record<string, number>[] = [
         { seite: 5 },
         { katheteA: 3, katheteB: 4 },
         { schenkel: 5, basis: 6 },
