@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ShapeCalculator } from '@/components/calculator/ShapeCalculator'
 import { AdSlot } from '@/components/AdSlot'
+import { DreieckFaq } from '@/components/DreieckFaq'
 import { MoreShapes } from '@/components/MoreShapes'
 import { RechnerSchema } from '@/components/RechnerSchema'
 import { ShapeInfo } from '@/components/ShapeInfo'
@@ -46,6 +47,8 @@ export default function StartseiteDreieck() {
           ))}
         </ul>
       </nav>
+
+      <DreieckFaq />
 
       <MoreShapes currentId="dreieck" />
       <AdSlot slot="4403201248" format="horizontal" className="mt-6" minHeight={90} />
