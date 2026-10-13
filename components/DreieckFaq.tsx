@@ -36,15 +36,15 @@ export const DREIECK_FAQ: FaqEintrag[] = [
 
 export function DreieckFaq() {
   return (
-    <section aria-labelledby="faq-heading" className="rounded-2xl bg-white border border-indigo-100 shadow-sm p-5">
-      <h2 id="faq-heading" className="text-lg font-black text-slate-800 mb-4 tracking-tight">
+    <section aria-labelledby="faq-heading" className="rounded-[22px] bg-white border border-line p-6 sm:px-7">
+      <h2 id="faq-heading" className="text-xl font-bold tracking-tight mb-1.5">
         Häufige Fragen zur Dreiecksberechnung
       </h2>
-      <div className="space-y-5">
+      <div className="flex flex-col divide-y divide-line-soft">
         {DREIECK_FAQ.map(eintrag => (
-          <div key={eintrag.frage}>
-            <h3 className="font-bold text-slate-800 mb-1">{eintrag.frage}</h3>
-            <p className="text-sm leading-relaxed text-slate-600">{eintrag.antwort}</p>
+          <div key={eintrag.frage} className="py-3.5 last:pb-0">
+            <h3 className="text-[15.5px] font-semibold mb-1">{eintrag.frage}</h3>
+            <p className="text-sm text-ink-2 text-pretty">{eintrag.antwort}</p>
           </div>
         ))}
       </div>

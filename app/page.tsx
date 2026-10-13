@@ -22,26 +22,31 @@ export default function StartseiteDreieck() {
         path="/"
         matheThemen={['Geometry', 'Trigonometry']}
       />
-      <AdSlot slot="1508045799" format="horizontal" className="mb-6" minHeight={90} />
+      <AdSlot slot="1508045799" format="horizontal" minHeight={90} />
       <ShapeCalculator shapeId="dreieck" />
       <ShapeInfo shapeId="dreieck" />
 
-      <nav aria-labelledby="themen-heading" className="rounded-2xl bg-white border border-indigo-100 shadow-sm p-5">
-        <h2 id="themen-heading" className="text-lg font-black text-slate-800 mb-1 tracking-tight">
-          Einzelne Größen gezielt berechnen
-        </h2>
-        <p className="text-sm text-slate-500 mb-4">
-          Du suchst nur eine bestimmte Größe? Diese Seiten erklären den jeweiligen Rechenweg im Detail.
-        </p>
-        <ul className="space-y-2">
+      <nav aria-labelledby="themen-heading" className="rounded-[22px] bg-white border border-line p-6 sm:px-7 flex flex-col gap-3">
+        <div>
+          <h2 id="themen-heading" className="text-xl font-bold tracking-tight mb-1">
+            Einzelne Größen gezielt berechnen
+          </h2>
+          <p className="text-sm text-ink-2">
+            Du suchst nur eine bestimmte Größe? Diese Seiten erklären den jeweiligen Rechenweg im Detail.
+          </p>
+        </div>
+        <ul className="grid gap-2 sm:grid-cols-2">
           {DREIECK_THEMEN.map(thema => (
             <li key={thema.id}>
               <Link
                 href={`/${thema.id}`}
-                className="block rounded-xl border border-slate-200 px-4 py-3 hover:border-indigo-300 hover:bg-indigo-50/50 transition-colors"
+                className="flex h-full justify-between gap-3 rounded-[14px] border border-line px-4 py-3 !text-ink !no-underline transition-colors hover:border-brand-600 hover:bg-brand-50"
               >
-                <span className="font-bold text-slate-800">{thema.linkText}</span>
-                <span className="block text-sm text-slate-500">{thema.linkBeschreibung}</span>
+                <span className="flex flex-col">
+                  <span className="font-semibold">{thema.linkText}</span>
+                  <span className="text-[13px] text-ink-3">{thema.linkBeschreibung}</span>
+                </span>
+                <span className="font-mono text-brand-600">→</span>
               </Link>
             </li>
           ))}
@@ -51,7 +56,7 @@ export default function StartseiteDreieck() {
       <DreieckFaq />
 
       <MoreShapes currentId="dreieck" />
-      <AdSlot slot="4403201248" format="horizontal" className="mt-6" minHeight={90} />
+      <AdSlot slot="4403201248" format="horizontal" minHeight={90} />
     </>
   )
 }

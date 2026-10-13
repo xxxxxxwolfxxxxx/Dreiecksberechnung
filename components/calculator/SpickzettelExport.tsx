@@ -42,32 +42,19 @@ export function SpickzettelExport({ solution, shapeId, svgElement, onExport }: P
   }
 
   return (
-    <div className="flex justify-center">
+    <div className="flex flex-col items-end gap-2">
       <button
         onClick={handleExport}
         disabled={isLoading}
         aria-label="PDF Spickzettel herunterladen"
         aria-busy={isLoading}
-        className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-green-500 to-emerald-600 px-6 py-2.5 font-semibold text-white hover:from-green-600 hover:to-emerald-700 transition-all disabled:opacity-50"
+        className="flex items-center gap-2 rounded-[10px] bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-700 disabled:opacity-60"
       >
-        <svg
-          className="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8m0 8l-9-2m9 2l9-2m-9-8l9 18m-9-18L3 7m6 0v0m0 0h6m0 0v12m0-12H9"
-          />
-        </svg>
-        {isLoading ? 'Wird erstellt...' : 'Spickzettel herunterladen'}
+        <span aria-hidden="true" className="font-mono">↓</span>
+        {isLoading ? 'Wird erstellt …' : 'Spickzettel herunterladen'}
       </button>
       {error && (
-        <div className="mt-2 rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-700">
+        <div className="rounded-[10px] border border-[#f3cccc] bg-[#fdf2f2] px-3 py-2 text-[13px] text-[#8f1f1f]">
           Fehler: {error}
         </div>
       )}

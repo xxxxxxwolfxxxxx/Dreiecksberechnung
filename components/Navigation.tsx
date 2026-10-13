@@ -9,6 +9,13 @@ import { pfadFuerForm, istAktiverPfad } from '@/lib/navigation/pfade'
 const SHAPES_2D = ['dreieck', 'kreis', 'rechteck', 'trapez', 'parallelogramm', 'raute']
 const SHAPES_3D = ['wuerfel', 'quader', 'kugel', 'zylinder', 'kegel', 'pyramide']
 
+// Jede Rubrik hat ihre eigene Akzentfarbe: 2D blau, 3D amber, See teal.
+const RUBRIK = {
+  blau: { label: 'text-brand-600', dot: 'bg-brand-600', aktiv: 'bg-brand-100 !text-brand-700 font-semibold' },
+  amber: { label: 'text-[#b86e00]', dot: 'bg-[#e59a1c]', aktiv: 'bg-amber-50 !text-[#8a5200] font-semibold' },
+  teal: { label: 'text-[#0d7f74]', dot: 'bg-[#14a394]', aktiv: 'bg-teal-50 !text-[#0d6b62] font-semibold' },
+} as const
+
 export function Navigation() {
   const pathname = usePathname()
   const shapes2d = shapeList.filter(s => SHAPES_2D.includes(s.id))
@@ -27,81 +34,61 @@ export function Navigation() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // Jede Rubrik hat ihre eigene Akzentfarbe: 2D indigo, 3D amber, Navigation teal.
-  const AKTIV_KLASSEN = {
-    indigo: 'bg-indigo-100 text-indigo-700 ring-2 ring-indigo-400/20',
-    amber: 'bg-amber-100 text-amber-700 ring-2 ring-amber-400/20',
-    teal: 'bg-teal-100 text-teal-700 ring-2 ring-teal-400/20',
-  } as const
-
-  const linkClass = (id: string, farbe: keyof typeof AKTIV_KLASSEN) =>
-    `whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-bold transition-all ${
+  const linkClass = (id: string, farbe: keyof typeof RUBRIK) =>
+    `whitespace-nowrap rounded-lg px-2.5 py-1 text-[13.5px] !no-underline transition-colors ${
       istAktiverPfad(pathname, id)
-        ? AKTIV_KLASSEN[farbe]
-        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+        ? RUBRIK[farbe].aktiv
+        : 'font-medium !text-ink-2 hover:bg-[#f2f4f7] hover:!text-ink'
     }`
 
+  const Reihe = ({ titel, farbe, children }: { titel: string; farbe: keyof typeof RUBRIK; children: React.ReactNode }) => (
+    <div className="flex items-center gap-2.5 overflow-x-auto scrollbar-hide">
+      <span className={`flex w-[34px] flex-shrink-0 items-center gap-1.5 font-mono text-[11px] font-semibold ${RUBRIK[farbe].label}`}>
+        <span className={`h-1.5 w-1.5 rounded-[2px] ${RUBRIK[farbe].dot}`} />
+        {titel}
+      </span>
+      <div className="flex gap-0.5">{children}</div>
+    </div>
+  )
+
   return (
-    <nav className={`sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200 transition-transform duration-300 ${visible ? 'translate-y-0' : '-translate-y-full'}`}>
-      <div className="mx-auto max-w-3xl px-4 py-3 sm:py-4">
-        {/* Logo */}
-        <div className="flex items-center justify-between mb-4">
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-black shadow-lg shadow-indigo-200 group-hover:scale-110 transition-transform">
+    <nav className={`sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-line transition-transform duration-300 ${visible ? 'translate-y-0' : '-translate-y-full'}`}>
+      <div className="mx-auto max-w-3xl px-4 sm:px-5 pt-3 pb-2.5 flex flex-col gap-2.5">
+        <div className="flex items-center justify-between gap-4">
+          <Link href="/" className="flex items-center gap-2.5 !text-ink !no-underline">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-brand-600 font-mono text-[15px] font-semibold text-white">
               G
-            </div>
-            <span className="text-xl font-black text-slate-800 tracking-tight">
-              Geo<span className="text-indigo-600">Rechner</span>
+            </span>
+            <span className="text-lg font-bold tracking-tight">
+              Geo<span className="text-brand-600">Rechner</span>
             </span>
           </Link>
-          <div className="hidden sm:flex gap-4 text-xs font-bold uppercase tracking-widest text-slate-400">
-            <span>Mathe macht Spaß!</span>
-          </div>
+          <span className="hidden sm:inline font-mono text-[11px] tracking-wide text-ink-3">Mathe macht Spaß!</span>
         </div>
 
-        {/* Categories */}
-        <div className="space-y-3">
-          {/* 2D-Formen */}
-          <div className="flex items-center gap-3 overflow-x-auto pb-1 scrollbar-hide">
-            <span className="flex-shrink-0 text-[10px] font-black uppercase tracking-[0.2em] text-indigo-500 bg-indigo-50 px-2 py-1 rounded">
-              2D
-            </span>
-            <div className="flex gap-1">
-              {shapes2d.map(shape => (
-                <Link key={shape.id} href={pfadFuerForm(shape.id)} className={linkClass(shape.id, 'indigo')}>
-                  {shape.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {/* 3D-Körper */}
-          <div className="flex items-center gap-3 overflow-x-auto pb-1 scrollbar-hide">
-            <span className="flex-shrink-0 text-[10px] font-black uppercase tracking-[0.2em] text-amber-500 bg-amber-50 px-2 py-1 rounded">
-              3D
-            </span>
-            <div className="flex gap-1">
-              {shapes3d.map(shape => (
-                <Link key={shape.id} href={pfadFuerForm(shape.id)} className={linkClass(shape.id, 'amber')}>
-                  {shape.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-
+        <div className="flex flex-col gap-1">
+          <Reihe titel="2D" farbe="blau">
+            {shapes2d.map(shape => (
+              <Link key={shape.id} href={pfadFuerForm(shape.id)} className={linkClass(shape.id, 'blau')}>
+                {shape.label}
+              </Link>
+            ))}
+          </Reihe>
+          <Reihe titel="3D" farbe="amber">
+            {shapes3d.map(shape => (
+              <Link key={shape.id} href={pfadFuerForm(shape.id)} className={linkClass(shape.id, 'amber')}>
+                {shape.label}
+              </Link>
+            ))}
+          </Reihe>
           {/* Navigation auf dem Wasser – Dreiecksmathematik in der Seefahrt */}
-          <div className="flex items-center gap-3 overflow-x-auto pb-1 scrollbar-hide">
-            <span className="flex-shrink-0 text-[10px] font-black uppercase tracking-[0.2em] text-teal-600 bg-teal-50 px-2 py-1 rounded">
-              See
-            </span>
-            <div className="flex gap-1">
-              {PEILUNGS_ROUTEN.map(route => (
-                <Link key={route.id} href={`/${route.id}`} className={linkClass(route.id, 'teal')}>
-                  {route.label}
-                </Link>
-              ))}
-            </div>
-          </div>
+          <Reihe titel="See" farbe="teal">
+            {PEILUNGS_ROUTEN.map(route => (
+              <Link key={route.id} href={`/${route.id}`} className={linkClass(route.id, 'teal')}>
+                {route.label}
+              </Link>
+            ))}
+          </Reihe>
         </div>
       </div>
     </nav>

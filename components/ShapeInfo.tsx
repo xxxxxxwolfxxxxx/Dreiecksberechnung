@@ -392,94 +392,76 @@ export function ShapeInfo({ shapeId }: Props) {
   if (!info) return null
 
   return (
-    <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden divide-y divide-slate-100">
+    <article className="bg-white rounded-[22px] border border-line overflow-hidden divide-y divide-line-soft">
       {/* 1. Einleitung */}
-      <section className="p-6 sm:p-8">
-        <h2 className="text-2xl font-black text-slate-800 mb-4 tracking-tight">{info.title}</h2>
-        <p className="text-slate-600 leading-relaxed text-lg">{info.intro}</p>
+      <section className="px-5 sm:px-7 pt-7 pb-6">
+        <h2 className="text-[26px] font-bold leading-tight tracking-[-0.02em] mb-3 text-pretty">{info.title}</h2>
+        <p className="text-[16.5px] text-ink-2 text-pretty">{info.intro}</p>
       </section>
 
       {/* 2. Wann brauchst du das? */}
-      <section className="p-6 sm:p-8 bg-slate-50/50">
-        <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
-          <span className="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xl">💡</span>
-          Wann brauchst du das?
-        </h3>
-        <ul className="grid gap-4 sm:grid-cols-2">
+      <section className="px-5 sm:px-7 py-6 bg-[#fbfbfd]">
+        <h3 className="text-[17px] font-semibold mb-3.5">Wann brauchst du das?</h3>
+        <ol className="grid gap-2.5 sm:grid-cols-2">
           {info.examples.map((ex, i) => (
-            <li key={i} className="flex items-start gap-4 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm">
-              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center text-xs font-black">
+            <li key={i} className="grid grid-cols-[24px_minmax(0,1fr)] gap-3 rounded-[14px] border border-line-soft bg-white px-4 py-3.5">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#e8f6ee] font-mono text-xs font-semibold text-[#127548]">
                 {i + 1}
               </span>
-              <span className="text-slate-600 text-sm leading-relaxed">{ex}</span>
+              <span className="text-sm text-ink-2">{ex}</span>
             </li>
           ))}
-        </ul>
+        </ol>
       </section>
 
       {/* 3. Formeln einfach erklärt */}
-      <section className="p-6 sm:p-8">
-        <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
-          <span className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl">📐</span>
-          Formeln einfach erklärt
-        </h3>
-        <div className="grid gap-4 sm:grid-cols-2">
+      <section className="px-5 sm:px-7 py-6">
+        <h3 className="text-[17px] font-semibold mb-3.5">Formeln einfach erklärt</h3>
+        <div className="grid gap-2.5 sm:grid-cols-2">
           {info.formulas.map((f, i) => (
-            <div key={i} className="group p-5 rounded-2xl bg-indigo-50/50 border border-indigo-100 hover:bg-indigo-50 transition-colors">
-              <div className="font-mono text-base font-black text-indigo-700 mb-2 p-3 bg-white rounded-xl border border-indigo-100 shadow-sm group-hover:scale-[1.02] transition-transform">
+            <div key={i} className="flex flex-col gap-2 rounded-[14px] border border-line-soft px-4 py-3.5">
+              <code className="rounded-lg bg-brand-50 px-3 py-2 font-mono text-[15px] font-semibold text-brand-700">
                 {f.formula}
-              </div>
-              <p className="text-slate-600 text-sm leading-relaxed">{f.explanation}</p>
+              </code>
+              <p className="text-sm text-ink-2">{f.explanation}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* 4. Beispielrechnung */}
-      <section className="p-6 sm:p-8 bg-slate-50/50">
-        <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
-          <span className="w-8 h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-xl">📝</span>
-          Beispielrechnung
-        </h3>
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-          <p className="text-slate-700 font-medium mb-6 leading-relaxed">{info.workedExample.setup}</p>
-          <div className="space-y-4">
-            {info.workedExample.steps.map((step, i) => (
-              <div key={i} className="flex gap-4 group">
-                <div className="flex flex-col items-center">
-                  <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-black shadow-lg shadow-indigo-100 z-10 group-hover:scale-110 transition-transform">
-                    {i + 1}
-                  </div>
-                  {i < info.workedExample.steps.length - 1 && (
-                    <div className="w-0.5 h-full bg-slate-100 -mt-1 mb-1"></div>
-                  )}
-                </div>
-                <div className="flex-1 pb-4">
-                  <p className="text-slate-700 text-sm leading-relaxed bg-slate-50 rounded-xl px-4 py-3 border border-slate-100 font-mono">
-                    {step}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+      <section className="px-5 sm:px-7 py-6 bg-[#fbfbfd]">
+        <h3 className="text-[17px] font-semibold mb-2">Beispielrechnung</h3>
+        <p className="text-[15px] text-ink-2 mb-3.5">{info.workedExample.setup}</p>
+        <ol className="flex flex-col gap-2">
+          {info.workedExample.steps.map((step, i) => {
+            const letzter = i === info.workedExample.steps.length - 1
+            return (
+              <li key={i} className="grid grid-cols-[28px_minmax(0,1fr)] items-center gap-3">
+                <span className={`flex h-7 w-7 items-center justify-center rounded-full font-mono text-[13px] font-semibold ${letzter ? 'bg-brand-600 text-white' : 'bg-brand-100 text-brand-700'}`}>
+                  {i + 1}
+                </span>
+                <span className={`rounded-[10px] border px-3 py-2 font-mono text-[13.5px] ${letzter ? 'border-brand-200 bg-brand-50 font-semibold text-brand-700' : 'border-line-soft bg-white text-ink'}`}>
+                  {step}
+                </span>
+              </li>
+            )
+          })}
+        </ol>
       </section>
 
       {/* 5. Wusstest du? */}
-      <section className="p-6 sm:p-8 bg-amber-50/50 border-t-2 border-dashed border-amber-200">
-        <h3 className="text-lg font-bold text-amber-800 mb-6 flex items-center gap-2">
-          <span className="w-8 h-8 rounded-full bg-amber-200 text-amber-700 flex items-center justify-center text-xl">✨</span>
-          Wusstest du schon?
-        </h3>
-        <div className="space-y-3">
+      <section className="px-5 sm:px-7 pt-6 pb-7 bg-[#fffaf0]">
+        <h3 className="text-[17px] font-semibold text-[#6b4300] mb-3.5">Wusstest du schon?</h3>
+        <div className="flex flex-col gap-2.5">
           {info.funFacts.map((fact, i) => (
-            <div key={i} className="flex items-center gap-4 bg-white p-4 rounded-2xl border border-amber-100 shadow-sm rotate-1 first:-rotate-1 last:-rotate-1 hover:rotate-0 transition-transform">
-              <span className="text-2xl">⭐</span>
-              <p className="text-amber-900 text-sm font-medium leading-relaxed">{fact}</p>
+            <div key={i} className="flex items-start gap-3 rounded-[14px] border border-[#f4e3bf] bg-white px-4 py-3.5 -rotate-[0.6deg] even:rotate-[0.5deg] hover:rotate-0 transition-transform">
+              <span aria-hidden="true" className="mt-[7px] h-2.5 w-2.5 flex-shrink-0 rotate-45 bg-[#e59a1c]" />
+              <p className="text-sm text-[#5a3c06]">{fact}</p>
             </div>
           ))}
         </div>
       </section>
-    </div>
+    </article>
   )
 }

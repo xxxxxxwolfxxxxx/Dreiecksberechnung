@@ -9,7 +9,7 @@ describe('ShapeCalculator', () => {
 
   test('zeigt Zeichnung und Eingabe-Panel', () => {
     render(<ShapeCalculator shapeId="dreieck" />)
-    expect(screen.getByText(/Zeichnung/i)).toBeInTheDocument()
+    expect(document.querySelector('svg[data-shape-drawing]')).toBeInTheDocument()
     const inputPanelHeaders = screen.getAllByText(/Werte eingeben/i)
     expect(inputPanelHeaders.length).toBeGreaterThan(0)
   })

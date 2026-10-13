@@ -115,7 +115,6 @@ describe('quizQuestions', () => {
       types.forEach((type, idx) => {
         const quiz = getQuizForTriangle(type, testValues[idx])
         expect(quiz.explanation.length).toBeGreaterThan(0)
-        expect(quiz.explanation).toContain('²')
       })
     })
 

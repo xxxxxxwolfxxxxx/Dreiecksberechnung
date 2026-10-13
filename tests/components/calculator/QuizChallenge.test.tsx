@@ -24,7 +24,7 @@ describe('QuizChallenge', () => {
     render(<QuizChallenge solution={mockSolution} />)
 
     // Header sollte angezeigt werden
-    expect(screen.getByText(/Schnelltest – Hast du verstanden\?/)).toBeInTheDocument()
+    expect(screen.getByText(/Hast du’s verstanden\?/)).toBeInTheDocument()
 
     // Die Frage sollte angezeigt werden (für rechtwinklig Triangle)
     expect(screen.getByText(/Hypotenuse/i)).toBeInTheDocument()
@@ -58,8 +58,8 @@ describe('QuizChallenge', () => {
     // Klick auf einen Button um die Antwort zu enthüllen
     fireEvent.click(buttons[0])
 
-    // Feedback-Text sollte sichtbar sein (✅ oder ❌)
-    expect(screen.getByText(/✅|❌/)).toBeInTheDocument()
+    // Feedback-Text sollte sichtbar sein
+    expect(screen.getByText(/Richtig!|Nicht ganz\./)).toBeInTheDocument()
 
     // Explanation sollte sichtbar sein (von der Feedback-Box, nicht die Frage)
     const explanations = screen.getAllByText(/Pythagoras|Satz/i)

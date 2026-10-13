@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { formatUnit } from '@/lib/format'
 import type { Solution } from '@/lib/shapes/types'
 import { getResultHint, getComparison, getContextForKey } from '@/utils/resultHints'
@@ -5,13 +6,15 @@ import { getResultHint, getComparison, getContextForKey } from '@/utils/resultHi
 interface Props {
   solution: Solution
   unit: string
+  /** Optionaler Fußbereich, z. B. der Spickzettel-Export */
+  children?: ReactNode
 }
 
 const LABELS: Record<string, string> = {
   a: 'Seite a', b: 'Seite b', c: 'Seite c',
   alpha: 'Winkel α', beta: 'Winkel β', gamma: 'Winkel γ',
   flaeche: 'Fläche', umfang: 'Umfang',
-  h_a: 'Höhe h_a', h_b: 'Höhe h_b', h_c: 'Höhe h_c',
+  h_a: 'Höhe hₐ', h_b: 'Höhe h_b', h_c: 'Höhe h_c',
   inkreis: 'Inkreisradius', umkreis: 'Umkreisradius',
   r: 'Radius', d: 'Durchmesser',
   diagonale: 'Diagonale', mittellinie: 'Mittellinie',
@@ -26,92 +29,97 @@ const LABELS: Record<string, string> = {
 const HIGHLIGHT_KEYS = ['flaeche', 'umfang', 'r', 'diagonale', 'volumen', 'oberflaeche']
 const VOLUME_KEYS = ['volumen']
 const AREA_KEYS = ['flaeche', 'oberflaeche', 'mantelflaeche', 'grundflaeche']
+const ANGLE_KEYS = ['alpha', 'beta', 'gamma']
 
-export function ResultsPanel({ solution, unit }: Props) {
+/** Beim Dreieck werden die übrigen Werte in Zeilen gruppiert. */
+const GRUPPEN: Array<{ titel: string; keys: string[] }> = [
+  { titel: 'Seiten', keys: ['a', 'b', 'c'] },
+  { titel: 'Winkel', keys: ANGLE_KEYS },
+  { titel: 'Höhen', keys: ['h_a', 'h_b', 'h_c'] },
+  { titel: 'Kreise', keys: ['inkreis', 'umkreis'] },
+]
+
+function Tooltip({ lines, align = 'left' }: { lines: string[]; align?: 'left' | 'right' }) {
+  if (!lines.length) return null
+  return (
+    <div className={`pointer-events-none absolute bottom-full z-20 mb-2 hidden w-60 flex-col gap-1.5 rounded-[10px] bg-ink px-3 py-2.5 text-[12.5px] leading-normal text-white group-hover:flex ${align === 'right' ? 'right-0' : 'left-0'}`}>
+      {lines.map((l, i) => <p key={i}>{l}</p>)}
+    </div>
+  )
+}
+
+export function ResultsPanel({ solution, unit, children }: Props) {
   const entries = Object.entries(solution.values)
   const highlighted = entries.filter(([k]) => HIGHLIGHT_KEYS.includes(k))
-  const rest = entries.filter(([k]) => !HIGHLIGHT_KEYS.includes(k))
+  const rest = entries.filter(([k]) => !HIGHLIGHT_KEYS.includes(k) && k !== 'typ')
+  const typ = solution.values.typ
+
+  const fmt = (key: string, value: number) => {
+    if (ANGLE_KEYS.includes(key)) return formatUnit(value, '°')
+    const power = VOLUME_KEYS.includes(key) ? 3 : AREA_KEYS.includes(key) ? 2 : 1
+    return formatUnit(value, unit, power)
+  }
+  const hinweise = (key: string, value?: number) =>
+    [getResultHint(key), AREA_KEYS.includes(key) && value !== undefined ? getComparison(value) : '', getContextForKey(key)].filter(Boolean) as string[]
+
+  // Gruppiert, wenn alle Keys bekannt sind (Dreieck) – sonst flaches Raster.
+  const bekannt = GRUPPEN.flatMap(g => g.keys)
+  const gruppiert = rest.every(([k]) => bekannt.includes(k))
+  const zeilen = gruppiert
+    ? GRUPPEN.map(g => ({ titel: g.titel, items: rest.filter(([k]) => g.keys.includes(k)) })).filter(z => z.items.length)
+    : [{ titel: '', items: rest }]
 
   return (
-    <div className="rounded-3xl bg-white border border-slate-200 shadow-xl shadow-slate-100 overflow-hidden">
-      <div className="bg-gradient-to-r from-emerald-500 to-teal-600 px-6 py-4">
-        <h3 className="font-black text-white text-xs uppercase tracking-[0.2em]">Ergebnis</h3>
+    <section className="flex flex-col gap-5 rounded-[22px] border border-line bg-white px-5 sm:px-7 py-6 shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
+      <div className="flex flex-wrap items-center justify-between gap-2.5">
+        <h3 className="text-xl font-bold tracking-tight">Ergebnis</h3>
+        {typeof typ === 'string' && (
+          <div className="group relative">
+            <span className="inline-flex items-center gap-2 rounded-full bg-[#f3efff] py-1 pl-1.5 pr-3 text-sm font-semibold capitalize text-[#4d2fb0]">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#6a4ee0] font-mono text-[11px] text-white">△</span>
+              {typ}
+            </span>
+            <Tooltip lines={hinweise('typ')} align="right" />
+          </div>
+        )}
       </div>
 
       {highlighted.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-6 border-b border-slate-100 bg-slate-50/30">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {highlighted.map(([key, value]) => {
             if (typeof value !== 'number') return null
-            const power = VOLUME_KEYS.includes(key) ? 3 : AREA_KEYS.includes(key) ? 2 : 1
-            const hint = getResultHint(key)
-            const comparison = AREA_KEYS.includes(key) ? getComparison(value) : ''
-            const context = getContextForKey(key)
-            const hasTooltip = hint || comparison || context
-
             return (
-              <div key={key} className={`rounded-2xl bg-white border border-indigo-100 p-5 shadow-sm hover:scale-[1.02] transition-transform ${hasTooltip ? 'group relative' : ''}`}>
-                <div className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-1">{LABELS[key] ?? key}</div>
-                <div className="text-2xl font-black text-indigo-600">
-                  {formatUnit(value, unit, power)}
-                </div>
-
-                {hasTooltip && (
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-900 text-white text-xs rounded-lg p-3 whitespace-normal w-48 z-10 shadow-lg pointer-events-none">
-                    {hint && <p className="mb-2">{hint}</p>}
-                    {comparison && <p className="mb-2">{comparison}</p>}
-                    {context && <p>{context}</p>}
-                  </div>
-                )}
+              <div key={key} className="group relative flex cursor-help flex-col gap-0.5 rounded-2xl border border-brand-200 bg-brand-50 px-4.5 py-4">
+                <span className="text-[13px] font-medium text-[#3a4fa8]">{LABELS[key] ?? key}</span>
+                <span className="font-mono text-[28px] font-semibold tracking-[-0.02em] text-brand-700">{fmt(key, value)}</span>
+                <Tooltip lines={hinweise(key, value)} />
               </div>
             )
           })}
         </div>
       )}
 
-      <dl className="grid grid-cols-2 gap-x-6 gap-y-4 p-6 sm:grid-cols-3">
-        {rest.map(([key, value]) => {
-          if (key === 'typ') {
-            const hint = getResultHint(key)
-            const context = getContextForKey(key)
-            const hasTooltip = hint || context
-            return (
-              <div key={key} className={`col-span-full rounded-2xl bg-violet-50 px-5 py-4 flex items-center gap-4 border border-violet-100 shadow-sm ${hasTooltip ? 'group relative' : ''}`}>
-                <span className="text-2xl">{'\u{1F4D0}'}</span>
-                <div>
-                  <dt className="text-[10px] font-black text-violet-400 uppercase tracking-widest">Dreieckstyp</dt>
-                  <dd className="font-black text-violet-700 text-lg capitalize">{String(value)}</dd>
-                </div>
-                {hasTooltip && (
-                  <div className="absolute bottom-full left-0 mb-2 hidden group-hover:block bg-gray-900 text-white text-xs rounded-lg p-2 whitespace-normal w-48 z-10 shadow-lg pointer-events-none">
-                    {hint && <p className="mb-1">{hint}</p>}
-                    {context && <p>{context}</p>}
+      <div className="flex flex-col">
+        {zeilen.map(z => (
+          <div key={z.titel || 'alle'} className={`grid gap-3 border-t border-line-soft py-3 ${z.titel ? 'sm:grid-cols-[90px_minmax(0,1fr)]' : ''}`}>
+            {z.titel && <span className="pt-0.5 text-[13px] font-semibold text-ink-3">{z.titel}</span>}
+            <dl className="grid grid-cols-2 gap-x-4 gap-y-2.5 sm:grid-cols-3">
+              {z.items.map(([key, value]) => {
+                if (typeof value !== 'number') return null
+                return (
+                  <div key={key} className="group relative flex flex-col">
+                    <dt className="text-[12.5px] text-ink-3">{LABELS[key] ?? key}</dt>
+                    <dd className="font-mono text-base font-medium text-ink">{fmt(key, value)}</dd>
+                    <Tooltip lines={hinweise(key)} />
                   </div>
-                )}
-              </div>
-            )
-          }
-          if (typeof value !== 'number') return null
-          const isAngle = ['alpha', 'beta', 'gamma'].includes(key)
-          const power = VOLUME_KEYS.includes(key) ? 3 : AREA_KEYS.includes(key) ? 2 : 1
-          const hint = getResultHint(key)
-          const context = getContextForKey(key)
-          const hasTooltip = hint || context
-          return (
-            <div key={key} className={`p-1 ${hasTooltip ? 'group relative' : ''}`}>
-              <dt className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{LABELS[key] ?? key}</dt>
-              <dd className="font-black text-slate-700 text-base">
-                {isAngle ? formatUnit(value, '°') : formatUnit(value, unit, power)}
-              </dd>
-              {hasTooltip && (
-                <div className="absolute bottom-full left-0 mb-2 hidden group-hover:block bg-gray-900 text-white text-xs rounded-lg p-2 whitespace-normal w-48 z-10 shadow-lg pointer-events-none">
-                  {hint && <p className="mb-1">{hint}</p>}
-                  {context && <p>{context}</p>}
-                </div>
-              )}
-            </div>
-          )
-        })}
-      </dl>
-    </div>
+                )
+              })}
+            </dl>
+          </div>
+        ))}
+      </div>
+
+      {children}
+    </section>
   )
 }

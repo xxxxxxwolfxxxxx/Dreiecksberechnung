@@ -11,34 +11,28 @@ export function RelatedTriangles({ typ, onSelect }: Props) {
   const related = getRelatedTriangles(typ)
 
   return (
-    <div className="rounded-2xl bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200 p-5">
-      <div className="flex items-center gap-2 mb-4">
-        <span className="text-2xl">🔬</span>
-        <h3 className="font-bold text-purple-900">Noch mehr ausprobieren?</h3>
+    <section className="flex flex-col gap-3.5 rounded-[22px] border border-line bg-white px-5 sm:px-7 py-6">
+      <div className="flex flex-col gap-1">
+        <h3 className="text-xl font-bold tracking-tight">Noch mehr ausprobieren?</h3>
+        <p className="text-sm text-ink-2">
+          Vergleiche dein Dreieck mit klassischen Beispielen – ein Klick setzt die Werte ein.
+        </p>
       </div>
 
-      <p className="text-sm text-gray-600 mb-4">
-        Vergleiche dein Dreieck mit klassischen Beispielen. Klick drauf und beobachte, wie sich die Werte ändern:
-      </p>
-
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 mt-4">
+      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
         {related.map((tri) => (
           <button
             key={tri.label}
             onClick={() => onSelect({ a: tri.a, b: tri.b, c: tri.c })}
-            className="border-2 border-purple-300 bg-white hover:border-purple-500 hover:bg-purple-50 rounded-lg p-3 text-left transition-all active:scale-95"
+            className="flex flex-col gap-1 rounded-[14px] border-[1.5px] border-line bg-white px-3.5 py-3 text-left transition-colors hover:border-brand-600 hover:bg-brand-50 active:scale-[0.98]"
           >
-            <div className="font-bold text-sm text-gray-800">{tri.label}</div>
+            <span className="font-mono text-[15px] font-semibold text-ink">{tri.label}</span>
             {tri.description && (
-              <div className="text-xs text-gray-600 mt-1">{tri.description}</div>
+              <span className="text-[12.5px] leading-snug text-ink-3">{tri.description}</span>
             )}
           </button>
         ))}
       </div>
-
-      <p className="text-xs text-gray-500 mt-4">
-        💡 Klick auf ein Dreieck → Werte werden eingegeben → Neue Berechnung
-      </p>
-    </div>
+    </section>
   )
 }

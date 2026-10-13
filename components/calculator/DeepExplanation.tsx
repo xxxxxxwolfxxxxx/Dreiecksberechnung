@@ -412,27 +412,24 @@ export function DeepExplanation({ solution, shapeId }: Props) {
   const content = getExplanationContent()
 
   return (
-    <div className="rounded-2xl bg-gradient-to-br from-indigo-50 to-blue-50 border-2 border-indigo-200 p-6">
-      <h2 className="text-2xl font-bold text-indigo-900 mb-6">{content.title}</h2>
+    <section className="flex flex-col gap-4 rounded-[22px] border border-line bg-white px-5 sm:px-7 py-6">
+      <div className="flex flex-col gap-1">
+        <span className="font-mono text-[11.5px] tracking-[0.06em] text-[#6a4ee0]">DEIN DREIECKSTYP IM DETAIL</span>
+        <h2 className="text-[22px] font-bold tracking-tight">{content.title}</h2>
+      </div>
 
-      <div className="space-y-5">
+      <div className="grid gap-3 sm:grid-cols-2">
         {content.sections.map((section, idx) => (
-          <div key={idx} className="bg-white rounded-lg p-4 border border-indigo-100">
-            <h3 className="text-lg font-semibold text-indigo-800 mb-2">
-              {section.heading}
-            </h3>
-            <p className="text-gray-700 leading-relaxed text-sm">
-              {section.content}
-            </p>
+          <div key={idx} className="flex flex-col gap-1.5 rounded-[14px] border border-line-soft px-4.5 py-4">
+            <h3 className="text-[15px] font-semibold">{section.heading}</h3>
+            <p className="text-sm text-ink-2 text-pretty">{section.content}</p>
           </div>
         ))}
       </div>
 
-      <div className="mt-6 p-4 bg-indigo-100 rounded-lg border border-indigo-300">
-        <p className="text-xs text-indigo-900">
-          💡 <strong>Merksatz:</strong> Geometrische Formen sind fundamental in Mathematik, Wissenschaft und Praxis. Das Verständnis ihrer Eigenschaften öffnet Türen zu komplexeren Konzepten.
-        </p>
-      </div>
-    </div>
+      <p className="rounded-xl bg-[#f3efff] px-4 py-3 text-[13px] text-[#4d2fb0]">
+        <strong>Merksatz:</strong> Geometrische Formen sind fundamental in Mathematik, Wissenschaft und Praxis. Das Verständnis ihrer Eigenschaften öffnet Türen zu komplexeren Konzepten.
+      </p>
+    </section>
   )
 }

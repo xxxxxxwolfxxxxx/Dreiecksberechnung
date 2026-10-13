@@ -102,8 +102,8 @@ describe('SpickzettelExport', () => {
 
   it('shows download icon in button', () => {
     const { container } = render(<SpickzettelExport solution={mockSolution} shapeId="dreieck" />)
-    const svg = container.querySelector('svg')
-    expect(svg).toBeInTheDocument()
+    const icon = container.querySelector('button [aria-hidden="true"]')
+    expect(icon).toBeInTheDocument()
   })
 
   it('calls generateSpickzettel and downloadPDF on button click', async () => {
@@ -229,9 +229,9 @@ describe('SpickzettelExport', () => {
 
   it('hides SVG from screenreaders', () => {
     const { container } = render(<SpickzettelExport solution={mockSolution} shapeId="dreieck" />)
-    const svg = container.querySelector('svg')
+    const icon = container.querySelector('button [aria-hidden="true"]')
 
-    expect(svg).toHaveAttribute('aria-hidden', 'true')
+    expect(icon).toHaveAttribute('aria-hidden', 'true')
   })
 
   it('clears error message when retrying after failure', async () => {

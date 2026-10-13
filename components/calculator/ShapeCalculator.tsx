@@ -71,8 +71,9 @@ function ShapeCalculatorInner({ shapeId, ueberschriftEbene = 'h1' }: Props) {
     if (einheit) setUnit(einheit)
   }, [shape])
 
+  const filled = Object.values(values).filter(v => v !== undefined && !isNaN(v as number)).length
+
   const result = useMemo(() => {
-    const filled = Object.values(values).filter(v => v !== undefined && !isNaN(v as number)).length
     if (filled >= shape.minRequired) {
       const solved = shape.solve(values)
       // Track successful calculation
@@ -91,74 +92,105 @@ function ShapeCalculatorInner({ shapeId, ueberschriftEbene = 'h1' }: Props) {
       return solved
     }
     return null
-  }, [values, shape])
+  }, [values, shape, filled])
 
   const handleChange = (key: string, value: number | undefined) => {
     setActiveIdx(0)
     setValues(prev => ({ ...prev, [key]: value }))
   }
 
+  const reset = () => {
+    setActiveIdx(0)
+    setValues({})
+  }
+
   const activeSolution = result?.solutions[activeIdx]
+  const statusText = activeSolution
+    ? 'Ergebnis berechnet'
+    : result?.error
+      ? 'Diese Werte ergeben kein Ergebnis'
+      : `Gib mindestens ${shape.minRequired} Werte ein (${Math.min(filled, shape.minRequired)}/${shape.minRequired})`
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="rounded-3xl bg-gradient-to-br from-indigo-500 to-indigo-700 p-6 sm:p-8 text-white shadow-xl shadow-indigo-100">
-        <div className="flex items-center justify-between gap-4">
-          <Ueberschrift className="text-2xl sm:text-3xl font-black tracking-tight leading-tight">
-            {shape.label} <span className="text-indigo-200">berechnen</span>
-          </Ueberschrift>
-          <select
-            value={unit}
-            onChange={e => setUnit(e.target.value)}
-            className="rounded-xl bg-white/10 border border-white/20 px-4 py-2 text-sm font-bold text-white backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-white/50 transition-all cursor-pointer"
-          >
-            {UNITS.map(u => <option key={u} value={u} className="text-slate-900">{u}</option>)}
-          </select>
+    <div className="flex flex-col gap-5">
+      {/* Rechner: Kopf, Skizze, Eingabe in einer Karte */}
+      <section className="rounded-[22px] bg-white border border-line shadow-[0_1px_2px_rgba(16,24,40,0.04),0_12px_32px_-16px_rgba(16,24,40,0.10)] overflow-hidden">
+        <div className="flex flex-wrap items-end justify-between gap-4 px-5 sm:px-7 pt-6 pb-4">
+          <div className="flex flex-col gap-1.5">
+            <span className="font-mono text-[11.5px] tracking-[0.06em] text-ink-3">RECHNER</span>
+            <Ueberschrift className="text-[28px] sm:text-[34px] font-bold leading-[1.1] tracking-[-0.025em]">
+              {shape.label} <span className="text-brand-600">berechnen</span>
+            </Ueberschrift>
+          </div>
+          <div role="radiogroup" aria-label="Einheit" className="flex gap-0.5 rounded-[11px] bg-[#f2f4f7] p-[3px]">
+            {UNITS.map(u => (
+              <button
+                key={u}
+                role="radio"
+                aria-checked={u === unit}
+                onClick={() => setUnit(u)}
+                className={`rounded-lg px-3 py-1.5 font-mono text-[13px] font-medium transition-colors ${
+                  u === unit ? 'bg-white text-ink shadow-[0_1px_2px_rgba(16,24,40,.12)]' : 'text-ink-3 hover:text-ink'
+                }`}
+              >
+                {u}
+              </button>
+            ))}
+          </div>
         </div>
-        <p className="mt-3 text-sm sm:text-base text-indigo-100 font-medium flex items-center gap-2">
-          {result?.solutions.length
-            ? <><span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" /> Ergebnis berechnet</>
-            : <><span className="w-2 h-2 rounded-full bg-indigo-300" /> Gib mindestens {shape.minRequired} Werte ein</>}
-        </p>
-      </div>
 
-      {/* Zeichnung (immer sichtbar) */}
-      <div className="rounded-3xl bg-white shadow-sm border border-slate-200 p-6">
-        <div className="flex items-center gap-2 mb-4">
-          <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 bg-slate-50 px-2 py-1 rounded">Zeichnung</span>
+        <div className="flex items-center gap-2.5 px-5 sm:px-7 pb-4 text-sm text-ink-2">
+          <span className="flex gap-1" aria-hidden="true">
+            {Array.from({ length: shape.minRequired }).map((_, i) => (
+              <span
+                key={i}
+                className={`h-1.5 w-[18px] rounded-[3px] transition-colors ${
+                  activeSolution ? 'bg-[#12915a]' : i < filled ? 'bg-brand-600' : 'bg-[#e1e4ea]'
+                }`}
+              />
+            ))}
+          </span>
+          <span className="font-medium" aria-live="polite">{statusText}</span>
         </div>
-        <ShapeDrawing
-          shape={shape}
-          data={activeSolution ? shape.toSVG(activeSolution.values as Record<string, number>, 280) : undefined}
-          isPreview={!activeSolution}
-        />
-      </div>
 
-      {/* Eingabe-Panel */}
-      <div className="rounded-3xl bg-white shadow-sm border border-slate-200 p-6">
-        <div className="flex items-center gap-2 mb-6">
-          <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 bg-slate-50 px-2 py-1 rounded">Werte eingeben</span>
+        {/* Zeichnung (immer sichtbar) */}
+        <div className="mx-3 sm:mx-4 rounded-2xl border border-line-soft bg-[#fbfbfd] bg-dots p-2">
+          <ShapeDrawing
+            shape={shape}
+            data={activeSolution ? shape.toSVG(activeSolution.values as Record<string, number>, 280) : undefined}
+            isPreview={!activeSolution}
+          />
         </div>
-        <InputPanel shape={shape} values={values} onChange={handleChange} unit={unit} />
-      </div>
+
+        {/* Eingabe */}
+        <div className="flex flex-col gap-4 px-5 sm:px-7 pt-5 pb-6">
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="text-[15px] font-semibold">Bekannte Werte eingeben</h2>
+            <button
+              onClick={reset}
+              className="rounded-lg border border-line bg-white px-3 py-1 text-[13px] font-medium text-ink-2 transition-colors hover:bg-[#f2f4f7] hover:text-ink"
+            >
+              Zurücksetzen
+            </button>
+          </div>
+          <InputPanel shape={shape} values={values} onChange={handleChange} unit={unit} />
+        </div>
+      </section>
 
       {/* Fehler */}
       {result?.error && (() => {
         const explanation = getErrorExplanation(result.error, values)
         return (
-          <div className="rounded-2xl bg-rose-50 border border-rose-200 p-5 text-sm font-medium text-rose-700 shadow-sm">
-            <div className="flex items-start gap-3">
-              <span className="text-lg">{explanation.emoji}</span>
-              <div className="flex-1">
-                <p className="font-black mb-2">Fehler bei der Berechnung</p>
-                <p className="whitespace-pre-wrap text-sm text-rose-800 mb-3">{explanation.message}</p>
-                {explanation.suggestion && (
-                  <div className="bg-rose-100 border border-rose-200 rounded-xl p-3 text-xs text-rose-900">
-                    <strong>Tipp:</strong> {explanation.suggestion}
-                  </div>
-                )}
-              </div>
+          <div role="alert" className="flex gap-3.5 rounded-2xl border border-[#f3cccc] bg-[#fdf2f2] px-5 py-4">
+            <span className="flex h-[26px] w-[26px] flex-shrink-0 items-center justify-center rounded-full bg-[#d13c3c] font-mono text-sm font-semibold text-white">!</span>
+            <div className="flex flex-col gap-1.5">
+              <p className="text-[15px] font-semibold text-[#8f1f1f]">Fehler bei der Berechnung</p>
+              <p className="whitespace-pre-wrap text-sm text-[#6e1d1d]">{explanation.message}</p>
+              {explanation.suggestion && (
+                <p className="mt-1 rounded-[10px] bg-[#fbe4e4] px-3 py-2 text-[13px] text-[#6e1d1d]">
+                  <strong>Tipp:</strong> {explanation.suggestion}
+                </p>
+              )}
             </div>
           </div>
         )
@@ -166,20 +198,18 @@ function ShapeCalculatorInner({ shapeId, ueberschriftEbene = 'h1' }: Props) {
 
       {/* Mehrere Loesungen (SSW) */}
       {result && result.solutions.length > 1 && (
-        <div className="rounded-3xl bg-amber-50 border border-amber-200 p-6 shadow-sm">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="text-[10px] font-black uppercase tracking-widest text-amber-500 bg-white px-2 py-1 rounded border border-amber-100">Auswahl</span>
-            <p className="text-sm font-black text-amber-900">Zwei Lösungen möglich</p>
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#f4dfb3] bg-[#fff8ea] px-5 py-4">
+          <div className="flex flex-col">
+            <strong className="text-[15px] text-[#6b4300]">Zwei Lösungen möglich</strong>
+            <span className="text-[13px] text-[#7a5410]">Bei SSW passen zwei verschiedene Dreiecke zu deinen Werten.</span>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-1 rounded-[11px] border border-[#f4dfb3] bg-white p-[3px]">
             {result.solutions.map((_, i) => (
               <button
                 key={i}
                 onClick={() => setActiveIdx(i)}
-                className={`rounded-xl px-6 py-3 text-sm font-black transition-all ${
-                  i === activeIdx
-                    ? 'bg-amber-500 text-white shadow-lg shadow-amber-200 scale-105'
-                    : 'bg-white border border-amber-200 text-amber-700 hover:bg-amber-100/50'
+                className={`rounded-lg px-4 py-1.5 text-sm font-semibold transition-colors ${
+                  i === activeIdx ? 'bg-[#e59a1c] text-white' : 'text-[#7a5410] hover:bg-[#fff8ea]'
                 }`}
               >
                 Lösung {i + 1}
@@ -189,25 +219,20 @@ function ShapeCalculatorInner({ shapeId, ueberschriftEbene = 'h1' }: Props) {
         </div>
       )}
 
-      {/* Ergebnisse */}
+      {/* Ergebnisse inkl. Export */}
       {activeSolution && (
-        <ResultsPanel solution={activeSolution} unit={unit} />
-      )}
-
-      {/* Export Button - für alle Formen */}
-      {activeSolution && (
-        <div className="rounded-2xl bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 p-5">
-          <p className="text-sm text-gray-600 mb-3">
-            💡 Speichere diese Lösung als PDF – perfekt für deine Hausaufgaben!
-          </p>
-          <SpickzettelExport
-            solution={activeSolution}
-            shapeId={shapeId}
-            onExport={() => trackEvent(EVENTS.SPICKZETTEL_EXPORTED, {
-              shape: shapeId
-            })}
-          />
-        </div>
+        <ResultsPanel solution={activeSolution} unit={unit}>
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-[14px] bg-canvas px-4 py-3.5">
+            <span className="text-sm text-ink-2">Lösung als PDF speichern – perfekt für die Hausaufgaben.</span>
+            <SpickzettelExport
+              solution={activeSolution}
+              shapeId={shapeId}
+              onExport={() => trackEvent(EVENTS.SPICKZETTEL_EXPORTED, {
+                shape: shapeId
+              })}
+            />
+          </div>
+        </ResultsPanel>
       )}
 
       {/* Mittlerer Werbebanner – erscheint nur nach der Berechnung */}
@@ -229,7 +254,7 @@ function ShapeCalculatorInner({ shapeId, ueberschriftEbene = 'h1' }: Props) {
 
       {/* Quiz Section - nur für Dreieck */}
       {activeSolution && shapeId === 'dreieck' && (
-        <QuizChallenge solution={activeSolution} />
+        <QuizChallenge key={`${activeIdx}-${activeSolution.values.typ}`} solution={activeSolution} />
       )}
 
       {/* Related Triangles Section - nur für Dreieck */}

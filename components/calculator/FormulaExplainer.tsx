@@ -11,56 +11,62 @@ export function FormulaExplainer({ steps, formulas, method }: Props) {
   const [open, setOpen] = useState(true)
 
   return (
-    <div className="rounded-3xl border border-indigo-100 bg-indigo-50/30 overflow-hidden shadow-sm">
+    <section className="overflow-hidden rounded-[22px] border border-line bg-white">
       <button
         onClick={() => setOpen(!open)}
-        className="flex w-full items-center justify-between px-6 py-5 text-left font-black text-indigo-900 group"
+        aria-expanded={open}
+        className="flex w-full items-center justify-between gap-3 px-5 sm:px-7 py-5 text-left"
       >
-        <span className="flex items-center gap-3">
-          <span className="text-xl group-hover:scale-125 transition-transform">🎓</span>
-          So wurde das berechnet: <span className="text-indigo-600 ml-1">{method}</span>
+        <span className="flex flex-col gap-0.5">
+          <span className="text-lg font-bold tracking-tight text-ink">So wurde das berechnet</span>
+          <span className="font-mono text-[13px] text-brand-600">{method}</span>
         </span>
-        <span className="text-indigo-400 text-xs font-black uppercase tracking-widest bg-white px-3 py-1.5 rounded-xl shadow-sm border border-indigo-50">
-          {open ? 'einklappen' : 'ansehen'}
+        <span className="flex-shrink-0 rounded-lg border border-line px-3 py-1 text-[13px] font-medium text-ink-2">
+          {open ? 'Einklappen' : 'Ansehen'}
         </span>
       </button>
 
       {open && (
-        <div className="px-6 pb-8 space-y-6">
+        <div className="flex flex-col gap-4.5 px-5 sm:px-7 pb-6">
           {/* Schritt-fuer-Schritt */}
-          <div className="space-y-6 relative">
-            <div className="absolute left-4 top-4 bottom-4 w-0.5 bg-indigo-100/50" />
-            {steps.map((step, i) => (
-              <div key={i} className="flex gap-4 relative z-10">
-                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-600 text-white text-sm font-black flex items-center justify-center shadow-lg shadow-indigo-200 group-hover:scale-110 transition-transform">
-                  {i + 1}
-                </span>
-                <div className="flex-1 bg-white p-4 rounded-2xl border border-indigo-50 shadow-sm">
-                  {step.split('\n').map((line, j) => (
-                    <p key={j} className={`${j === 0 ? 'text-slate-800 font-bold mb-2' : 'font-mono text-sm text-indigo-700 bg-indigo-50/50 rounded-xl px-3 py-2 border border-indigo-100'}`}>
-                      {line}
-                    </p>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
+          <ol className="flex flex-col gap-3.5">
+            {steps.map((step, i) => {
+              const [titel, ...zeilen] = step.split('\n')
+              return (
+                <li key={i} className="grid grid-cols-[28px_minmax(0,1fr)] gap-3.5">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-100 font-mono text-[13px] font-semibold text-brand-700">
+                    {i + 1}
+                  </span>
+                  <div className="flex min-w-0 flex-col gap-1.5 pt-0.5">
+                    <p className="text-[15px] font-semibold text-ink">{titel}</p>
+                    {zeilen.length > 0 && (
+                      <div className="flex flex-col gap-0.5 overflow-x-auto rounded-[10px] bg-canvas px-3.5 py-2.5">
+                        {zeilen.map((line, j) => (
+                          <code key={j} className="whitespace-pre font-mono text-[13.5px] text-brand-700">{line}</code>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </li>
+              )
+            })}
+          </ol>
 
           {/* Verwendete Formeln */}
           {formulas.length > 0 && (
-            <div className="bg-white/50 rounded-2xl p-5 border border-indigo-100/50">
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Verwendete Formeln</p>
-              <div className="flex flex-wrap gap-3">
+            <div className="flex flex-col gap-2 border-t border-line-soft pt-3.5">
+              <p className="text-[13px] font-semibold text-ink-3">Verwendete Formeln</p>
+              <div className="flex flex-wrap gap-2">
                 {formulas.map((f, i) => (
-                  <span key={i} className="bg-white border border-indigo-100 rounded-xl px-4 py-2 font-mono text-sm font-bold text-indigo-800 shadow-sm">
+                  <code key={i} className="rounded-lg border border-line bg-white px-2.5 py-1.5 font-mono text-[13px] font-medium text-ink">
                     {f}
-                  </span>
+                  </code>
                 ))}
               </div>
             </div>
           )}
         </div>
       )}
-    </div>
+    </section>
   )
 }

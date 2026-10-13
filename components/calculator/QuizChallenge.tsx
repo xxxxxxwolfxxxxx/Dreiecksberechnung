@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { getQuizForTriangle } from '@/utils/quizQuestions'
 import type { Solution } from '@/lib/shapes/types'
 
@@ -10,111 +10,70 @@ interface Props {
 
 export function QuizChallenge({ solution }: Props) {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null)
-  const [revealed, setRevealed] = useState(false)
+  const revealed = selectedAnswer !== null
 
-  // Quiz laden
+  // Quiz einmal pro Lösung laden (sonst würfelt die Reihenfolge bei jedem Render neu)
   const triangleType = solution.values.typ as string
-  const quiz = getQuizForTriangle(triangleType, solution.values as Record<string, number>)
+  const quiz = useMemo(
+    () => getQuizForTriangle(triangleType, solution.values as Record<string, number>),
+    [triangleType, solution.values]
+  )
 
   const isCorrect = selectedAnswer ? quiz.isCorrect(selectedAnswer) : false
 
-  const handleAnswerClick = (option: string) => {
-    setSelectedAnswer(option)
-    setRevealed(true)
-  }
-
   return (
-    <div className="rounded-2xl bg-blue-50 border-2 border-blue-300 p-5">
-      {/* Header */}
-      <div className="flex items-center gap-2 mb-5">
-        <span className="text-2xl">🎓</span>
-        <h3 className="font-bold text-blue-900">Schnelltest – Hast du verstanden?</h3>
+    <section className="flex flex-col gap-3.5 rounded-[22px] border border-line bg-white px-5 sm:px-7 py-6">
+      <div className="flex flex-col gap-1">
+        <span className="font-mono text-[11.5px] tracking-[0.06em] text-brand-600">SCHNELLTEST</span>
+        <h3 className="text-xl font-bold tracking-tight">Hast du’s verstanden?</h3>
       </div>
 
-      {/* Frage */}
-      <div className="mb-6">
-        <p className="text-gray-700 font-medium">{quiz.question}</p>
-      </div>
+      <p className="text-base font-medium text-ink">{quiz.question}</p>
 
-      {/* Antwort-Optionen */}
-      <div className="flex flex-col gap-3 mb-6">
+      <div className="flex flex-col gap-2">
         {quiz.options.map((option) => {
-          const isSelected = selectedAnswer === option
           const isOptionCorrect = quiz.isCorrect(option)
-
-          let buttonClasses =
-            'flex items-center gap-3 p-4 rounded-lg border-2 transition-all text-left'
-
-          if (revealed && isSelected) {
-            // Gewählte Antwort - Styling basierend auf richtig/falsch
-            if (isOptionCorrect) {
-              buttonClasses += ' border-green-500 bg-green-50'
-            } else {
-              buttonClasses += ' border-red-500 bg-red-50'
-            }
-          } else if (!revealed) {
-            // Noch nicht beantwortet
-            buttonClasses += ' border-gray-300 hover:border-blue-400 hover:bg-blue-50 cursor-pointer'
-          } else {
-            // Revealed, aber nicht diese Option gewählt
-            buttonClasses += ' border-gray-300'
-          }
-
+          const zeigeRichtig = revealed && isOptionCorrect
+          const zeigeFalsch = revealed && selectedAnswer === option && !isOptionCorrect
           return (
             <button
               key={option}
-              onClick={() => handleAnswerClick(option)}
+              onClick={() => setSelectedAnswer(option)}
               disabled={revealed}
-              className={buttonClasses}
+              className={`flex items-center gap-3 rounded-xl border-[1.5px] px-3.5 py-3 text-left text-[15px] font-medium text-ink transition-colors ${
+                zeigeRichtig
+                  ? 'border-[#4cbf85] bg-[#f0faf4]'
+                  : zeigeFalsch
+                    ? 'border-[#e58b8b] bg-[#fdf2f2]'
+                    : revealed
+                      ? 'border-line bg-white'
+                      : 'border-line bg-white hover:border-brand-600'
+              }`}
             >
-              {/* Radio-Button-Kreis */}
-              <div
-                className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                  revealed && isSelected
-                    ? isOptionCorrect
-                      ? 'border-green-500 bg-green-500'
-                      : 'border-red-500 bg-red-500'
-                    : 'border-gray-400'
-                }`}
-              >
-                {revealed && isSelected && (
-                  <span className={isOptionCorrect ? 'text-white text-sm' : 'text-white text-sm'}>
-                    {isOptionCorrect ? '✓' : ''}
-                  </span>
-                )}
-              </div>
-
-              {/* Option-Text */}
-              <span className="text-gray-700 font-medium">{option}</span>
+              <span className={`flex h-[22px] w-[22px] flex-shrink-0 items-center justify-center rounded-full border-[1.5px] text-xs text-white ${
+                zeigeRichtig ? 'border-[#12915a] bg-[#12915a]' : zeigeFalsch ? 'border-[#d13c3c] bg-[#d13c3c]' : 'border-[#c3c8d1]'
+              }`}>
+                {zeigeRichtig ? '✓' : zeigeFalsch ? '×' : ''}
+              </span>
+              {option}
             </button>
           )
         })}
       </div>
 
-      {/* Feedback nach Antwort */}
-      {revealed && selectedAnswer && (
-        <div
-          className={`rounded-lg p-4 ${
-            isCorrect ? 'bg-green-100 border border-green-300' : 'bg-yellow-100 border border-yellow-300'
-          }`}
-        >
-          <div className="mb-2">
-            {isCorrect ? (
-              <span className="font-bold text-green-700">✅ Richtig!</span>
-            ) : (
-              <span className="font-bold text-yellow-700">❌ Nicht ganz.</span>
-            )}
-          </div>
-
-          <p className="text-sm text-gray-700 mb-3">{quiz.explanation}</p>
-
+      {revealed && (
+        <div className={`flex flex-col gap-1 rounded-xl px-4 py-3 ${isCorrect ? 'bg-[#ecf8f1]' : 'bg-[#fff6e5]'}`}>
+          <strong className={`text-[15px] ${isCorrect ? 'text-[#0f7a4b]' : 'text-[#8a5200]'}`}>
+            {isCorrect ? 'Richtig!' : 'Nicht ganz.'}
+          </strong>
+          <p className="text-sm text-ink-2">{quiz.explanation}</p>
           {!isCorrect && (
-            <p className="text-sm font-semibold text-gray-800">
-              Richtige Antwort: <span className="text-green-700">{quiz.correctAnswer}</span>
+            <p className="text-sm text-ink-2">
+              Richtige Antwort: <span className="font-semibold text-[#0f7a4b]">{quiz.correctAnswer}</span>
             </p>
           )}
         </div>
       )}
-    </div>
+    </section>
   )
 }
