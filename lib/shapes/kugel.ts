@@ -20,7 +20,7 @@ export const kugel: Shape = {
 
     const steps: string[] = [
       `Gegeben: r = ${fmt(r)}`,
-      `Volumen:\nV = \u2154 \u00B7 \u03C0 \u00B7 r\u00B3\n= \u2154 \u00B7 \u03C0 \u00B7 ${fmt(r)}\u00B3\n= \u2154 \u00B7 \u03C0 \u00B7 ${fmt(r ** 3)}\n\u2248 ${fmt(volumen)}`,
+      `Volumen:\nV = 4/3 \u00B7 \u03C0 \u00B7 r\u00B3\n= 4/3 \u00B7 \u03C0 \u00B7 ${fmt(r)}\u00B3\n= 4/3 \u00B7 \u03C0 \u00B7 ${fmt(r ** 3)}\n\u2248 ${fmt(volumen)}`,
       `Oberfl\u00E4che:\nA = 4 \u00B7 \u03C0 \u00B7 r\u00B2\n= 4 \u00B7 \u03C0 \u00B7 ${fmt(r)}\u00B2\n= 4 \u00B7 \u03C0 \u00B7 ${fmt(r ** 2)}\n\u2248 ${fmt(oberflaeche)}`,
     ]
 
@@ -29,7 +29,7 @@ export const kugel: Shape = {
         values: { r, volumen, oberflaeche },
         method: 'Kugel-Formeln',
         formulas: [
-          'V = \u2154 \u00B7 \u03C0 \u00B7 r\u00B3',
+          'V = 4/3 \u00B7 \u03C0 \u00B7 r\u00B3',
           'A = 4 \u00B7 \u03C0 \u00B7 r\u00B2',
         ],
         steps,

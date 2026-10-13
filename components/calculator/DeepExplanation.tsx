@@ -29,7 +29,7 @@ export function DeepExplanation({ solution, shapeId }: Props) {
               },
               {
                 heading: 'Der Satz des Pythagoras',
-                content: `Der Satz des Pythagoras besagt: a² + b² = c² (wobei c die Hypotenuse ist). In deinem Fall: ${a}² + ${b}² = ${Math.sqrt(a*a + b*b).toFixed(2)}². Dieser fundamentale Satz ermöglicht es uns, die dritte Seite zu berechnen, wenn zwei Seiten bekannt sind.`
+                content: `Der Satz des Pythagoras besagt: a² + b² = c² (wobei c die Hypotenuse ist). In deinem Fall: ${a}² + ${b}² = ${Number(Math.sqrt(a*a + b*b).toFixed(2)).toLocaleString('de-DE')}². Dieser fundamentale Satz ermöglicht es uns, die dritte Seite zu berechnen, wenn zwei Seiten bekannt sind.`
               },
               {
                 heading: 'Praktische Anwendungen',

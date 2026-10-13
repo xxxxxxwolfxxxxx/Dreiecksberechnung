@@ -14,7 +14,7 @@ const LABELS: Record<string, string> = {
   a: 'Seite a', b: 'Seite b', c: 'Seite c',
   alpha: 'Winkel α', beta: 'Winkel β', gamma: 'Winkel γ',
   flaeche: 'Fläche', umfang: 'Umfang',
-  h_a: 'Höhe hₐ', h_b: 'Höhe h_b', h_c: 'Höhe h_c',
+  h_a: 'Höhe h_a', h_b: 'Höhe h_b', h_c: 'Höhe h_c',
   inkreis: 'Inkreisradius', umkreis: 'Umkreisradius',
   r: 'Radius', d: 'Durchmesser',
   diagonale: 'Diagonale', mittellinie: 'Mittellinie',
