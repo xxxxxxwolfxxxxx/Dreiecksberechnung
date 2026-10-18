@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Dreiecksberechnung
 
-## Getting Started
+Geometrie- und Navigationsrechner mit nachvollziehbarem Lösungsweg und PDF-Export: Dreieck, Viereck-Formen, Körper sowie nautische Peilverfahren.
 
-First, run the development server:
+**Live:** <https://dreieck-berechnen.de>
+
+## Was drin ist
+
+- **Ebene Figuren:** Dreieck (Seiten, Winkel, Fläche, Umfang), Rechteck, Parallelogramm, Raute, Trapez, Kreis
+- **Räumliche Körper:** Quader, Würfel, Zylinder, Kegel, Kugel, Pyramide
+- **Nautische Peilverfahren:** Kreuzpeilung und Vier-Strich-Peilung (`lib/navigation/`)
+- Lösungsweg zu jedem Ergebnis, Hinweise zu Eingabefehlern, PDF-Export (`jspdf`, `html2canvas`)
+- Strukturierte Daten (JSON-LD) und Sitemap für die Suchmaschinen
+
+Die Rechenlogik liegt getrennt von der Oberfläche in `lib/shapes/` und `lib/navigation/`.
+
+## Tech-Stack
+
+Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS 4 · Jest und Testing Library · ESLint · Netlify (Node 20)
+
+## Lokal starten
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000
+npm run build      # Produktions-Build
+npm start          # Produktions-Build ausliefern
+npm run lint
+npm test           # Jest
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Optional lassen sich Werbe- und Analyse-IDs über Umgebungsvariablen setzen (`NEXT_PUBLIC_ADSENSE_ID`, `NEXT_PUBLIC_FUNDING_CHOICES_ID`). Ohne sie läuft die Anwendung unverändert.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tests
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Die Tests unter `tests/` decken Rechenlogik (`lib/`), Komponenten, Hilfsfunktionen (u. a. PDF-Erzeugung) und die Sitemap ab.
 
-## Learn More
+## Hinweis zu den Formeln
 
-To learn more about Next.js, take a look at the following resources:
+Die Rechner verwenden die üblichen geometrischen Formeln und die Verfahren der terrestrischen Navigation. Für die Schifffahrt ersetzen sie keine amtliche Navigation; Eingaben und Ergebnisse sind selbst zu prüfen.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Lizenz
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Es ist keine Lizenz hinterlegt. Der Quellcode steht zur Ansicht; ohne ausdrückliche Lizenz sind Nutzung und Weitergabe nicht erlaubt.
