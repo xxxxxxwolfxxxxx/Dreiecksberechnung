@@ -1575,10 +1575,6 @@ export default function Impressum() {
     <article className="prose dark:prose-invert max-w-2xl">
       <h1>Impressum</h1>
       <p>Angaben gemäß § 5 TMG</p>
-      {/* Platzhalter — echte Angaben eintragen */}
-      <p><strong>Name:</strong> [Vor- und Nachname]</p>
-      <p><strong>Anschrift:</strong> [Straße, PLZ Ort]</p>
-      <p><strong>E-Mail:</strong> [E-Mail-Adresse]</p>
       <h2>Haftungsausschluss</h2>
       <p>Die Berechnungen auf dieser Website dienen nur zur Orientierung. Für die Richtigkeit der Ergebnisse wird keine Gewähr übernommen.</p>
     </article>

@@ -5,7 +5,7 @@ export default function Impressum() {
   return (
     <article className="prose dark:prose-invert max-w-2xl">
       <h1>Impressum</h1>
-      <p>Angaben gemäß § 5 TMG</p>
+      <p>Angaben gemäß § 5 DDG</p>
       <p><strong>Name:</strong> Matthias Dührkop</p>
       <p><strong>Anschrift:</strong> Rhedewiesen 1, 19258 Boizenburg</p>
       <p><strong>E-Mail:</strong> <a href="mailto:xxxxwolfxxxx@me.com">xxxxwolfxxxx@me.com</a></p>
