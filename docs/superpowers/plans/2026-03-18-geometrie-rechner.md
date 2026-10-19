@@ -1575,7 +1575,7 @@ export default function Impressum() {
     <article className="prose dark:prose-invert max-w-2xl">
       <h1>Impressum</h1>
       <p>Angaben gemäß § 5 TMG</p>
-      {/* Platzhalter — Wolf muss seine echten Daten eintragen */}
+      {/* Platzhalter — echte Angaben eintragen */}
       <p><strong>Name:</strong> [Vor- und Nachname]</p>
       <p><strong>Anschrift:</strong> [Straße, PLZ Ort]</p>
       <p><strong>E-Mail:</strong> [E-Mail-Adresse]</p>
