@@ -35,11 +35,11 @@ export default function VierStrichPeilungPage() {
           }),
         }}
       />
-      <AdSlot slot="1508045799" format="horizontal" className="mb-6" minHeight={90} />
       <VersegelungRechner />
+      <AdSlot slot="1508045799" format="horizontal" />
       <PeilungInfo id="vier-strich-peilung" />
       <MoreShapes currentId="vier-strich-peilung" />
-      <AdSlot slot="4403201248" format="horizontal" className="mt-6" minHeight={90} />
+      <AdSlot slot="4403201248" format="horizontal" className="mt-6" />
     </>
   )
 }

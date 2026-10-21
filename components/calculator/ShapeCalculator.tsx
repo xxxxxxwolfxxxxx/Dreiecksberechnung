@@ -39,10 +39,10 @@ function MidBanner() {
     }, 50)
   }, [])
   return (
-    <div style={{ minHeight: 90 }}>
+    <div className="h-[280px] overflow-hidden sm:h-[120px]" style={{ contain: 'layout paint' }}>
       <ins
         className="adsbygoogle"
-        style={{ display: 'block' }}
+        style={{ display: 'block', height: '100%' }}
         data-ad-client="ca-pub-8687929894744033"
         data-ad-slot="7625380516"
         data-ad-format="horizontal"

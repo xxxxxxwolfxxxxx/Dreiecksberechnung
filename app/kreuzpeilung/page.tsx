@@ -35,11 +35,11 @@ export default function KreuzpeilungPage() {
           }),
         }}
       />
-      <AdSlot slot="1508045799" format="horizontal" className="mb-6" minHeight={90} />
       <KreuzpeilungRechner />
+      <AdSlot slot="1508045799" format="horizontal" />
       <PeilungInfo id="kreuzpeilung" />
       <MoreShapes currentId="kreuzpeilung" />
-      <AdSlot slot="4403201248" format="horizontal" className="mt-6" minHeight={90} />
+      <AdSlot slot="4403201248" format="horizontal" className="mt-6" />
     </>
   )
 }

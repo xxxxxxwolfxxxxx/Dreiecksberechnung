@@ -46,9 +46,9 @@ export function DreieckThemaSeite({ thema }: Props) {
         </ul>
       </section>
 
-      <AdSlot slot="1508045799" format="horizontal" className="my-6" minHeight={90} />
 
       <ShapeCalculator shapeId="dreieck" ueberschriftEbene="h2" />
+      <AdSlot slot="1508045799" format="horizontal" />
 
       <section aria-labelledby="formeln-heading" className="rounded-2xl bg-white border border-slate-200 shadow-sm p-5">
         <h2 id="formeln-heading" className="text-lg font-black text-slate-800 mb-4 tracking-tight">
@@ -120,7 +120,7 @@ export function DreieckThemaSeite({ thema }: Props) {
       </nav>
 
       <MoreShapes currentId="dreieck" />
-      <AdSlot slot="4403201248" format="horizontal" className="mt-6" minHeight={90} />
+      <AdSlot slot="4403201248" format="horizontal" className="mt-6" />
     </>
   )
 }

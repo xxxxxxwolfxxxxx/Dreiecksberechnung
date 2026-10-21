@@ -19,11 +19,11 @@ export default function WuerfelPage() {
         path="/wuerfel"
         matheThemen={['Geometry']}
       />
-      <AdSlot slot="1508045799" format="horizontal" className="mb-6" minHeight={90} />
       <ShapeCalculator shapeId="wuerfel" />
+      <AdSlot slot="1508045799" format="horizontal" />
       <ShapeInfo shapeId="wuerfel" />
       <MoreShapes currentId="wuerfel" />
-      <AdSlot slot="4403201248" format="horizontal" className="mt-6" minHeight={90} />
+      <AdSlot slot="4403201248" format="horizontal" className="mt-6" />
     </>
   )
 }

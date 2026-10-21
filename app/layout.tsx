@@ -28,9 +28,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Google Funding Choices (IAB TCF 2.2 CMP) — vor AdSense laden */}
         <Script
           src={`https://fundingchoicesmessages.google.com/i/${process.env.NEXT_PUBLIC_FUNDING_CHOICES_ID}?ers=1`}
-          strategy="beforeInteractive"
+          strategy="afterInteractive"
         />
-        <Script id="fc-init" strategy="beforeInteractive">{`
+        <Script id="fc-init" strategy="afterInteractive">{`
           (function() {
             function signalGooglefcPresent() {
               if (!window.frames['googlefcPresent']) {
@@ -51,7 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* AdSense */}
         <Script
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8687929894744033"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           crossOrigin="anonymous"
         />
       </head>

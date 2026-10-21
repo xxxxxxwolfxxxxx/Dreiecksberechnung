@@ -19,11 +19,11 @@ export default function KugelPage() {
         path="/kugel"
         matheThemen={['Geometry']}
       />
-      <AdSlot slot="1508045799" format="horizontal" className="mb-6" minHeight={90} />
       <ShapeCalculator shapeId="kugel" />
+      <AdSlot slot="1508045799" format="horizontal" />
       <ShapeInfo shapeId="kugel" />
       <MoreShapes currentId="kugel" />
-      <AdSlot slot="4403201248" format="horizontal" className="mt-6" minHeight={90} />
+      <AdSlot slot="4403201248" format="horizontal" className="mt-6" />
     </>
   )
 }

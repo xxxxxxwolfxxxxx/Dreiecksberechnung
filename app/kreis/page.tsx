@@ -19,11 +19,11 @@ export default function KreisPage() {
         path="/kreis"
         matheThemen={['Geometry', 'Circle']}
       />
-      <AdSlot slot="1508045799" format="horizontal" className="mb-6" minHeight={90} />
       <ShapeCalculator shapeId="kreis" />
+      <AdSlot slot="1508045799" format="horizontal" />
       <ShapeInfo shapeId="kreis" />
       <MoreShapes currentId="kreis" />
-      <AdSlot slot="4403201248" format="horizontal" className="mt-6" minHeight={90} />
+      <AdSlot slot="4403201248" format="horizontal" className="mt-6" />
     </>
   )
 }

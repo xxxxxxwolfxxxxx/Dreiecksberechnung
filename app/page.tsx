@@ -22,8 +22,8 @@ export default function StartseiteDreieck() {
         path="/"
         matheThemen={['Geometry', 'Trigonometry']}
       />
-      <AdSlot slot="1508045799" format="horizontal" minHeight={90} />
       <ShapeCalculator shapeId="dreieck" />
+      <AdSlot slot="1508045799" format="horizontal" />
       <ShapeInfo shapeId="dreieck" />
 
       <nav aria-labelledby="themen-heading" className="rounded-[22px] bg-white border border-line p-6 sm:px-7 flex flex-col gap-3">
@@ -56,7 +56,7 @@ export default function StartseiteDreieck() {
       <DreieckFaq />
 
       <MoreShapes currentId="dreieck" />
-      <AdSlot slot="4403201248" format="horizontal" minHeight={90} />
+      <AdSlot slot="4403201248" format="horizontal" />
     </>
   )
 }

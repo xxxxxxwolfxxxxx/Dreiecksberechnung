@@ -19,11 +19,11 @@ export default function RechteckPage() {
         path="/rechteck"
         matheThemen={['Geometry']}
       />
-      <AdSlot slot="1508045799" format="horizontal" className="mb-6" minHeight={90} />
       <ShapeCalculator shapeId="rechteck" />
+      <AdSlot slot="1508045799" format="horizontal" />
       <ShapeInfo shapeId="rechteck" />
       <MoreShapes currentId="rechteck" />
-      <AdSlot slot="4403201248" format="horizontal" className="mt-6" minHeight={90} />
+      <AdSlot slot="4403201248" format="horizontal" className="mt-6" />
     </>
   )
 }

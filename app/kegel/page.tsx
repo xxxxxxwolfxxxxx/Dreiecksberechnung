@@ -19,11 +19,11 @@ export default function KegelPage() {
         path="/kegel"
         matheThemen={['Geometry']}
       />
-      <AdSlot slot="1508045799" format="horizontal" className="mb-6" minHeight={90} />
       <ShapeCalculator shapeId="kegel" />
+      <AdSlot slot="1508045799" format="horizontal" />
       <ShapeInfo shapeId="kegel" />
       <MoreShapes currentId="kegel" />
-      <AdSlot slot="4403201248" format="horizontal" className="mt-6" minHeight={90} />
+      <AdSlot slot="4403201248" format="horizontal" className="mt-6" />
     </>
   )
 }

@@ -20,8 +20,8 @@ export default function QuaderPage() {
         path="/quader"
         matheThemen={['Geometry']}
       />
-      <AdSlot slot="1508045799" format="horizontal" className="mb-6" minHeight={90} />
       <ShapeCalculator shapeId="quader" />
+      <AdSlot slot="1508045799" format="horizontal" />
       <ShapeInfo shapeId="quader" />
 
       {/*
@@ -61,7 +61,7 @@ export default function QuaderPage() {
       </section>
 
       <MoreShapes currentId="quader" />
-      <AdSlot slot="4403201248" format="horizontal" className="mt-6" minHeight={90} />
+      <AdSlot slot="4403201248" format="horizontal" className="mt-6" />
     </>
   )
 }

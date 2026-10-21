@@ -19,11 +19,11 @@ export default function PyramidePage() {
         path="/pyramide"
         matheThemen={['Geometry']}
       />
-      <AdSlot slot="1508045799" format="horizontal" className="mb-6" minHeight={90} />
       <ShapeCalculator shapeId="pyramide" />
+      <AdSlot slot="1508045799" format="horizontal" />
       <ShapeInfo shapeId="pyramide" />
       <MoreShapes currentId="pyramide" />
-      <AdSlot slot="4403201248" format="horizontal" className="mt-6" minHeight={90} />
+      <AdSlot slot="4403201248" format="horizontal" className="mt-6" />
     </>
   )
 }
