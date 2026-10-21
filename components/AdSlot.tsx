@@ -25,14 +25,18 @@ export function AdSlot({ slot, format = 'auto', className = '' }: Props) {
 
   return (
     <div className={`h-[280px] overflow-hidden sm:h-[120px] ${className}`} style={{ contain: 'layout paint' }}>
-      <ins
-        className="adsbygoogle"
-        style={{ display: 'block', height: '100%' }}
-        data-ad-client="ca-pub-8687929894744033"
-        data-ad-slot={slot}
-        data-ad-format={format}
-        data-full-width-responsive="true"
-      />
+      {/* Google setzt am direkten Eltern-Element der <ins> "height: auto !important".
+          Die feste Hoehe sitzt deshalb eine Ebene darueber. */}
+      <div>
+        <ins
+          className="adsbygoogle"
+          style={{ display: 'block' }}
+          data-ad-client="ca-pub-8687929894744033"
+          data-ad-slot={slot}
+          data-ad-format={format}
+          data-full-width-responsive="true"
+        />
+      </div>
     </div>
   )
 }
