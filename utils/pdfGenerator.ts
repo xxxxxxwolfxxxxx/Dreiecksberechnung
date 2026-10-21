@@ -91,7 +91,7 @@ export async function generateSpickzettel(
 
   doc.setProperties({
     title: `${shapeLabel} Spickzettel`,
-    author: 'Geometrie-Rechner'
+    author: 'dreieck-berechnen.de'
   })
 
   const pageHeight = doc.internal.pageSize.getHeight()

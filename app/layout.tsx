@@ -84,7 +84,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <Link href="/impressum" className="!text-ink-2 hover:underline">Impressum</Link>
                 <Link href="/datenschutz" className="!text-ink-2 hover:underline">Datenschutz</Link>
               </span>
-              <span>GeoRechner</span>
+              <span>dreieck-berechnen.de</span>
             </div>
           </div>
         </footer>

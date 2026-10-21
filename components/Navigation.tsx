@@ -57,10 +57,10 @@ export function Navigation() {
         <div className="flex items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-2.5 !text-ink !no-underline">
             <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-brand-600 font-mono text-[15px] font-semibold text-white">
-              G
+              D
             </span>
             <span className="text-lg font-bold tracking-tight">
-              Geo<span className="text-brand-600">Rechner</span>
+              Dreieck <span className="text-brand-600">berechnen</span>
             </span>
           </Link>
           <span className="hidden sm:inline font-mono text-[11px] tracking-wide text-ink-3">Mathe macht Spaß!</span>
