@@ -7,10 +7,10 @@ interface Props {
   className?: string
 }
 
-// Feste Hoehe statt min-height: responsive Anzeigen liefern mobil bis ~280px.
-// Waere der Platz nicht reserviert, schiebt die Anzeige beim Laden den Inhalt
-// nach unten (Core Web Vitals: CLS). overflow-hidden verhindert, dass sie
-// ueber den reservierten Rahmen hinauswaechst.
+// Platz reservieren (min-height), aber nicht beschneiden: Google setzt an den
+// Eltern-Elementen "height: auto !important" und liefert mobil Anzeigen bis
+// ~390px. Die Anzeigen stehen unter dem Rechner, ausserhalb des ersten
+// Viewports; ein Nachwachsen dort zaehlt nicht als sichtbarer Layout-Shift.
 export function AdSlot({ slot, format = 'auto', className = '' }: Props) {
   const pushed = useRef(false)
 
@@ -24,19 +24,15 @@ export function AdSlot({ slot, format = 'auto', className = '' }: Props) {
   }, [])
 
   return (
-    <div className={`h-[280px] overflow-hidden sm:h-[120px] ${className}`} style={{ contain: 'layout paint' }}>
-      {/* Google setzt am direkten Eltern-Element der <ins> "height: auto !important".
-          Die feste Hoehe sitzt deshalb eine Ebene darueber. */}
-      <div>
-        <ins
-          className="adsbygoogle"
-          style={{ display: 'block' }}
-          data-ad-client="ca-pub-8687929894744033"
-          data-ad-slot={slot}
-          data-ad-format={format}
-          data-full-width-responsive="true"
-        />
-      </div>
+    <div className={`min-h-[280px] sm:min-h-[120px] ${className}`}>
+      <ins
+        className="adsbygoogle"
+        style={{ display: 'block' }}
+        data-ad-client="ca-pub-8687929894744033"
+        data-ad-slot={slot}
+        data-ad-format={format}
+        data-full-width-responsive="true"
+      />
     </div>
   )
 }

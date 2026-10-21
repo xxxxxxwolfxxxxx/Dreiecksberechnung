@@ -39,17 +39,15 @@ function MidBanner() {
     }, 50)
   }, [])
   return (
-    <div className="h-[280px] overflow-hidden sm:h-[120px]" style={{ contain: 'layout paint' }}>
-      <div>
-        <ins
-          className="adsbygoogle"
-          style={{ display: 'block' }}
-          data-ad-client="ca-pub-8687929894744033"
-          data-ad-slot="7625380516"
-          data-ad-format="horizontal"
-          data-full-width-responsive="true"
-        />
-      </div>
+    <div className="min-h-[280px] sm:min-h-[120px]">
+      <ins
+        className="adsbygoogle"
+        style={{ display: 'block' }}
+        data-ad-client="ca-pub-8687929894744033"
+        data-ad-slot="7625380516"
+        data-ad-format="horizontal"
+        data-full-width-responsive="true"
+      />
     </div>
   )
 }
