@@ -7,8 +7,8 @@ import { RechnerSchema } from '@/components/RechnerSchema'
 import { ShapeInfo } from '@/components/ShapeInfo'
 
 export const metadata: Metadata = {
-  title: 'Quader berechnen – Volumen, Oberfläche, Raumdiagonale',
-  description: 'Quader online berechnen: Volumen, Oberfläche und Raumdiagonale aus Länge, Breite und Höhe. Auch der richtige Rechner, wenn du das Volumen eines rechteckigen Körpers suchst.',
+  title: 'Quader berechnen – Volumen (Rechteck), Oberfläche, Diagonale',
+  description: 'Quader online berechnen: Volumen, Oberfläche und Raumdiagonale aus Länge, Breite und Höhe. Auch der richtige Rechner für das Volumen eines Rechtecks bzw. rechteckigen Körpers.',
 }
 
 export default function QuaderPage() {

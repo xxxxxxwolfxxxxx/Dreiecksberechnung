@@ -9,7 +9,7 @@ import { ShapeInfo } from '@/components/ShapeInfo'
 import { DREIECK_THEMEN } from '@/lib/dreieck-themen'
 
 export const metadata: Metadata = {
-  title: 'Dreieck berechnen – Fläche, Umfang & Winkel online',
+  title: 'Dreieck berechnen – Online-Rechner für Fläche, Umfang & Winkel',
   description: 'Dreieck online berechnen: aus drei bekannten Werten sofort Fläche, Umfang, alle Winkel, Höhen und Radien – mit Rechenweg und Skizze. Kostenlos, ohne Anmeldung.',
 }
 
