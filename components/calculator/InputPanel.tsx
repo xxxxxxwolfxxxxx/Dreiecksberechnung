@@ -73,7 +73,7 @@ export function InputPanel({ shape, values, onChange, unit }: Props) {
             }}
             className="h-full w-full bg-transparent pl-3.5 pr-10 font-mono text-[17px] font-medium text-ink placeholder:text-[#b7bdc7] focus:outline-none"
           />
-          <span className="pointer-events-none absolute right-3 font-mono text-[13px] text-[#8a919c]">
+          <span className="pointer-events-none absolute right-3 font-mono text-[13px] text-ink-3">
             {displayUnit}
           </span>
         </div>

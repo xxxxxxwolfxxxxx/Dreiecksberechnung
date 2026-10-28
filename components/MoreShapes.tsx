@@ -34,7 +34,7 @@ export function MoreShapes({ currentId }: Props) {
 
       {shapes3d.length > 0 && (
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="w-[30px] font-mono text-[11px] font-semibold text-[#b86e00]">3D</span>
+          <span className="w-[30px] font-mono text-[11px] font-semibold text-[#955800]">3D</span>
           {shapes3d.map(s => (
             <Link key={s.id} href={pfadFuerForm(s.id)} className={`${chip} hover:border-[#e59a1c] hover:!text-[#8a5200]`}>
               {s.label}

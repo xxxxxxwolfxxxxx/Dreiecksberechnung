@@ -12,7 +12,7 @@ const SHAPES_3D = ['wuerfel', 'quader', 'kugel', 'zylinder', 'kegel', 'pyramide'
 // Jede Rubrik hat ihre eigene Akzentfarbe: 2D blau, 3D amber, See teal.
 const RUBRIK = {
   blau: { label: 'text-brand-600', dot: 'bg-brand-600', aktiv: 'bg-brand-100 !text-brand-700 font-semibold' },
-  amber: { label: 'text-[#b86e00]', dot: 'bg-[#e59a1c]', aktiv: 'bg-amber-50 !text-[#8a5200] font-semibold' },
+  amber: { label: 'text-[#955800]', dot: 'bg-[#e59a1c]', aktiv: 'bg-amber-50 !text-[#8a5200] font-semibold' },
   teal: { label: 'text-[#0d7f74]', dot: 'bg-[#14a394]', aktiv: 'bg-teal-50 !text-[#0d6b62] font-semibold' },
 } as const
 
